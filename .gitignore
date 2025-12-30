@@ -1,28 +1,68 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
+# Compiled output
+dist/
+dist-server/
+tmp/
+out-tsc/
+bazel-out/
+/packages/*/dist
+/apps/*/dist
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# Visual Studio Code
+.vscode/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Angular
 .angular/
+.angular/cache/
 
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
+# NestJS
+.nest/
 
-# Environment files
-/.env
+# Environment Variables
+.env
+.env.production
+.env.development
+.env.local
+.env.*.local
+# Keep example env
+!.env.example
 
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
+# Test coverage
+coverage/
 
-# TypeScript cache
-*.tsbuildinfo
+# Supabase
+supabase/functions/*/deno.lock
+supabase/.temp/
+supabase/.branches/
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Docker
+docker-data/
+
+# Miscellaneous
+*.log
+*.zip
+*.tar.gz
+*.rar

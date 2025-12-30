@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  # Local PostgreSQL database mimicking Supabase DB
+  db:
+    image: postgres:15-alpine
+    container_name: fakturologia-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fakturologia
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  # Placeholder for Backend
+  # backend:
+  #   build: ./apps/backend
+  #   ports:
+  #     - "3000:3000"
+  #   env_file: .env
+  #   depends_on:
+  #     - db
+
+volumes:
+  db-data:

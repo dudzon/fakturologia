@@ -1,0 +1,13 @@
+{
+  "name": "@fakturologia/shared",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types for Fakturologia",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

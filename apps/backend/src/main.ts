@@ -8,111 +8,111 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter, AllExceptionsFilter } from './common';
 
 /**
- * Funkcja bootstrap inicjalizująca aplikację NestJS
+ * Bootstrap function initializing NestJS application
  *
- * Konfiguruje:
- * 1. Bezpieczeństwo (helmet, CORS)
- * 2. Walidację globalną (ValidationPipe)
- * 3. Kompresję odpowiedzi
- * 4. Filtry wyjątków
- * 5. Dokumentację Swagger
- * 6. Globalny prefix API
+ * Configures:
+ * 1. Security (helmet, CORS)
+ * 2. Global validation (ValidationPipe)
+ * 3. Response compression
+ * 4. Exception filters
+ * 5. Swagger documentation
+ * 6. Global API prefix
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Pobierz ConfigService do odczytu zmiennych środowiskowych
+  // Get ConfigService to read environment variables
   const configService = app.get(ConfigService);
 
-  // ===== BEZPIECZEŃSTWO =====
+  // ===== SECURITY =====
 
-  // Helmet dodaje nagłówki HTTP zwiększające bezpieczeństwo
-  // np. X-Content-Type-Options, X-Frame-Options, etc.
+  // Helmet adds HTTP headers that increase security
+  // e.g., X-Content-Type-Options, X-Frame-Options, etc.
   app.use(helmet());
 
-  // Konfiguracja CORS (Cross-Origin Resource Sharing)
-  // Pozwala na komunikację z frontendem z innej domeny
+  // CORS (Cross-Origin Resource Sharing) configuration
+  // Allows communication with frontend from different domain
   const allowedOrigins = configService.get<string[]>('cors.origins') || [];
   app.enableCors({
     origin: allowedOrigins,
-    credentials: true, // Pozwala na przesyłanie cookies
+    credentials: true, // Allows cookie transmission
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  // ===== KOMPRESJA =====
+  // ===== COMPRESSION =====
 
-  // Kompresja gzip zmniejsza rozmiar odpowiedzi HTTP
+  // Gzip compression reduces HTTP response size
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(compression());
 
-  // ===== FILTRY WYJĄTKÓW =====
+  // ===== EXCEPTION FILTERS =====
 
-  // Globalne filtry wyjątków zapewniają spójny format odpowiedzi błędów
-  // WAŻNE: Kolejność ma znaczenie!
-  // - AllExceptionsFilter jako fallback (przechwytuje wszystko)
-  // - HttpExceptionFilter dla wyjątków HTTP (bardziej szczegółowy)
+  // Global exception filters ensure consistent error response format
+  // IMPORTANT: Order matters!
+  // - AllExceptionsFilter as fallback (catches everything)
+  // - HttpExceptionFilter for HTTP exceptions (more specific)
   /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call */
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
   /* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call */
 
-  // ===== WALIDACJA GLOBALNA =====
+  // ===== GLOBAL VALIDATION =====
 
-  // ValidationPipe automatycznie waliduje wszystkie dane wejściowe
-  // używając dekoratorów z class-validator
+  // ValidationPipe automatically validates all input data
+  // using decorators from class-validator
   app.useGlobalPipes(
     new ValidationPipe({
-      // whitelist: true - usuwa wszystkie pola, które nie są zdefiniowane w DTO
+      // whitelist: true - removes all fields not defined in DTO
       whitelist: true,
-      // forbidNonWhitelisted: true - rzuca błąd gdy przekazano nieznane pole
+      // forbidNonWhitelisted: true - throws error when unknown field is passed
       forbidNonWhitelisted: true,
-      // transform: true - automatycznie transformuje payload na instancję DTO
+      // transform: true - automatically transforms payload to DTO instance
       transform: true,
-      // transformOptions - opcje dla class-transformer
+      // transformOptions - options for class-transformer
       transformOptions: {
         enableImplicitConversion: true,
       },
     }),
   );
 
-  // ===== GLOBALNY PREFIX =====
+  // ===== GLOBAL PREFIX =====
 
-  // Wszystkie endpointy będą poprzedzone /api/v1
-  // np. /users/profile stanie się /api/v1/users/profile
+  // All endpoints will be prefixed with /api/v1
+  // e.g., /users/profile will become /api/v1/users/profile
   app.setGlobalPrefix('api/v1');
 
   // ===== SWAGGER =====
 
-  // Konfiguracja dokumentacji Swagger/OpenAPI
-  // Dokumentacja będzie dostępna pod /api/docs
+  // Swagger/OpenAPI documentation configuration
+  // Documentation will be available at /api/docs
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Fakturologia API')
     .setDescription(
-      'API dla aplikacji do wystawiania faktur. Obsługuje zarządzanie profilami użytkowników, kontrahentami i fakturami.',
+      'API for invoice application. Handles user profile management, contractors and invoices.',
     )
     .setVersion('1.0')
-    // Konfiguracja autoryzacji Bearer Token
+    // Bearer Token authorization configuration
     .addBearerAuth(
       {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        description: 'Wprowadź token JWT otrzymany z Supabase Auth',
+        description: 'Enter JWT token obtained from Supabase Auth',
       },
-      'access-token', // Nazwa schematu autoryzacji
+      'access-token', // Authorization scheme name
     )
-    .addTag('Users', 'Zarządzanie profilem użytkownika')
-    .addTag('Health', 'Sprawdzanie stanu aplikacji')
+    .addTag('Users', 'User profile management')
+    .addTag('Health', 'Application health check')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
-      persistAuthorization: true, // Zachowuje token między odświeżeniami
+      persistAuthorization: true, // Persists token between refreshes
     },
   });
 
-  // ===== START SERWERA =====
+  // ===== SERVER START =====
 
   const port = configService.get<number>('port') || 3000;
   await app.listen(port);

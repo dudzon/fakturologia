@@ -1,13 +1,13 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 /**
- * Wyjątki domenowe dla modułu User Profile
+ * Domain exceptions for the User Profile module
  *
- * W NestJS wyjątki HTTP automatycznie zwracają odpowiedni status code.
- * Tworzymy własne klasy wyjątków dla lepszej czytelności kodu
- * i spójnych kodów błędów w API.
+ * In NestJS, HTTP exceptions automatically return the appropriate status code.
+ * We create custom exception classes for better code readability
+ * and consistent error codes in the API.
  *
- * Struktura odpowiedzi błędu:
+ * Error response structure:
  * {
  *   "statusCode": 400,
  *   "code": "INVALID_NIP",
@@ -18,10 +18,10 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
  */
 
 /**
- * ProfileNotFoundException - Profil użytkownika nie został znaleziony
+ * ProfileNotFoundException - User profile not found
  *
  * HTTP 404 Not Found
- * Rzucany gdy profil nie istnieje w tabeli user_profiles
+ * Thrown when profile does not exist in user_profiles table
  */
 export class ProfileNotFoundException extends NotFoundException {
   constructor() {
@@ -33,10 +33,10 @@ export class ProfileNotFoundException extends NotFoundException {
 }
 
 /**
- * InvalidNipException - Nieprawidłowy format lub suma kontrolna NIP
+ * InvalidNipException - Invalid NIP format or checksum
  *
  * HTTP 400 Bad Request
- * Rzucany przez walidator IsPolishNIP
+ * Thrown by the IsPolishNIP validator
  */
 export class InvalidNipException extends BadRequestException {
   constructor() {
@@ -48,10 +48,10 @@ export class InvalidNipException extends BadRequestException {
 }
 
 /**
- * InvalidIbanException - Nieprawidłowy format IBAN
+ * InvalidIbanException - Invalid IBAN format
  *
  * HTTP 400 Bad Request
- * Rzucany przez walidator IsValidIBAN
+ * Thrown by the IsValidIBAN validator
  */
 export class InvalidIbanException extends BadRequestException {
   constructor() {
@@ -63,10 +63,10 @@ export class InvalidIbanException extends BadRequestException {
 }
 
 /**
- * InvalidNumberFormatException - Format numeracji nie zawiera {NNN}
+ * InvalidNumberFormatException - Format does not contain {NNN}
  *
  * HTTP 400 Bad Request
- * Rzucany przez walidator ContainsPlaceholder
+ * Thrown by the ContainsPlaceholder validator
  */
 export class InvalidNumberFormatException extends BadRequestException {
   constructor() {
@@ -78,10 +78,10 @@ export class InvalidNumberFormatException extends BadRequestException {
 }
 
 /**
- * LogoNotFoundException - Logo nie istnieje
+ * LogoNotFoundException - Logo does not exist
  *
  * HTTP 404 Not Found
- * Rzucany przy próbie usunięcia logo, które nie istnieje
+ * Thrown when trying to delete a logo that does not exist
  */
 export class LogoNotFoundException extends NotFoundException {
   constructor() {
@@ -93,10 +93,10 @@ export class LogoNotFoundException extends NotFoundException {
 }
 
 /**
- * InvalidFileTypeException - Nieprawidłowy typ pliku
+ * InvalidFileTypeException - Invalid file type
  *
  * HTTP 400 Bad Request
- * Rzucany gdy plik nie jest PNG ani JPG
+ * Thrown when file is not PNG or JPG
  */
 export class InvalidFileTypeException extends BadRequestException {
   constructor() {
@@ -108,10 +108,10 @@ export class InvalidFileTypeException extends BadRequestException {
 }
 
 /**
- * FileTooLargeException - Plik jest za duży
+ * FileTooLargeException - File is too large
  *
  * HTTP 400 Bad Request
- * Rzucany gdy plik przekracza 2MB
+ * Thrown when file exceeds 2MB
  */
 export class FileTooLargeException extends BadRequestException {
   constructor() {

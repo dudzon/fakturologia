@@ -3,27 +3,27 @@ import { IsOptional, IsString, Length, Matches } from 'class-validator';
 import { IsPolishNIP, IsValidIBAN, ContainsPlaceholder } from '../../../common';
 
 /**
- * UpdateUserProfileDto - DTO do aktualizacji profilu użytkownika
+ * UpdateUserProfileDto - DTO for updating user profile
  *
- * Wszystkie pola są opcjonalne (@IsOptional), ponieważ użytkownik
- * może aktualizować tylko wybrane pola.
+ * All fields are optional (@IsOptional), because the user
+ * can update only selected fields.
  *
- * Walidacja:
- * - nip: dokładnie 10 cyfr + walidacja sumy kontrolnej NIP
- * - bankAccount: max 32 znaki + walidacja formatu IBAN (mod 97)
- * - invoiceNumberFormat: musi zawierać placeholder {NNN}
+ * Validation:
+ * - nip: exactly 10 digits + NIP checksum validation
+ * - bankAccount: max 32 characters + IBAN format validation (mod 97)
+ * - invoiceNumberFormat: must contain {NNN} placeholder
  *
- * Przykład użycia:
+ * Usage example:
  * PUT /api/v1/users/profile
  * {
- *   "companyName": "Nowa Firma Sp. z o.o.",
+ *   "companyName": "New Company Ltd.",
  *   "nip": "1234567890"
  * }
  */
 export class UpdateUserProfileDto {
   @ApiPropertyOptional({
-    description: 'Nazwa firmy sprzedawcy',
-    example: 'Firma ABC Sp. z o.o.',
+    description: 'Seller company name',
+    example: 'ABC Company Ltd.',
     maxLength: 255,
   })
   @IsOptional()
@@ -31,8 +31,8 @@ export class UpdateUserProfileDto {
   companyName?: string;
 
   @ApiPropertyOptional({
-    description: 'Pełny adres firmy (ulica, kod pocztowy, miasto)',
-    example: 'ul. Nowa 456, 00-002 Warszawa',
+    description: 'Full company address (street, postal code, city)',
+    example: '456 New St, 00-002 Warsaw',
     maxLength: 500,
   })
   @IsOptional()
@@ -41,7 +41,7 @@ export class UpdateUserProfileDto {
 
   @ApiPropertyOptional({
     description:
-      'NIP firmy - dokładnie 10 cyfr, walidowany algorytmem sumy kontrolnej',
+      'Company tax ID (NIP) - exactly 10 digits, validated with checksum algorithm',
     example: '1234567890',
     minLength: 10,
     maxLength: 10,
@@ -54,7 +54,7 @@ export class UpdateUserProfileDto {
   nip?: string;
 
   @ApiPropertyOptional({
-    description: 'Numer konta bankowego w formacie IBAN (max 32 znaki)',
+    description: 'Bank account number in IBAN format (max 32 characters)',
     example: 'PL61109010140000071219812874',
     maxLength: 32,
   })
@@ -68,7 +68,7 @@ export class UpdateUserProfileDto {
 
   @ApiPropertyOptional({
     description:
-      'Format numeracji faktur. Musi zawierać {NNN}. Dostępne: {YYYY}, {MM}, {DD}, {NNN}',
+      'Invoice number format. Must contain {NNN}. Available: {YYYY}, {MM}, {DD}, {NNN}',
     example: 'FV/{YYYY}/{MM}/{NNN}',
     maxLength: 100,
   })

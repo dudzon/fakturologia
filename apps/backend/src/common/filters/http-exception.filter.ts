@@ -7,76 +7,76 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-// UWAGA: Używamy Request/Response z Express, ponieważ NestJS domyślnie
-// używa Express jako warstwy HTTP. W filtrach wyjątków musimy bezpośrednio
-// operować na obiektach request/response, więc importy z Express są standardem.
+// NOTE: We use Request/Response from Express because NestJS by default
+// uses Express as the HTTP layer. In exception filters we must directly
+// operate on request/response objects, so Express imports are standard.
 
 /**
- * Interfejs dla ustandaryzowanej odpowiedzi błędu API
+ * Interface for standardized API error response
  *
- * Wszystkie błędy HTTP zwracane przez API mają ten sam format,
- * co ułatwia obsługę błędów po stronie klienta.
+ * All HTTP errors returned by the API have the same format,
+ * which makes error handling easier on the client side.
  */
 interface ErrorResponse {
-  /** HTTP status code (np. 400, 401, 404, 500) */
+  /** HTTP status code (e.g., 400, 401, 404, 500) */
   statusCode: number;
 
-  /** Kod błędu domenowego (np. 'INVALID_NIP', 'PROFILE_NOT_FOUND') */
+  /** Domain error code (e.g., 'INVALID_NIP', 'PROFILE_NOT_FOUND') */
   code: string;
 
-  /** Czytelny komunikat błędu lub tablica komunikatów (dla walidacji) */
+  /** Human-readable error message or array of messages (for validation) */
   message: string | string[];
 
-  /** Timestamp wystąpienia błędu w formacie ISO 8601 */
+  /** Timestamp of error occurrence in ISO 8601 format */
   timestamp: string;
 
-  /** Ścieżka URL żądania które spowodowało błąd */
+  /** URL path of the request that caused the error */
   path: string;
 }
 
 /**
- * HttpExceptionFilter - Globalny filtr wyjątków HTTP
+ * HttpExceptionFilter - Global HTTP exception filter
  *
- * W NestJS filtry wyjątków przechwytują wyjątki rzucane podczas
- * przetwarzania żądań i przekształcają je w odpowiedzi HTTP.
+ * In NestJS exception filters intercept exceptions thrown during
+ * request processing and transform them into HTTP responses.
  *
- * Ten filtr:
- * 1. Przechwytuje wszystkie HttpException (i podklasy)
- * 2. Formatuje odpowiedź błędu do ustandaryzowanego formatu
- * 3. Loguje błędy dla celów debugowania
- * 4. Ukrywa szczegóły wewnętrzne w produkcji
+ * This filter:
+ * 1. Catches all HttpException (and subclasses)
+ * 2. Formats error response to standardized format
+ * 3. Logs errors for debugging purposes
+ * 4. Hides internal details in production
  *
- * @Catch(HttpException) - dekorator określający jakie wyjątki przechwytujemy
+ * @Catch(HttpException) - decorator specifying which exceptions we catch
  */
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
   /**
-   * Metoda catch - główna logika filtra
+   * catch method - main filter logic
    *
-   * Wywoływana automatycznie gdy HttpException jest rzucony
-   * gdziekolwiek w pipeline żądania.
+   * Called automatically when HttpException is thrown
+   * anywhere in the request pipeline.
    *
-   * @param exception - przechwycony wyjątek HttpException
-   * @param host - ArgumentsHost dający dostęp do kontekstu żądania
+   * @param exception - caught HttpException
+   * @param host - ArgumentsHost providing access to request context
    */
   catch(exception: HttpException, host: ArgumentsHost): void {
-    // Pobierz kontekst HTTP
+    // Get HTTP context
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    // Pobierz status HTTP z wyjątku
+    // Get HTTP status from exception
     const status = exception.getStatus();
 
-    // Pobierz response z wyjątku (może być string lub obiekt)
+    // Get response from exception (can be string or object)
     const exceptionResponse = exception.getResponse();
 
-    // Wyciągnij kod błędu i komunikat
+    // Extract error code and message
     const { code, message } = this.extractErrorDetails(exceptionResponse);
 
-    // Zbuduj ustandaryzowaną odpowiedź błędu
+    // Build standardized error response
     const errorResponse: ErrorResponse = {
       statusCode: status,
       code,
@@ -85,29 +85,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
       path: request.url,
     };
 
-    // Loguj błąd (różne poziomy dla różnych statusów)
+    // Log error (different levels for different statuses)
     this.logError(status, errorResponse, request);
 
-    // Wyślij odpowiedź
+    // Send response
     response.status(status).json(errorResponse);
   }
 
   /**
-   * Wyciąga kod błędu i komunikat z odpowiedzi wyjątku
+   * Extracts error code and message from exception response
    *
-   * Obsługuje różne formaty:
+   * Handles different formats:
    * 1. String: "Not Found" → { code: 'ERROR', message: 'Not Found' }
-   * 2. Object z code: { code: 'INVALID_NIP', message: '...' }
-   * 3. Object z message array (walidacja): { message: ['error1', 'error2'] }
+   * 2. Object with code: { code: 'INVALID_NIP', message: '...' }
+   * 3. Object with message array (validation): { message: ['error1', 'error2'] }
    *
-   * @param response - response z HttpException
+   * @param response - response from HttpException
    * @returns { code, message }
    */
   private extractErrorDetails(response: string | object): {
     code: string;
     message: string | string[];
   } {
-    // Jeśli response to string
+    // If response is a string
     if (typeof response === 'string') {
       return {
         code: 'ERROR',
@@ -115,23 +115,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
     }
 
-    // Jeśli response to obiekt
+    // If response is an object
     const responseObj = response as Record<string, unknown>;
 
-    // Pobierz kod błędu (domyślnie 'ERROR')
+    // Get error code (default 'ERROR')
     const code =
       typeof responseObj.code === 'string' ? responseObj.code : 'ERROR';
 
-    // Pobierz komunikat
+    // Get message
     let message: string | string[];
 
     if (Array.isArray(responseObj.message)) {
-      // Tablica komunikatów (np. z ValidationPipe)
+      // Array of messages (e.g., from ValidationPipe)
       message = responseObj.message as string[];
     } else if (typeof responseObj.message === 'string') {
       message = responseObj.message;
     } else if (typeof responseObj.error === 'string') {
-      // Fallback do pola 'error' (używane przez niektóre wbudowane wyjątki)
+      // Fallback to 'error' field (used by some built-in exceptions)
       message = responseObj.error;
     } else {
       message = 'An error occurred';
@@ -141,14 +141,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   /**
-   * Loguje błąd z odpowiednim poziomem
+   * Logs error with appropriate level
    *
-   * - 4xx (błędy klienta): WARN
-   * - 5xx (błędy serwera): ERROR
+   * - 4xx (client errors): WARN
+   * - 5xx (server errors): ERROR
    *
    * @param status - HTTP status code
-   * @param errorResponse - obiekt odpowiedzi błędu
-   * @param request - obiekt żądania
+   * @param errorResponse - error response object
+   * @param request - request object
    */
   private logError(
     status: number,
@@ -158,10 +158,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const logMessage = `${request.method} ${request.url} - ${status} - ${errorResponse.code}`;
 
     if (status >= 500) {
-      // Błędy serwera - ERROR level
+      // Server errors - ERROR level
       this.logger.error(logMessage, JSON.stringify(errorResponse));
     } else if (status >= 400) {
-      // Błędy klienta - WARN level
+      // Client errors - WARN level
       this.logger.warn(logMessage);
     }
   }

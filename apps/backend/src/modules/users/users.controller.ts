@@ -34,23 +34,23 @@ import {
 } from './dto';
 
 /**
- * UsersController - Kontroler obsługujący endpointy profilu użytkownika
+ * UsersController - Controller handling user profile endpoints
  *
- * W architekturze NestJS kontroler:
- * 1. Odbiera żądania HTTP
- * 2. Waliduje dane wejściowe (automatycznie przez ValidationPipe)
- * 3. Deleguje logikę do serwisu
- * 4. Zwraca odpowiedź HTTP
+ * In NestJS architecture, a controller:
+ * 1. Receives HTTP requests
+ * 2. Validates input data (automatically via ValidationPipe)
+ * 3. Delegates logic to the service
+ * 4. Returns HTTP response
  *
- * Zasada "szczupłego kontrolera":
- * - Kontroler NIE zawiera logiki biznesowej
- * - Cała logika jest w UsersService
+ * "Thin controller" principle:
+ * - Controller does NOT contain business logic
+ * - All logic is in UsersService
  *
- * Dekoratory na poziomie klasy:
- * @ApiTags('Users') - grupuje endpointy w Swagger
- * @ApiBearerAuth('access-token') - wszystkie endpointy wymagają JWT
- * @UseGuards(JwtAuthGuard) - globalny guard dla całego kontrolera
- * @Controller('users') - prefix ścieżki: /api/v1/users/*
+ * Class-level decorators:
+ * @ApiTags('Users') - groups endpoints in Swagger
+ * @ApiBearerAuth('access-token') - all endpoints require JWT
+ * @UseGuards(JwtAuthGuard) - global guard for entire controller
+ * @Controller('users') - path prefix: /api/v1/users/*
  */
 @ApiTags('Users')
 @ApiBearerAuth('access-token')
@@ -62,30 +62,30 @@ export class UsersController {
   /**
    * GET /api/v1/users/profile
    *
-   * Pobiera profil aktualnie zalogowanego użytkownika.
-   * Dane użytkownika są pobierane z tokenu JWT przez @CurrentUser().
+   * Gets the profile of the currently logged-in user.
+   * User data is retrieved from the JWT token via @CurrentUser().
    *
-   * @param user - Obiekt użytkownika z JWT (wstrzykiwany przez @CurrentUser)
-   * @returns UserProfileResponseDto - pełne dane profilu
+   * @param user - User object from JWT (injected by @CurrentUser)
+   * @returns UserProfileResponseDto - full profile data
    */
   @Get('profile')
   @ApiOperation({
-    summary: 'Pobierz profil użytkownika',
+    summary: 'Get user profile',
     description:
-      'Zwraca profil aktualnie zalogowanego użytkownika wraz z danymi firmy',
+      'Returns the profile of the currently logged-in user along with company data',
   })
   @ApiResponse({
     status: 200,
-    description: 'Profil użytkownika',
+    description: 'User profile',
     type: UserProfileResponseDto,
   })
   @ApiResponse({
     status: 401,
-    description: 'Brak autoryzacji - nieprawidłowy lub brakujący token',
+    description: 'Unauthorized - invalid or missing token',
   })
   @ApiResponse({
     status: 404,
-    description: 'Profil nie znaleziony',
+    description: 'Profile not found',
   })
   async getProfile(@CurrentUser() user: User): Promise<UserProfileResponseDto> {
     return this.usersService.getProfile(user.id);
@@ -94,37 +94,35 @@ export class UsersController {
   /**
    * PUT /api/v1/users/profile
    *
-   * Aktualizuje profil użytkownika.
-   * Wszystkie pola są opcjonalne - można aktualizować wybrane.
+   * Updates the user profile.
+   * All fields are optional - only selected fields can be updated.
    *
-   * Walidacja DTO:
-   * - nip: 10 cyfr + suma kontrolna NIP
-   * - bankAccount: format IBAN + mod 97
-   * - invoiceNumberFormat: musi zawierać {NNN}
+   * DTO Validation:
+   * - nip: 10 digits + NIP checksum
+   * - bankAccount: IBAN format + mod 97
+   * - invoiceNumberFormat: must contain {NNN}
    *
-   * @param user - Obiekt użytkownika z JWT
-   * @param updateDto - Dane do aktualizacji
-   * @returns UserProfileResponseDto - zaktualizowany profil
+   * @param user - User object from JWT
+   * @param updateDto - Data to update
+   * @returns UserProfileResponseDto - updated profile
    */
   @Put('profile')
   @ApiOperation({
-    summary: 'Aktualizuj profil użytkownika',
-    description:
-      'Aktualizuje dane firmy użytkownika. Wszystkie pola są opcjonalne.',
+    summary: 'Update user profile',
+    description: 'Updates user company data. All fields are optional.',
   })
   @ApiResponse({
     status: 200,
-    description: 'Profil zaktualizowany pomyślnie',
+    description: 'Profile updated successfully',
     type: UserProfileResponseDto,
   })
   @ApiResponse({
     status: 400,
-    description:
-      'Błąd walidacji - nieprawidłowy NIP, IBAN lub format numeracji',
+    description: 'Validation error - invalid NIP, IBAN, or numbering format',
   })
   @ApiResponse({
     status: 401,
-    description: 'Brak autoryzacji',
+    description: 'Unauthorized',
   })
   async updateProfile(
     @CurrentUser() user: User,
@@ -136,37 +134,37 @@ export class UsersController {
   /**
    * POST /api/v1/users/profile/logo
    *
-   * Uploaduje lub zastępuje logo firmy.
+   * Uploads or replaces company logo.
    *
    * FileInterceptor:
-   * - Parsuje multipart/form-data
-   * - Pole 'file' zawiera plik
+   * - Parses multipart/form-data
+   * - 'file' field contains the file
    *
    * ParseFilePipe:
    * - MaxFileSizeValidator: max 2MB
-   * - FileTypeValidator: tylko PNG i JPG
+   * - FileTypeValidator: only PNG and JPG
    *
-   * @param user - Obiekt użytkownika z JWT
-   * @param file - Plik logo (z multer)
-   * @returns UploadLogoResponseDto - URL do nowego logo
+   * @param user - User object from JWT
+   * @param file - Logo file (from multer)
+   * @returns UploadLogoResponseDto - URL to new logo
    */
   @Post('profile/logo')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({
-    summary: 'Upload logo firmy',
+    summary: 'Upload company logo',
     description:
-      'Uploaduje lub zastępuje logo firmy. Akceptowane formaty: PNG, JPG. Max rozmiar: 2MB.',
+      'Uploads or replaces company logo. Accepted formats: PNG, JPG. Max size: 2MB.',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Plik logo firmy',
+    description: 'Company logo file',
     schema: {
       type: 'object',
       properties: {
         file: {
           type: 'string',
           format: 'binary',
-          description: 'Plik obrazu (PNG lub JPG, max 2MB)',
+          description: 'Image file (PNG or JPG, max 2MB)',
         },
       },
       required: ['file'],
@@ -174,16 +172,16 @@ export class UsersController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Logo uploadowane pomyślnie',
+    description: 'Logo uploaded successfully',
     type: UploadLogoResponseDto,
   })
   @ApiResponse({
     status: 400,
-    description: 'Błąd walidacji - nieprawidłowy typ pliku lub plik za duży',
+    description: 'Validation error - invalid file type or file too large',
   })
   @ApiResponse({
     status: 401,
-    description: 'Brak autoryzacji',
+    description: 'Unauthorized',
   })
   async uploadLogo(
     @CurrentUser() user: User,
@@ -192,7 +190,7 @@ export class UsersController {
         validators: [
           // Max 2MB
           new MaxFileSizeValidator({ maxSize: 2 * 1024 * 1024 }),
-          // Tylko PNG i JPG
+          // Only PNG and JPG
           new FileTypeValidator({ fileType: /^image\/(png|jpeg)$/ }),
         ],
         fileIsRequired: true,
@@ -206,32 +204,32 @@ export class UsersController {
   /**
    * DELETE /api/v1/users/profile/logo
    *
-   * Usuwa logo firmy.
+   * Deletes company logo.
    *
-   * @HttpCode(HttpStatus.OK) - zwraca 200 zamiast domyślnego 204 dla DELETE
-   * (bo zwracamy body z komunikatem)
+   * @HttpCode(HttpStatus.OK) - returns 200 instead of default 204 for DELETE
+   * (because we return body with message)
    *
-   * @param user - Obiekt użytkownika z JWT
-   * @returns MessageResponseDto - komunikat sukcesu
+   * @param user - User object from JWT
+   * @returns MessageResponseDto - success message
    */
   @Delete('profile/logo')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Usuń logo firmy',
-    description: 'Usuwa logo firmy użytkownika z systemu',
+    summary: 'Delete company logo',
+    description: 'Deletes user company logo from the system',
   })
   @ApiResponse({
     status: 200,
-    description: 'Logo usunięte pomyślnie',
+    description: 'Logo deleted successfully',
     type: MessageResponseDto,
   })
   @ApiResponse({
     status: 401,
-    description: 'Brak autoryzacji',
+    description: 'Unauthorized',
   })
   @ApiResponse({
     status: 404,
-    description: 'Logo nie istnieje',
+    description: 'Logo does not exist',
   })
   async deleteLogo(@CurrentUser() user: User): Promise<MessageResponseDto> {
     return this.usersService.deleteLogo(user.id);

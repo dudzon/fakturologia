@@ -9,24 +9,24 @@ import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { Request } from 'express';
 
 /**
- * Interfejs rozszerzający Express Request o dane użytkownika
+ * Interface extending Express Request with user data
  */
 export interface RequestWithUser extends Request {
   user?: User;
 }
 
 /**
- * JwtAuthGuard - Guard zabezpieczający endpointy wymagające autoryzacji
+ * JwtAuthGuard - Guard protecting endpoints requiring authorization
  *
- * W NestJS Guard to klasa implementująca interfejs CanActivate.
- * Jest wywoływany PRZED kontrolerem i decyduje czy żądanie może być obsłużone.
+ * In NestJS a Guard is a class implementing the CanActivate interface.
+ * It is called BEFORE the controller and decides whether the request can be handled.
  *
- * Ten guard:
- * 1. Wyciąga token JWT z nagłówka Authorization
- * 2. Weryfikuje token używając Supabase Auth
- * 3. Dodaje dane użytkownika do obiektu request
+ * This guard:
+ * 1. Extracts JWT token from Authorization header
+ * 2. Verifies token using Supabase Auth
+ * 3. Adds user data to the request object
  *
- * Użycie:
+ * Usage:
  * @UseGuards(JwtAuthGuard)
  * @Get('profile')
  * getProfile() { ... }
@@ -36,8 +36,8 @@ export class JwtAuthGuard implements CanActivate {
   private supabase: SupabaseClient<any, any, any>;
 
   constructor(private readonly configService: ConfigService) {
-    // Inicjalizacja klienta Supabase
-    // Używamy anonKey bo weryfikacja JWT jest publiczna
+    // Initialize Supabase client
+    // We use anonKey because JWT verification is public
     const supabaseUrl = this.configService.get<string>('supabase.url');
     const supabaseAnonKey = this.configService.get<string>('supabase.anonKey');
 
@@ -49,19 +49,19 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   /**
-   * Metoda canActivate - główna logika guarda
+   * canActivate method - main guard logic
    *
-   * @param context - ExecutionContext zawiera informacje o aktualnym żądaniu
-   * @returns Promise<boolean> - true jeśli żądanie może być obsłużone
-   * @throws UnauthorizedException - jeśli token jest nieprawidłowy lub brakuje go
+   * @param context - ExecutionContext contains information about the current request
+   * @returns Promise<boolean> - true if request can be handled
+   * @throws UnauthorizedException - if token is invalid or missing
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Pobierz obiekt request z kontekstu HTTP
-    // NestJS obsługuje różne typy kontekstów (HTTP, WebSocket, RPC)
-    // dlatego używamy switchToHttp() aby uzyskać dostęp do HTTP request
+    // Get request object from HTTP context
+    // NestJS handles different context types (HTTP, WebSocket, RPC)
+    // so we use switchToHttp() to access HTTP request
     const request = context.switchToHttp().getRequest<RequestWithUser>();
 
-    // Wyciągnij token z nagłówka Authorization
+    // Extract token from Authorization header
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -72,8 +72,8 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      // Weryfikuj token używając Supabase
-      // getUser() zwraca dane użytkownika jeśli token jest prawidłowy
+      // Verify token using Supabase
+      // getUser() returns user data if token is valid
       const {
         data: { user },
         error,
@@ -86,19 +86,19 @@ export class JwtAuthGuard implements CanActivate {
         });
       }
 
-      // Dodaj użytkownika do obiektu request
-      // Dzięki temu kontroler i @CurrentUser decorator
-      // będą miały dostęp do danych zalogowanego użytkownika
+      // Add user to request object
+      // This allows controller and @CurrentUser decorator
+      // to access logged-in user data
       request.user = user;
 
       return true;
     } catch (error) {
-      // Jeśli błąd to już UnauthorizedException, przekaż go dalej
+      // If error is already UnauthorizedException, pass it through
       if (error instanceof UnauthorizedException) {
         throw error;
       }
 
-      // Inne błędy (np. problem z połączeniem do Supabase)
+      // Other errors (e.g., connection problem with Supabase)
       throw new UnauthorizedException({
         code: 'UNAUTHORIZED',
         message: 'Token verification failed',
@@ -107,12 +107,12 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   /**
-   * Pomocnicza metoda do wyciągania tokenu z nagłówka
+   * Helper method to extract token from header
    *
-   * Nagłówek Authorization ma format: "Bearer <token>"
+   * Authorization header format: "Bearer <token>"
    *
-   * @param request - obiekt żądania Express
-   * @returns token JWT lub undefined
+   * @param request - Express request object
+   * @returns JWT token or undefined
    */
   private extractTokenFromHeader(request: RequestWithUser): string | undefined {
     const authHeader = request.headers.authorization;
@@ -121,10 +121,10 @@ export class JwtAuthGuard implements CanActivate {
       return undefined;
     }
 
-    // Rozdziel "Bearer" i token
+    // Split "Bearer" and token
     const [type, token] = authHeader.split(' ');
 
-    // Sprawdź czy format jest poprawny
+    // Check if format is correct
     if (type !== 'Bearer' || !token) {
       return undefined;
     }

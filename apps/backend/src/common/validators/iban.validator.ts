@@ -5,28 +5,28 @@ import {
 } from 'class-validator';
 
 /**
- * @IsValidIBAN() - Walidator międzynarodowego numeru konta bankowego (IBAN)
+ * @IsValidIBAN() - International Bank Account Number (IBAN) validator
  *
- * IBAN (International Bank Account Number) to standardowy format
- * numeru konta bankowego używany w Europie i wielu innych krajach.
+ * IBAN (International Bank Account Number) is a standard format
+ * for bank account numbers used in Europe and many other countries.
  *
- * Format IBAN:
- * - 2 litery (kod kraju, np. PL dla Polski)
- * - 2 cyfry (cyfra kontrolna)
- * - Do 30 znaków alfanumerycznych (numer konta)
+ * IBAN format:
+ * - 2 letters (country code, e.g., PL for Poland)
+ * - 2 digits (check digit)
+ * - Up to 30 alphanumeric characters (account number)
  *
- * Algorytm walidacji (MOD 97-10):
- * 1. Przenieś pierwsze 4 znaki na koniec
- * 2. Zamień litery na liczby (A=10, B=11, ..., Z=35)
- * 3. Oblicz resztę z dzielenia przez 97
- * 4. Reszta musi wynosić 1
+ * Validation algorithm (MOD 97-10):
+ * 1. Move first 4 characters to the end
+ * 2. Replace letters with numbers (A=10, B=11, ..., Z=35)
+ * 3. Calculate remainder of division by 97
+ * 4. Remainder must equal 1
  *
- * Przykład: PL61 1090 1014 0000 0712 1981 2874
- * 1. Przenieś: 10901014000007121981287461 (gdzie PL = 2521)
- * 2. Oblicz: 10901014000007121981287425 21 61 mod 97 = 1 ✓
+ * Example: PL61 1090 1014 0000 0712 1981 2874
+ * 1. Move: 10901014000007121981287461 (where PL = 2521)
+ * 2. Calculate: 10901014000007121981287425 21 61 mod 97 = 1 ✓
  *
- * Użycie w DTO:
- * @IsValidIBAN({ message: 'Nieprawidłowy format IBAN' })
+ * Usage in DTO:
+ * @IsValidIBAN({ message: 'Invalid IBAN format' })
  * bankAccount: string;
  */
 export function IsValidIBAN(validationOptions?: ValidationOptions) {
@@ -38,77 +38,77 @@ export function IsValidIBAN(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         /**
-         * Główna funkcja walidująca IBAN
+         * Main IBAN validation function
          *
-         * @param value - wartość do walidacji
-         * @returns true jeśli IBAN jest prawidłowy
+         * @param value - value to validate
+         * @returns true if IBAN is valid
          */
         validate(value: unknown): boolean {
           if (typeof value !== 'string') {
             return false;
           }
 
-          // Usuń spacje i przekonwertuj na wielkie litery
+          // Remove spaces and convert to uppercase
           const iban = value.replace(/\s/g, '').toUpperCase();
 
-          // Sprawdź podstawowy format:
-          // - 2 litery (kod kraju)
-          // - 2 cyfry (cyfra kontrolna)
-          // - 1-30 znaków alfanumerycznych
+          // Check basic format:
+          // - 2 letters (country code)
+          // - 2 digits (check digit)
+          // - 1-30 alphanumeric characters
           if (!/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/.test(iban)) {
             return false;
           }
 
-          // Walidacja długości dla popularnych krajów
+          // Validate length for popular countries
           const countryLengths: Record<string, number> = {
-            PL: 28, // Polska
-            DE: 22, // Niemcy
-            FR: 27, // Francja
-            GB: 22, // Wielka Brytania
-            ES: 24, // Hiszpania
-            IT: 27, // Włochy
-            NL: 18, // Holandia
-            BE: 16, // Belgia
+            PL: 28, // Poland
+            DE: 22, // Germany
+            FR: 27, // France
+            GB: 22, // United Kingdom
+            ES: 24, // Spain
+            IT: 27, // Italy
+            NL: 18, // Netherlands
+            BE: 16, // Belgium
             AT: 20, // Austria
-            CH: 21, // Szwajcaria
+            CH: 21, // Switzerland
           };
 
           const countryCode = iban.slice(0, 2);
           const expectedLength = countryLengths[countryCode];
 
-          // Jeśli znamy długość dla danego kraju, sprawdź ją
+          // If we know the length for the given country, check it
           if (expectedLength && iban.length !== expectedLength) {
             return false;
           }
 
-          // Algorytm MOD 97-10:
+          // MOD 97-10 algorithm:
 
-          // 1. Przenieś pierwsze 4 znaki na koniec
+          // 1. Move first 4 characters to the end
           const rearranged = iban.slice(4) + iban.slice(0, 4);
 
-          // 2. Zamień litery na liczby (A=10, B=11, ..., Z=35)
+          // 2. Replace letters with numbers (A=10, B=11, ..., Z=35)
           const numericString = rearranged.replace(/[A-Z]/g, (char) =>
             (char.charCodeAt(0) - 55).toString(),
           );
 
-          // 3. Oblicz mod 97
-          // Dla bardzo długich liczb musimy liczyć mod 97 iteracyjnie
-          // (JavaScript nie obsługuje dokładnie tak dużych liczb)
+          // 3. Calculate mod 97
+          // For very long numbers we must calculate mod 97 iteratively
+          // (JavaScript doesn't handle such large numbers accurately)
           let remainder = numericString;
           while (remainder.length > 2) {
-            // Bierzemy maksymalnie 9 cyfr (bezpieczne dla parseInt)
+            // Take maximum 9 digits (safe for parseInt)
             const block = remainder.slice(0, 9);
             const blockRemainder = parseInt(block, 10) % 97;
             remainder =
               blockRemainder.toString() + remainder.slice(block.length);
           }
 
-          // 4. Końcowa reszta musi wynosić 1
+          // 4. Final remainder must equal 1
           return parseInt(remainder, 10) % 97 === 1;
         },
 
         /**
-         * Domyślny komunikat błędu
+         * Default error message
          */
         defaultMessage(args: ValidationArguments): string {
           return `${args.property} must be a valid IBAN`;

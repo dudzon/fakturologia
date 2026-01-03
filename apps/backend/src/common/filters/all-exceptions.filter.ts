@@ -8,20 +8,20 @@ import {
 import { Request, Response } from 'express';
 
 /**
- * AllExceptionsFilter - Filtr dla WSZYSTKICH nieobsłużonych wyjątków
+ * AllExceptionsFilter - Filter for ALL unhandled exceptions
  *
- * Ten filtr jest "siatką bezpieczeństwa" - przechwytuje wyjątki,
- * które nie zostały obsłużone przez HttpExceptionFilter.
+ * This filter is a "safety net" - it catches exceptions
+ * that were not handled by HttpExceptionFilter.
  *
- * Dotyczy to głównie:
- * - Błędów bazy danych
- * - Błędów zewnętrznych serwisów (Supabase)
- * - Nieoczekiwanych błędów w kodzie
+ * This mainly includes:
+ * - Database errors
+ * - External service errors (Supabase)
+ * - Unexpected code errors
  *
- * WAŻNE: W produkcji NIE zwracamy stack trace ani szczegółów błędu!
- * To mogłoby ujawnić wrażliwe informacje o systemie.
+ * IMPORTANT: In production we do NOT return stack trace or error details!
+ * This could reveal sensitive system information.
  *
- * @Catch() - bez argumentów = przechwytuje WSZYSTKO
+ * @Catch() - without arguments = catches EVERYTHING
  */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -32,19 +32,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    // Dla nieznanych wyjątków zawsze zwracamy 500
+    // For unknown exceptions we always return 500
     const status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-    // Wyciągnij informacje o błędzie do logowania
+    // Extract error information for logging
     const errorDetails = this.extractErrorDetails(exception);
 
-    // Loguj pełne szczegóły błędu (tylko po stronie serwera)
+    // Log full error details (server-side only)
     this.logger.error(
       `Unhandled exception: ${request.method} ${request.url}`,
       errorDetails.stack || errorDetails.message,
     );
 
-    // Odpowiedź dla klienta - NIE ujawniamy szczegółów!
+    // Response for client - do NOT reveal details!
     const errorResponse = {
       statusCode: status,
       code: 'INTERNAL_SERVER_ERROR',
@@ -60,12 +60,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
   }
 
   /**
-   * Wyciąga szczegóły błędu dla logowania
+   * Extracts error details for logging
    *
-   * Obsługuje różne typy wyjątków:
-   * - Error (standardowy)
+   * Handles different exception types:
+   * - Error (standard)
    * - String
-   * - Nieznany obiekt
+   * - Unknown object
    */
   private extractErrorDetails(exception: unknown): {
     message: string;

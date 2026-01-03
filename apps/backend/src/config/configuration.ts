@@ -1,17 +1,17 @@
 /**
- * Centralna konfiguracja aplikacji
+ * Central application configuration
  *
- * Funkcja ta jest wywoływana przez ConfigModule.forRoot()
- * i zwraca obiekt konfiguracji zbudowany ze zmiennych środowiskowych.
+ * This function is called by ConfigModule.forRoot()
+ * and returns configuration object built from environment variables.
  *
- * @returns Obiekt konfiguracji aplikacji
+ * @returns Application configuration object
  */
 export default () => ({
-  // Konfiguracja serwera
+  // Server configuration
   port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
 
-  // Konfiguracja Supabase
+  // Supabase configuration
   supabase: {
     url: process.env.SUPABASE_URL,
     anonKey: process.env.SUPABASE_ANON_KEY,
@@ -19,12 +19,12 @@ export default () => ({
     jwtSecret: process.env.SUPABASE_JWT_SECRET,
   },
 
-  // Konfiguracja CORS
+  // CORS configuration
   cors: {
     origins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:4200'],
   },
 
-  // Konfiguracja uploadu plików
+  // File upload configuration
   upload: {
     maxLogoSizeBytes: 2 * 1024 * 1024, // 2MB
     allowedMimeTypes: ['image/png', 'image/jpeg'],

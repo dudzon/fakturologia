@@ -5,23 +5,23 @@ import {
 } from 'class-validator';
 
 /**
- * @ContainsPlaceholder() - Walidator sprawdzający obecność placeholdera w stringu
+ * @ContainsPlaceholder() - Validator checking for placeholder presence in string
  *
- * Ten walidator jest używany do walidacji formatu numeracji faktur.
- * Format musi zawierać placeholder {NNN} który będzie zastąpiony
- * kolejnym numerem faktury.
+ * This validator is used to validate invoice number format.
+ * The format must contain placeholder {NNN} which will be replaced
+ * with the next invoice number.
  *
- * Przykładowe prawidłowe formaty:
- * - "FV/{YYYY}/{NNN}" → np. "FV/2025/001"
- * - "FV/{YYYY}/{MM}/{NNN}" → np. "FV/2025/01/001"
- * - "{NNN}/{YYYY}" → np. "001/2025"
+ * Example valid formats:
+ * - "FV/{YYYY}/{NNN}" → e.g., "FV/2025/001"
+ * - "FV/{YYYY}/{MM}/{NNN}" → e.g., "FV/2025/01/001"
+ * - "{NNN}/{YYYY}" → e.g., "001/2025"
  *
- * Użycie w DTO:
- * @ContainsPlaceholder('{NNN}', { message: 'Format musi zawierać {NNN}' })
+ * Usage in DTO:
+ * @ContainsPlaceholder('{NNN}', { message: 'Format must contain {NNN}' })
  * invoiceNumberFormat: string;
  *
- * @param placeholder - wymagany placeholder (np. '{NNN}')
- * @param validationOptions - opcje walidacji class-validator
+ * @param placeholder - required placeholder (e.g., '{NNN}')
+ * @param validationOptions - class-validator validation options
  */
 export function ContainsPlaceholder(
   placeholder: string,
@@ -32,30 +32,30 @@ export function ContainsPlaceholder(
       name: 'containsPlaceholder',
       target: object.constructor,
       propertyName: propertyName,
-      // constraints - dodatkowe parametry przekazane do walidatora
-      // Tutaj przekazujemy wymagany placeholder
+      // constraints - additional parameters passed to validator
+      // Here we pass the required placeholder
       constraints: [placeholder],
       options: validationOptions,
       validator: {
         /**
-         * Funkcja walidująca
+         * Validation function
          *
-         * @param value - wartość do walidacji
-         * @param args - argumenty walidacji, zawierają constraints
-         * @returns true jeśli wartość zawiera wymagany placeholder
+         * @param value - value to validate
+         * @param args - validation arguments, contains constraints
+         * @returns true if value contains required placeholder
          */
         validate(value: unknown, args: ValidationArguments): boolean {
-          // Pobierz wymagany placeholder z constraints
+          // Get required placeholder from constraints
           const [requiredPlaceholder] = args.constraints as [string];
 
-          // Sprawdź czy wartość jest stringiem i zawiera placeholder
+          // Check if value is a string and contains placeholder
           return (
             typeof value === 'string' && value.includes(requiredPlaceholder)
           );
         },
 
         /**
-         * Domyślny komunikat błędu
+         * Default error message
          */
         defaultMessage(args: ValidationArguments): string {
           const [requiredPlaceholder] = args.constraints as [string];

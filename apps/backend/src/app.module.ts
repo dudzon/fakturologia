@@ -5,32 +5,34 @@ import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { validate } from './config/env.validation';
 import { UsersModule } from './modules/users/users.module';
+import { ContractorsModule } from './modules/contractors/contractors.module';
+import { InvoicesModule } from './modules/invoices/invoices.module';
 
 /**
- * Główny moduł aplikacji (AppModule)
+ * Main application module (AppModule)
  *
- * W NestJS każda aplikacja ma jeden główny moduł (root module).
- * Jest to punkt wejścia, który importuje i konfiguruje wszystkie inne moduły.
+ * In NestJS every application has one main module (root module).
+ * It is the entry point that imports and configures all other modules.
  *
- * @decorator @Module - definiuje moduł NestJS
- *   - imports: inne moduły, których funkcjonalność chcemy używać
- *   - controllers: kontrolery obsługujące żądania HTTP
- *   - providers: serwisy i inne dostawcy (dependency injection)
- *   - exports: elementy udostępniane innym modułom (tutaj nie używane)
+ * @decorator @Module - defines a NestJS module
+ *   - imports: other modules whose functionality we want to use
+ *   - controllers: controllers handling HTTP requests
+ *   - providers: services and other providers (dependency injection)
+ *   - exports: elements exposed to other modules (not used here)
  */
 @Module({
   imports: [
     /**
-     * ConfigModule - moduł do zarządzania konfiguracją
+     * ConfigModule - module for configuration management
      *
-     * forRoot() - metoda statyczna konfigurująca moduł jako globalny
-     * - isGlobal: true - ConfigService będzie dostępny w całej aplikacji
-     *   bez potrzeby importowania ConfigModule w każdym module
-     * - load: [configuration] - ładuje funkcję konfiguracji z configuration.ts
-     * - validate: funkcja walidująca zmienne środowiskowe
-     * - envFilePath: określa gdzie szukać plików .env
-     *   - szuka najpierw .env.{NODE_ENV} (np. .env.development)
-     *   - potem .env jako fallback
+     * forRoot() - static method configuring module as global
+     * - isGlobal: true - ConfigService will be available across entire application
+     *   without need to import ConfigModule in every module
+     * - load: [configuration] - loads configuration function from configuration.ts
+     * - validate: function validating environment variables
+     * - envFilePath: specifies where to look for .env files
+     *   - looks first for .env.{NODE_ENV} (e.g., .env.development)
+     *   - then .env as fallback
      */
     ConfigModule.forRoot({
       isGlobal: true,
@@ -40,10 +42,23 @@ import { UsersModule } from './modules/users/users.module';
     }),
 
     /**
-     * UsersModule - moduł obsługujący profile użytkowników
-     * Zawiera endpointy: GET/PUT /profile, POST/DELETE /profile/logo
+     * UsersModule - module handling user profiles
+     * Contains endpoints: GET/PUT /profile, POST/DELETE /profile/logo
      */
     UsersModule,
+
+    /**
+     * ContractorsModule - module handling contractors (invoice buyers)
+     * Contains endpoints: GET/POST /contractors, GET/PUT/DELETE /contractors/:id
+     */
+    ContractorsModule,
+
+    /**
+     * InvoicesModule - module handling invoices
+     * Contains endpoints: GET/POST /invoices, GET/PUT/DELETE /invoices/:id,
+     * GET /invoices/next-number, PATCH /invoices/:id/status, POST /invoices/:id/duplicate
+     */
+    InvoicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

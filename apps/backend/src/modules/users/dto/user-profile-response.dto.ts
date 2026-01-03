@@ -2,17 +2,17 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 /**
- * UserProfileResponseDto - DTO odpowiedzi dla profilu użytkownika
+ * UserProfileResponseDto - Response DTO for user profile
  *
- * DTO (Data Transfer Object) to obiekt używany do transferu danych
- * między warstwami aplikacji. W tym przypadku definiuje strukturę
- * odpowiedzi API dla endpointu GET /users/profile.
+ * DTO (Data Transfer Object) is an object used for data transfer
+ * between application layers. In this case it defines the structure
+ * of API response for GET /users/profile endpoint.
  *
- * Kluczowe elementy:
- * - @ApiProperty/@ApiPropertyOptional - dokumentacja Swagger
- * - @Expose - class-transformer używa tego do serializacji
+ * Key elements:
+ * - @ApiProperty/@ApiPropertyOptional - Swagger documentation
+ * - @Expose - class-transformer uses this for serialization
  *
- * Mapowanie nazw pól (baza danych → API):
+ * Field name mapping (database → API):
  * - company_name → companyName (snake_case → camelCase)
  * - bank_account → bankAccount
  * - logo_url → logoUrl
@@ -23,7 +23,7 @@ import { Expose } from 'class-transformer';
  */
 export class UserProfileResponseDto {
   @ApiProperty({
-    description: 'Unikalny identyfikator użytkownika (UUID)',
+    description: 'Unique user identifier (UUID)',
     example: '550e8400-e29b-41d4-a716-446655440000',
     format: 'uuid',
   })
@@ -31,42 +31,42 @@ export class UserProfileResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Adres email użytkownika',
+    description: 'User email address',
     example: 'jan.kowalski@example.com',
   })
   @Expose()
   email: string;
 
   @ApiPropertyOptional({
-    description: 'Nazwa firmy sprzedawcy',
-    example: 'Firma ABC Sp. z o.o.',
+    description: 'Seller company name',
+    example: 'Company ABC Ltd.',
   })
   @Expose()
   companyName: string | null;
 
   @ApiPropertyOptional({
-    description: 'Pełny adres firmy (ulica, kod pocztowy, miasto)',
-    example: 'ul. Przykładowa 123, 00-001 Warszawa',
+    description: 'Full company address (street, postal code, city)',
+    example: '123 Example St, 00-001 Warsaw',
   })
   @Expose()
   address: string | null;
 
   @ApiPropertyOptional({
-    description: 'NIP firmy (10 cyfr)',
+    description: 'Company tax ID (NIP - 10 digits)',
     example: '1234567890',
   })
   @Expose()
   nip: string | null;
 
   @ApiPropertyOptional({
-    description: 'Numer konta bankowego w formacie IBAN',
+    description: 'Bank account number in IBAN format',
     example: 'PL61109010140000071219812874',
   })
   @Expose()
   bankAccount: string | null;
 
   @ApiPropertyOptional({
-    description: 'URL do logo firmy w Supabase Storage',
+    description: 'URL to company logo in Supabase Storage',
     example:
       'https://xyz.supabase.co/storage/v1/object/public/logos/user-id/logo.png',
   })
@@ -75,7 +75,7 @@ export class UserProfileResponseDto {
 
   @ApiProperty({
     description:
-      'Format numeracji faktur. Dostępne placeholdery: {YYYY} - rok, {MM} - miesiąc, {NNN} - numer',
+      'Invoice number format. Available placeholders: {YYYY} - year, {MM} - month, {NNN} - number',
     example: 'FV/{YYYY}/{MM}/{NNN}',
     default: 'FV/{YYYY}/{NNN}',
   })
@@ -84,7 +84,7 @@ export class UserProfileResponseDto {
 
   @ApiProperty({
     description:
-      'Aktualny licznik numeracji faktur (następna faktura otrzyma ten numer + 1)',
+      'Current invoice number counter (next invoice will get this number + 1)',
     example: 5,
     default: 0,
   })
@@ -92,14 +92,14 @@ export class UserProfileResponseDto {
   invoiceNumberCounter: number;
 
   @ApiProperty({
-    description: 'Data utworzenia profilu',
+    description: 'Profile creation date',
     example: '2025-01-01T10:00:00.000Z',
   })
   @Expose()
   createdAt: Date;
 
   @ApiProperty({
-    description: 'Data ostatniej aktualizacji profilu',
+    description: 'Profile last update date',
     example: '2025-01-15T14:30:00.000Z',
   })
   @Expose()

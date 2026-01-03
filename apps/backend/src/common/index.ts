@@ -12,6 +12,8 @@ export * from './validators/invoice-number-format.validator';
 
 // Exceptions
 export * from './exceptions/user-profile.exceptions';
+export * from './exceptions/contractor.exceptions';
+export * from './exceptions/invoice.exceptions';
 
 // Filters
 export * from './filters/http-exception.filter';

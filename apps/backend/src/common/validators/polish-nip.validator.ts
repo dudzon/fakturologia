@@ -5,24 +5,24 @@ import {
 } from 'class-validator';
 
 /**
- * @IsPolishNIP() - Walidator polskiego numeru NIP
+ * @IsPolishNIP() - Polish NIP number validator
  *
- * NIP (Numer Identyfikacji Podatkowej) to 10-cyfrowy numer
- * z sumą kontrolną obliczaną według algorytmu wagowego.
+ * NIP (Tax Identification Number) is a 10-digit number
+ * with a checksum calculated using a weight algorithm.
  *
- * Algorytm walidacji:
- * 1. NIP musi składać się dokładnie z 10 cyfr
- * 2. Każda z pierwszych 9 cyfr jest mnożona przez odpowiednią wagę
- * 3. Suma iloczynów mod 11 musi być równa 10. cyfrze (cyfra kontrolna)
+ * Validation algorithm:
+ * 1. NIP must consist of exactly 10 digits
+ * 2. Each of the first 9 digits is multiplied by the appropriate weight
+ * 3. Sum of products mod 11 must equal the 10th digit (check digit)
  *
- * Wagi: [6, 5, 7, 2, 3, 4, 5, 6, 7]
+ * Weights: [6, 5, 7, 2, 3, 4, 5, 6, 7]
  *
- * Przykład: NIP 1234567890
- * - Suma: 1*6 + 2*5 + 3*7 + 4*2 + 5*3 + 6*4 + 7*5 + 8*6 + 9*7 = 184
- * - 184 mod 11 = 8 (musi być równe ostatniej cyfrze - tutaj 0, więc błędny NIP)
+ * Example: NIP 1234567890
+ * - Sum: 1*6 + 2*5 + 3*7 + 4*2 + 5*3 + 6*4 + 7*5 + 8*6 + 9*7 = 184
+ * - 184 mod 11 = 8 (must equal last digit - here 0, so invalid NIP)
  *
- * Użycie w DTO:
- * @IsPolishNIP({ message: 'Nieprawidłowy NIP' })
+ * Usage in DTO:
+ * @IsPolishNIP({ message: 'Invalid NIP' })
  * nip: string;
  */
 export function IsPolishNIP(validationOptions?: ValidationOptions) {
@@ -34,35 +34,35 @@ export function IsPolishNIP(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         /**
-         * Główna funkcja walidująca
+         * Main validation function
          *
-         * @param value - wartość do walidacji
-         * @returns true jeśli NIP jest prawidłowy, false w przeciwnym razie
+         * @param value - value to validate
+         * @returns true if NIP is valid, false otherwise
          */
         validate(value: unknown): boolean {
-          // Sprawdź czy wartość jest stringiem i ma 10 cyfr
+          // Check if value is a string and has 10 digits
           if (typeof value !== 'string' || !/^\d{10}$/.test(value)) {
             return false;
           }
 
-          // Wagi używane w algorytmie NIP
+          // Weights used in NIP algorithm
           const weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
 
-          // Konwertuj string na tablicę cyfr
+          // Convert string to array of digits
           const digits = value.split('').map(Number);
 
-          // Oblicz sumę kontrolną
-          // reduce() sumuje iloczyny cyfr i wag
+          // Calculate checksum
+          // reduce() sums products of digits and weights
           const checksum = weights.reduce(
             (sum, weight, index) => sum + weight * digits[index],
             0,
           );
 
-          // Ostatnia cyfra musi być równa sumie kontrolnej mod 11
-          // Jeśli mod 11 = 10, NIP jest nieprawidłowy (nie istnieje cyfra 10)
+          // Last digit must equal checksum mod 11
+          // If mod 11 = 10, NIP is invalid (digit 10 doesn't exist)
           const remainder = checksum % 11;
 
-          // Jeśli reszta = 10, NIP jest nieprawidłowy
+          // If remainder = 10, NIP is invalid
           if (remainder === 10) {
             return false;
           }
@@ -71,7 +71,7 @@ export function IsPolishNIP(validationOptions?: ValidationOptions) {
         },
 
         /**
-         * Domyślny komunikat błędu
+         * Default error message
          */
         defaultMessage(args: ValidationArguments): string {
           return `${args.property} must be a valid Polish NIP number`;

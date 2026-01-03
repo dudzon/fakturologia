@@ -3,42 +3,42 @@ import { User } from '@supabase/supabase-js';
 import { RequestWithUser } from '../guards/jwt-auth.guard';
 
 /**
- * @CurrentUser() - Dekorator parametru do pobierania aktualnie zalogowanego użytkownika
+ * @CurrentUser() - Parameter decorator to get currently logged-in user
  *
- * W NestJS możemy tworzyć własne dekoratory parametrów używając createParamDecorator.
- * Dekorator ten pozwala na eleganckie wstrzykiwanie danych użytkownika do metod kontrolera.
+ * In NestJS we can create custom parameter decorators using createParamDecorator.
+ * This decorator allows for elegant injection of user data into controller methods.
  *
- * WYMAGANIE: Endpoint musi być zabezpieczony JwtAuthGuard,
- * który dodaje użytkownika do request.user
+ * REQUIREMENT: Endpoint must be protected by JwtAuthGuard,
+ * which adds user to request.user
  *
- * Użycie:
+ * Usage:
  *
- * // Pobierz cały obiekt użytkownika
+ * // Get entire user object
  * @Get('profile')
  * getProfile(@CurrentUser() user: User) {
  *   return user;
  * }
  *
- * // Pobierz tylko konkretne pole
+ * // Get only specific field
  * @Get('id')
  * getId(@CurrentUser('id') userId: string) {
  *   return userId;
  * }
  *
- * @param data - opcjonalna nazwa pola do pobrania (np. 'id', 'email')
- * @param ctx - ExecutionContext z informacjami o aktualnym żądaniu
- * @returns User lub konkretne pole użytkownika
+ * @param data - optional field name to retrieve (e.g., 'id', 'email')
+ * @param ctx - ExecutionContext with information about current request
+ * @returns User or specific user field
  */
 export const CurrentUser = createParamDecorator(
   (data: keyof User | undefined, ctx: ExecutionContext) => {
-    // Pobierz request z kontekstu HTTP
+    // Get request from HTTP context
     const request = ctx.switchToHttp().getRequest<RequestWithUser>();
 
-    // request.user jest ustawiany przez JwtAuthGuard
+    // request.user is set by JwtAuthGuard
     const user = request.user;
 
-    // Jeśli podano nazwę pola, zwróć tylko to pole
-    // W przeciwnym razie zwróć cały obiekt użytkownika
+    // If field name provided, return only that field
+    // Otherwise return entire user object
     if (data && user) {
       return user[data];
     }

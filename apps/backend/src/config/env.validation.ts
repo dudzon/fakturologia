@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 
 /**
- * Enum środowisk aplikacji
+ * Application environments enum
  */
 enum Environment {
   Development = 'development',
@@ -18,10 +18,10 @@ enum Environment {
 }
 
 /**
- * Klasa definiująca wymagane zmienne środowiskowe
+ * Class defining required environment variables
  *
- * Ta klasa służy do walidacji zmiennych środowiskowych przy starcie aplikacji.
- * Dekoratory class-validator określają wymagania dla każdej zmiennej.
+ * This class is used to validate environment variables at application startup.
+ * class-validator decorators specify requirements for each variable.
  */
 class EnvironmentVariables {
   @IsEnum(Environment)
@@ -33,7 +33,7 @@ class EnvironmentVariables {
   PORT: number = 3000;
 
   @IsString()
-  @IsUrl({ require_tld: false }) // require_tld: false pozwala na localhost
+  @IsUrl({ require_tld: false }) // require_tld: false allows localhost
   SUPABASE_URL: string;
 
   @IsString()
@@ -51,29 +51,29 @@ class EnvironmentVariables {
 }
 
 /**
- * Funkcja walidująca zmienne środowiskowe
+ * Function validating environment variables
  *
- * Jest wywoływana przez ConfigModule przy starcie aplikacji.
- * Jeśli walidacja się nie powiedzie, aplikacja nie wystartuje.
+ * Called by ConfigModule at application startup.
+ * If validation fails, application will not start.
  *
- * @param config - Obiekt ze zmiennymi środowiskowymi
- * @returns Zwalidowany obiekt konfiguracji
- * @throws Error jeśli walidacja się nie powiedzie
+ * @param config - Object with environment variables
+ * @returns Validated configuration object
+ * @throws Error if validation fails
  */
 export function validate(config: Record<string, unknown>) {
-  // plainToInstance konwertuje zwykły obiekt na instancję klasy
-  // enableImplicitConversion: true - automatycznie konwertuje typy (np. string "3000" na number 3000)
+  // plainToInstance converts plain object to class instance
+  // enableImplicitConversion: true - automatically converts types (e.g., string "3000" to number 3000)
   const validatedConfig = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
 
-  // validateSync wykonuje synchroniczną walidację
+  // validateSync performs synchronous validation
   const errors = validateSync(validatedConfig, {
     skipMissingProperties: false,
   });
 
   if (errors.length > 0) {
-    // Formatujemy błędy do czytelnej postaci
+    // Format errors to readable form
     const errorMessages = errors
       .map((error) => {
         const constraints = Object.values(error.constraints || {}).join(', ');

@@ -101,8 +101,6 @@ async function bootstrap() {
       },
       'access-token', // Authorization scheme name
     )
-    .addTag('Users', 'User profile management')
-    .addTag('Health', 'Application health check')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

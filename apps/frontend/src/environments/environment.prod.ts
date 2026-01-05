@@ -2,6 +2,7 @@
 // Set SUPABASE_URL and SUPABASE_KEY environment variables during deployment
 export const environment = {
   production: true,
+  apiUrl: '${API_URL}',
   supabaseUrl: '${SUPABASE_URL}',
   supabaseKey: '${SUPABASE_KEY}',
 };

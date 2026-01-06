@@ -25,7 +25,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ContractorService } from '../../services/contractor.service';
 import { ContractorsStore } from '../../stores/contractors.store';
-import { nipValidator, normalizeNip } from '../../shared/validators';
+import { nipValidator, normalizeNip } from '../../shared/validators/nip.validator';
 import type { CanDeactivateComponent } from '../../core/guards/can-deactivate.guard';
 import type {
   ContractorResponse,

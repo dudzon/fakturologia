@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -42,6 +42,13 @@ import { AuthService } from '../../core/auth.service';
       title="Zaloguj się"
       subtitle="Wprowadź dane logowania, aby kontynuować"
     >
+      @if (sessionExpired()) {
+        <div class="login__info" role="status">
+          <mat-icon>info_outline</mat-icon>
+          <span>Twoja sesja wygasła. Zaloguj się ponownie.</span>
+        </div>
+      }
+
       @if (errorMessage()) {
         <div class="login__error" role="alert">
           <mat-icon>error_outline</mat-icon>
@@ -128,6 +135,22 @@ import { AuthService } from '../../core/auth.service';
     </app-auth-layout>
   `,
   styles: [`
+    .login__info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      background-color: #e3f2fd;
+      border-radius: 8px;
+      color: #1565c0;
+      font-size: 14px;
+    }
+
+    .login__info mat-icon {
+      color: #1565c0;
+    }
+
     .login__error {
       display: flex;
       align-items: center;
@@ -207,10 +230,11 @@ import { AuthService } from '../../core/auth.service';
     }
   `]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   /** Form state */
   readonly loginForm = this.fb.nonNullable.group({
@@ -225,9 +249,18 @@ export class LoginComponent {
   readonly errorMessage = signal<string | null>(null);
   readonly showResendVerification = signal(false);
   readonly isResending = signal(false);
+  readonly sessionExpired = signal(false);
 
   /** Store email for resend verification */
   private lastAttemptedEmail = '';
+
+  ngOnInit(): void {
+    // Check if user was redirected due to expired session
+    const expired = this.route.snapshot.queryParamMap.get('sessionExpired');
+    if (expired === 'true') {
+      this.sessionExpired.set(true);
+    }
+  }
 
   /**
    * Toggle password field visibility

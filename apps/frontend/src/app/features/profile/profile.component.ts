@@ -24,16 +24,12 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { UserService } from '../../services/user.service';
-import {
-  nipValidator,
-  normalizeNip,
-  ibanValidator,
-  normalizeIban,
-  invoiceNumberFormatValidator
-} from '../../shared/validators';
+import { nipValidator, normalizeNip } from '../../shared/validators/nip.validator';
+import { ibanValidator, normalizeIban } from '../../shared/validators/iban.validator';
+import { invoiceNumberFormatValidator } from '../../shared/validators/invoice-number-format.validator';
 import type { CanDeactivateComponent } from '../../core/guards/can-deactivate.guard';
 import type { UserProfileResponse, UpdateUserProfileCommand } from '../../../types';
-import type { ProfileFormValue, ProfileCompletenessState, ProfileRequiredFieldMeta } from './models';
+import type { ProfileFormValue, ProfileCompletenessState, ProfileRequiredFieldMeta } from './models/profile-form.model';
 import { LogoUploadComponent } from './components/logo-upload.component';
 import { InvoiceNumberPreviewComponent } from './components/invoice-number-preview.component';
 import { ProfileCompletenessIndicatorComponent } from './components/profile-completeness-indicator.component';

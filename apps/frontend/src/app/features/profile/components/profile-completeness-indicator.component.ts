@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import type { UserProfileResponse } from '../../../../types';
-import type { ProfileCompletenessState, ProfileRequiredFieldMeta } from '../models';
+import type { ProfileCompletenessState, ProfileRequiredFieldMeta } from '../models/profile-form.model';
 
 /**
  * ProfileCompletenessIndicatorComponent - Visualizes profile completion status.

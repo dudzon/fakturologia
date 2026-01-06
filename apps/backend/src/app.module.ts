@@ -4,7 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { validate } from './config/env.validation';
-import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ContractorsModule } from './modules/contractors/contractors.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
@@ -20,6 +19,9 @@ import { InvoicesModule } from './modules/invoices/invoices.module';
  *   - controllers: controllers handling HTTP requests
  *   - providers: services and other providers (dependency injection)
  *   - exports: elements exposed to other modules (not used here)
+ *
+ * Note: Authentication is handled directly by Supabase Auth on the frontend.
+ * Backend only verifies JWT tokens using JwtAuthGuard.
  */
 @Module({
   imports: [
@@ -41,13 +43,6 @@ import { InvoicesModule } from './modules/invoices/invoices.module';
       validate,
       envFilePath: [`.env.${process.env.NODE_ENV}`, '.env'],
     }),
-
-    /**
-     * AuthModule - module handling user authentication
-     * Contains endpoints: POST /auth/register, /auth/login, /auth/logout,
-     * /auth/refresh, /auth/forgot-password, /auth/reset-password
-     */
-    AuthModule,
 
     /**
      * UsersModule - module handling user profiles

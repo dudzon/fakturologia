@@ -2,7 +2,7 @@ import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
-import { generateInvoiceNumberPreview } from '../../../shared/validators';
+import { generateInvoiceNumberPreview } from '../../../shared/validators/invoice-number-format.validator';
 
 /**
  * InvoiceNumberPreviewComponent - Displays a preview of the invoice number

@@ -12,9 +12,9 @@ import '@analogjs/vitest-angular/setup-zone';
 import '@angular/compiler';
 
 // 3. Setup TestBed for Angular testing
-import '@angular/platform-browser-dynamic/testing';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { TestBed } from '@angular/core/testing';
-TestBed.initTestEnvironment();
+TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 
 // 4. Then setup @analogjs/vitest-angular TestBed
 import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';

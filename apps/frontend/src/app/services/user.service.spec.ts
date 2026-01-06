@@ -50,6 +50,8 @@ describe('UserService', () => {
     address: 'Test Address 123',
     bankAccount: 'PL12345678901234567890123456',
     logoUrl: 'https://example.com/logo.png',
+    invoiceNumberFormat: 'FV/{YYYY}/{MM}/{NNN}',
+    invoiceNumberCounter: 1,
     createdAt: '2024-01-15T10:00:00Z',
     updatedAt: '2024-01-15T10:00:00Z'
   };
@@ -81,7 +83,7 @@ describe('UserService', () => {
     it('should fetch user profile', () => {
       httpClientMock.get.mockReturnValue(of(mockProfile));
 
-      service.getProfile().subscribe(profile => {
+      service.getProfile().subscribe((profile: UserProfileResponse) => {
         expect(profile).toEqual(mockProfile);
       });
 
@@ -93,8 +95,8 @@ describe('UserService', () => {
       httpClientMock.get.mockReturnValue(throwError(() => error));
 
       service.getProfile().subscribe({
-        next: () => fail('should have failed'),
-        error: err => expect(err.status).toBe(500)
+        next: () => expect.fail('should have failed'),
+        error: (err: any) => expect(err.status).toBe(500)
       });
 
       expect(httpClientMock.get).toHaveBeenCalledWith('/api/v1/users/profile');
@@ -111,7 +113,7 @@ describe('UserService', () => {
       const updatedProfile = { ...mockProfile, ...updateData };
       httpClientMock.put.mockReturnValue(of(updatedProfile));
 
-      service.updateProfile(updateData).subscribe(profile => {
+      service.updateProfile(updateData).subscribe((profile: UserProfileResponse) => {
         expect(profile).toEqual(updatedProfile);
       });
 
@@ -122,7 +124,7 @@ describe('UserService', () => {
       const partialUpdate = { companyName: 'New Name' };
       httpClientMock.put.mockReturnValue(of({ ...mockProfile, companyName: 'New Name' }));
 
-      service.updateProfile(partialUpdate).subscribe(profile => {
+      service.updateProfile(partialUpdate).subscribe((profile: UserProfileResponse) => {
         expect(profile.companyName).toBe('New Name');
       });
 
@@ -135,7 +137,7 @@ describe('UserService', () => {
       const file = new File(['test'], 'logo.png', { type: 'image/png' });
       httpClientMock.post.mockReturnValue(of(mockUploadResponse));
 
-      service.uploadLogo(file).subscribe(response => {
+      service.uploadLogo(file).subscribe((response: UploadLogoResponse) => {
         expect(response).toEqual(mockUploadResponse);
       });
 
@@ -150,8 +152,8 @@ describe('UserService', () => {
       httpClientMock.post.mockReturnValue(throwError(() => error));
 
       service.uploadLogo(file).subscribe({
-        next: () => fail('should have failed'),
-        error: err => expect(err.status).toBe(413)
+        next: () => expect.fail('should have failed'),
+        error: (err: any) => expect(err.status).toBe(413)
       });
 
       expect(httpClientMock.post).toHaveBeenCalledWith('/api/v1/users/profile/logo', expect.any(FormData));
@@ -162,7 +164,7 @@ describe('UserService', () => {
     it('should delete logo', () => {
       httpClientMock.delete.mockReturnValue(of(mockMessageResponse));
 
-      service.deleteLogo().subscribe(response => {
+      service.deleteLogo().subscribe((response: MessageResponse) => {
         expect(response).toEqual(mockMessageResponse);
       });
 
@@ -174,8 +176,8 @@ describe('UserService', () => {
       httpClientMock.delete.mockReturnValue(throwError(() => error));
 
       service.deleteLogo().subscribe({
-        next: () => fail('should have failed'),
-        error: err => expect(err.status).toBe(404)
+        next: () => expect.fail('should have failed'),
+        error: (err: any) => expect(err.status).toBe(404)
       });
 
       expect(httpClientMock.delete).toHaveBeenCalledWith('/api/v1/users/profile/logo');

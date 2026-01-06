@@ -58,6 +58,8 @@ describe('profileCompleteGuard', () => {
     address: 'Test Address 123',
     bankAccount: 'PL12345678901234567890123456',
     logoUrl: null,
+    invoiceNumberFormat: 'FV/{YYYY}/{MM}/{NNN}',
+    invoiceNumberCounter: 1,
     createdAt: '2024-01-15T10:00:00Z',
     updatedAt: '2024-01-15T10:00:00Z'
   };
@@ -70,6 +72,8 @@ describe('profileCompleteGuard', () => {
     address: '',
     bankAccount: '',
     logoUrl: null,
+    invoiceNumberFormat: 'FV/{YYYY}/{MM}/{NNN}',
+    invoiceNumberCounter: 1,
     createdAt: '2024-01-15T10:00:00Z',
     updatedAt: '2024-01-15T10:00:00Z'
   };

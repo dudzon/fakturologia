@@ -4,9 +4,11 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { Request } from 'express';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 /**
  * Interface extending Express Request with user data
@@ -22,20 +24,29 @@ export interface RequestWithUser extends Request {
  * It is called BEFORE the controller and decides whether the request can be handled.
  *
  * This guard:
- * 1. Extracts JWT token from Authorization header
- * 2. Verifies token using Supabase Auth
- * 3. Adds user data to the request object
+ * 1. Checks if endpoint is marked as @Public() - if yes, allows access
+ * 2. Extracts JWT token from Authorization header
+ * 3. Verifies token using Supabase Auth
+ * 4. Adds user data to the request object
  *
  * Usage:
  * @UseGuards(JwtAuthGuard)
  * @Get('profile')
  * getProfile() { ... }
+ *
+ * For public endpoints:
+ * @Public()
+ * @Get('health')
+ * healthCheck() { ... }
  */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   private supabase: SupabaseClient<any, any, any>;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly reflector: Reflector,
+  ) {
     // Initialize Supabase client
     // We use anonKey because JWT verification is public
     const supabaseUrl = this.configService.get<string>('supabase.url');
@@ -56,6 +67,18 @@ export class JwtAuthGuard implements CanActivate {
    * @throws UnauthorizedException - if token is invalid or missing
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    // Check if endpoint is marked as public
+    // @Public() decorator sets IS_PUBLIC_KEY metadata to true
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    // If endpoint is public, allow access without token verification
+    if (isPublic) {
+      return true;
+    }
+
     // Get request object from HTTP context
     // NestJS handles different context types (HTTP, WebSocket, RPC)
     // so we use switchToHttp() to access HTTP request

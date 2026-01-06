@@ -2,8 +2,66 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
 import { canDeactivateGuard } from './core/guards/can-deactivate.guard';
 import { profileCompleteGuard } from './core/guards/profile-complete.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
+  // Landing Page (public)
+  {
+    path: '',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/landing/landing-page.component').then(
+        (m) => m.LandingPageComponent
+      ),
+    canActivate: [guestGuard],
+    title: 'Fakturologia - Proste fakturowanie dla freelancerów'
+  },
+
+  // Auth routes (public - guest only)
+  {
+    path: 'auth',
+    canActivate: [guestGuard],
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/auth/login.component').then(
+            (m) => m.LoginComponent
+          ),
+        title: 'Logowanie - Fakturologia'
+      },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./features/auth/register.component').then(
+            (m) => m.RegisterComponent
+          ),
+        title: 'Rejestracja - Fakturologia'
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('./features/auth/forgot-password.component').then(
+            (m) => m.ForgotPasswordComponent
+          ),
+        title: 'Zapomniałem hasła - Fakturologia'
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () =>
+          import('./features/auth/reset-password.component').then(
+            (m) => m.ResetPasswordComponent
+          ),
+        title: 'Resetuj hasło - Fakturologia'
+      },
+      {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
+      }
+    ]
+  },
+
   // Invoices routes (protected) - Main dashboard
   {
     path: 'invoices',

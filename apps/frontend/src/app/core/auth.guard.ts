@@ -12,5 +12,5 @@ export const authGuard: CanActivateFn = async () => {
     return true;
   }
 
-  return router.createUrlTree(["/login"]);
+  return router.createUrlTree(["/auth/login"]);
 };

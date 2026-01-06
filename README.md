@@ -12,10 +12,62 @@ Aplikacja do wystawiania faktur VAT dla freelancerów i mikroprzedsiębiorców.
 
 - Node.js (v20+)
 - Docker (opcjonalnie)
+- Supabase CLI (`npm install -g supabase`)
 
 ## Uruchomienie lokalne
 
-### 1. Instalacja zależności
+### 1. Supabase (autentykacja i baza danych)
+
+Uruchom lokalny Supabase:
+
+```bash
+supabase start
+```
+
+Po uruchomieniu zapisz dane z `supabase status -o env`:
+
+- `ANON_KEY` - klucz publiczny
+- `SERVICE_ROLE_KEY` - klucz administratora
+- `JWT_SECRET` - sekret do weryfikacji tokenów
+
+### 2. Konfiguracja środowiska
+
+**Frontend:**
+
+Skopiuj przykładowy plik konfiguracji:
+
+```bash
+cp apps/frontend/src/environments/environment.example.ts apps/frontend/src/environments/environment.ts
+```
+
+Uzupełnij wartości z `supabase status`:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: "http://localhost:3000",
+  supabaseUrl: "http://127.0.0.1:54321",
+  supabaseKey: "your-anon-key-from-supabase-status",
+};
+```
+
+**Backend:**
+
+Plik `.env` w `apps/backend/` powinien zawierać:
+
+```bash
+NODE_ENV=development
+PORT=3000
+
+SUPABASE_URL=http://127.0.0.1:54321
+SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_JWT_SECRET=your-jwt-secret
+
+ALLOWED_ORIGINS=http://localhost:4200
+```
+
+### 3. Instalacja zależności
 
 Frontend:
 
@@ -31,15 +83,7 @@ cd apps/backend
 npm install
 ```
 
-### 2. Baza danych
-
-Uruchom lokalną bazę PostgreSQL:
-
-```bash
-docker-compose up -d db
-```
-
-### 3. Start aplikacji
+### 4. Start aplikacji
 
 Backend (http://localhost:3000):
 
@@ -54,3 +98,12 @@ Frontend (http://localhost:4200):
 cd apps/frontend
 npm start
 ```
+
+## Bezpieczeństwo
+
+⚠️ **WAŻNE:** Pliki zawierające sekrety są ignorowane przez git:
+
+- `apps/backend/.env`
+- `apps/frontend/src/environments/environment.ts`
+
+Nigdy nie commituj tych plików. Używaj plików `.example` jako szablonów.

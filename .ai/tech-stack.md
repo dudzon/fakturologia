@@ -19,6 +19,9 @@ Aplikacja Fakturologia wykorzystuje nowoczesny stack technologiczny łączący s
 | **Hosting**          | Digital Ocean         | VPS, Docker, pełna kontrola                                    |
 | **CI/CD**            | GitHub Actions        | Automatyzacja deploymentu                                      |
 | **Konteneryzacja**   | Docker                | Spójne środowisko, przenośność                                 |
+| **Testy (FE)**       | Vitest + ATL          | Szybkie testy jednostkowe/komponentów Angular 21               |
+| **Testy (BE)**       | Jest                  | Testy jednostkowe serwisów/guardów NestJS                      |
+| **Testy E2E**        | Playwright            | E2E w realnych przeglądarkach                                  |
 
 ---
 
@@ -321,15 +324,16 @@ jobs:
 
 ## 8. Narzędzia deweloperskie
 
-| Narzędzie             | Zastosowanie                          |
-| --------------------- | ------------------------------------- |
-| **ESLint + Prettier** | Linting i formatowanie kodu           |
-| **Jest**              | Testy jednostkowe (NestJS)            |
-| **Jasmine/Karma**     | Testy jednostkowe (Angular)           |
-| **Playwright**        | Testy E2E                             |
-| **Supabase CLI**      | Lokalne środowisko Supabase, migracje |
-| **class-validator**   | Walidacja DTO w NestJS                |
-| **class-transformer** | Transformacja obiektów                |
+| Narzędzie             | Zastosowanie                                 |
+| --------------------- | -------------------------------------------- |
+| **ESLint + Prettier** | Linting i formatowanie kodu                  |
+| **Vitest + ATL**      | Testy jednostkowe i komponentów (Angular 21) |
+| **Jest**              | Testy jednostkowe (NestJS)                   |
+| **Playwright**        | Testy E2E (Chromium/WebKit/Firefox)          |
+| **Happy DOM/JSDOM**   | Środowisko uruchomieniowe testów FE          |
+| **Supabase CLI**      | Lokalne środowisko Supabase, migracje        |
+| **class-validator**   | Walidacja DTO w NestJS                       |
+| **class-transformer** | Transformacja obiektów                       |
 
 ---
 

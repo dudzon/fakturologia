@@ -37,23 +37,31 @@ describe('InvoicesStore', () => {
       id: '1',
       invoiceNumber: 'FV/2024/01',
       issueDate: '2024-01-15',
-      saleDate: '2024-01-15',
-      paymentDeadline: '2024-01-29',
-      contractor: { id: 'c1', name: 'Test Contractor', nip: '1234567890' },
+      dueDate: '2024-01-29',
+      status: 'unpaid',
+      buyerName: 'Test Contractor',
+      buyerNip: '1234567890',
+      totalNet: '1000.00',
+      totalVat: '230.00',
       totalGross: '1230.00',
       currency: 'PLN',
-      status: 'unpaid'
+      createdAt: '2024-01-15T10:00:00Z',
+      updatedAt: '2024-01-15T10:00:00Z'
     },
     {
       id: '2',
       invoiceNumber: 'FV/2024/02',
       issueDate: '2024-01-20',
-      saleDate: '2024-01-20',
-      paymentDeadline: '2024-02-03',
-      contractor: { id: 'c2', name: 'Another Client', nip: '9876543210' },
+      dueDate: '2024-02-03',
+      status: 'paid',
+      buyerName: 'Another Client',
+      buyerNip: '9876543210',
+      totalNet: '500.00',
+      totalVat: '115.00',
       totalGross: '615.00',
       currency: 'PLN',
-      status: 'paid'
+      createdAt: '2024-01-20T10:00:00Z',
+      updatedAt: '2024-01-20T10:00:00Z'
     }
   ];
 

@@ -54,13 +54,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should return 0% complete when all required fields are empty', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: '',
         nip: '',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -78,13 +78,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should return 33% complete when one field is filled', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -102,13 +102,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should return 67% complete when two fields are filled', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -126,13 +126,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should return 100% complete when all required fields are filled', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -150,13 +150,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should not consider optional fields for completeness', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: 'PL123456789',
         invoiceNumberFormat: 'FV/{YYYY}/{NNN}',
-        invoiceCounter: 50,
+        invoiceNumberCounter: 50,
         logoUrl: 'https://example.com/logo.png',
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -173,13 +173,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should update state when profile changes', () => {
       const incompleteProfile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -218,13 +218,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should mark filled fields correctly', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -242,13 +242,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should mark all fields as filled when profile is complete', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -266,13 +266,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should render warning container when profile is incomplete', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -296,13 +296,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should display progress title when completion is partial', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -318,13 +318,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should render progress bar with correct value', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -342,13 +342,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should display completion percentage text', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -394,13 +394,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should display check icon for filled fields', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -422,13 +422,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should apply filled class to filled fields', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '',
         address: '',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -448,13 +448,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should render complete container when profile is complete', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -470,13 +470,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should display complete title', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -492,13 +492,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should display complete message', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -514,13 +514,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should display check icon in complete state', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -536,13 +536,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should not render progress bar when complete', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'
@@ -558,13 +558,13 @@ describe('ProfileCompletenessIndicatorComponent', () => {
     it('should not render required fields list when complete', () => {
       const profile: UserProfileResponse = {
         id: '1',
-        userId: 'user-1',
+        email: 'test@example.com',
         companyName: 'Test Company',
         nip: '1234567890',
         address: 'Test Address 123',
         bankAccount: null,
         invoiceNumberFormat: null,
-        invoiceCounter: 1,
+        invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
         updatedAt: '2024-01-01'

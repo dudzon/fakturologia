@@ -77,6 +77,7 @@ describe('InvoiceTotalsComponent', () => {
     const mockItems: InvoiceItemResponse[] = [
       {
         id: '1',
+        position: 1,
         name: 'Item 1',
         quantity: '2',
         unit: 'szt.',
@@ -88,6 +89,7 @@ describe('InvoiceTotalsComponent', () => {
       },
       {
         id: '2',
+        position: 2,
         name: 'Item 2',
         quantity: '1',
         unit: 'szt.',
@@ -137,6 +139,7 @@ describe('InvoiceTotalsComponent', () => {
       const multipleItemsSameRate: InvoiceItemResponse[] = [
         {
           id: '1',
+        position: 1,
           name: 'Item 1',
           quantity: '1',
           unit: 'szt.',
@@ -148,6 +151,7 @@ describe('InvoiceTotalsComponent', () => {
         },
         {
           id: '2',
+        position: 2,
           name: 'Item 2',
           quantity: '1',
           unit: 'szt.',
@@ -173,6 +177,7 @@ describe('InvoiceTotalsComponent', () => {
       const mixedRates: InvoiceItemResponse[] = [
         {
           id: '1',
+        position: 1,
           name: 'Item 1',
           quantity: '1',
           unit: 'szt.',
@@ -184,6 +189,7 @@ describe('InvoiceTotalsComponent', () => {
         },
         {
           id: '2',
+        position: 2,
           name: 'Item 2',
           quantity: '1',
           unit: 'szt.',
@@ -195,6 +201,7 @@ describe('InvoiceTotalsComponent', () => {
         },
         {
           id: '3',
+        position: 3,
           name: 'Item 3',
           quantity: '1',
           unit: 'szt.',
@@ -216,6 +223,7 @@ describe('InvoiceTotalsComponent', () => {
     it('should label zw rate correctly', () => {
       const zwItem: InvoiceItemResponse[] = [{
         id: '1',
+        position: 1,
         name: 'Item',
         quantity: '1',
         unit: 'szt.',
@@ -267,6 +275,7 @@ describe('InvoiceTotalsComponent', () => {
       const mockItems: InvoiceItemResponse[] = [
         {
           id: '1',
+        position: 1,
           name: 'Item 1',
           quantity: '1',
           unit: 'szt.',

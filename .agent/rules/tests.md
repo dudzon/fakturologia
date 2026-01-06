@@ -20,6 +20,55 @@
 - Structure tests for maintainability - Group related tests with descriptive `describe` blocks, use explicit assertion messages, and follow the Arrange-Act-Assert pattern to make tests self-documenting.
 - Leverage TypeScript type checking in tests - Enable strict typing in your tests to catch type errors early, use `expectTypeOf()` for type-level assertions, and ensure mocks preserve the original type signatures.
 
+##### Testing Angular Presentational Components with Vitest
+
+When testing Angular components that rely on template rendering and DOM interactions, follow these patterns:
+
+- **Initialize TestBed explicitly** - Add `TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting())` in `beforeAll()` of each test file. The global vitest.setup.ts initialization doesn't persist across Vitest's test isolation boundaries.
+- **Use ComponentFixture** - Create components with `TestBed.createComponent()` to get a fixture that provides access to both the component instance and the rendered DOM.
+- **Set signal inputs** - Use `fixture.componentRef.setInput('inputName', value)` to set input values on components that use Angular's `input()` signals.
+- **Trigger change detection** - Call `fixture.detectChanges()` after setting inputs or making state changes to update the rendered DOM.
+- **Query the DOM** - Use `fixture.nativeElement.querySelector()` to test rendered output. This gives you direct access to the HTML elements for verifying classes, attributes, and content.
+- **Clean up** - Call `fixture?.destroy()` and `TestBed.resetTestingModule()` in `afterEach()` to ensure proper cleanup between tests.
+
+Example:
+
+```typescript
+describe("MyComponent", () => {
+  let fixture: ComponentFixture<MyComponent>;
+  let component: MyComponent;
+
+  beforeAll(() => {
+    TestBed.initTestEnvironment(
+      BrowserDynamicTestingModule,
+      platformBrowserDynamicTesting()
+    );
+  });
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MyComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MyComponent);
+    component = fixture.componentInstance;
+  });
+
+  afterEach(() => {
+    fixture?.destroy();
+    TestBed.resetTestingModule();
+  });
+
+  it("should render with input", () => {
+    fixture.componentRef.setInput("title", "Test");
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement.querySelector(".title");
+    expect(element?.textContent).toBe("Test");
+  });
+});
+```
+
 ### Guidelines for E2E
 
 #### PLAYWRIGHT

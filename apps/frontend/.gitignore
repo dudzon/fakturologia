@@ -47,6 +47,9 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Test environment
+.env.test
+
 # Environment configuration files (contain secrets)
 /src/environments/environment.ts
 /src/environments/environment.*.ts

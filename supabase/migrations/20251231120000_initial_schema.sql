@@ -11,8 +11,8 @@
 -- 1. extensions
 -- ============================================
 
--- enable uuid generation extension for generating unique identifiers
-create extension if not exists "uuid-ossp";
+-- Note: Using built-in gen_random_uuid() instead of uuid_generate_v4()
+-- This is available in PostgreSQL 13+ without additional extensions
 
 -- ============================================
 -- 2. custom types (enums)
@@ -65,7 +65,7 @@ comment on column user_profiles.invoice_number_counter is 'auto-incrementing cou
 -- supports soft delete for data retention compliance
 -- --------------------------------------------
 create table contractors (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   
   -- owner relationship - cascade delete when user is removed
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -92,7 +92,7 @@ comment on column contractors.deleted_at is 'soft delete timestamp - null means 
 -- snapshots ensure historical accuracy (legal requirement)
 -- --------------------------------------------
 create table invoices (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   
   -- ownership and optional contractor reference
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -149,7 +149,7 @@ comment on column invoices.total_net is 'pre-calculated net total for performanc
 -- cascade deleted when parent invoice is removed
 -- --------------------------------------------
 create table invoice_items (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   
   -- parent invoice reference - cascade ensures cleanup
   invoice_id uuid not null references invoices(id) on delete cascade,

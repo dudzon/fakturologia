@@ -49,6 +49,8 @@ Thumbs.db
 .env.*.local
 # Keep example env
 !.env.example
+# Test environment
+.env.test
 
 # Test coverage
 coverage/

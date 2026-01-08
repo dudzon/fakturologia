@@ -366,7 +366,7 @@ export class ContractorListComponent implements OnInit {
     // Setup search debounce
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((_search) => {
+      .subscribe((search) => {
         this.store.updateQuery({ search: search || undefined });
       });
   }
@@ -442,7 +442,7 @@ export class ContractorListComponent implements OnInit {
   /**
    * Show delete confirmation dialog.
    */
-  confirmDelete(_contractor: ContractorResponse): void {
+  confirmDelete(contractor: ContractorResponse): void {
     const dialogData: ConfirmDialogData = {
       title: 'Usuń kontrahenta',
       message: `Czy na pewno chcesz usunąć kontrahenta "${contractor.name}"? Ta operacja jest nieodwracalna.`,
@@ -457,7 +457,7 @@ export class ContractorListComponent implements OnInit {
       width: '400px',
     });
 
-    dialogRef.afterClosed().subscribe(async (_confirmed: boolean) => {
+    dialogRef.afterClosed().subscribe(async (confirmed: boolean) => {
       if (confirmed) {
         const success = await this.store.deleteContractor(contractor.id);
 

@@ -1,9 +1,8 @@
-import { inject, Injectable, signal } from "@angular/core";
-import type { User, Session } from "@supabase/supabase-js";
-import { SUPABASE_CLIENT } from "./supabase.provider";
-import { environment } from "../../environments/environment";
+import { inject, Injectable, signal } from '@angular/core';
+import type { User, Session } from '@supabase/supabase-js';
+import { SUPABASE_CLIENT } from './supabase.provider';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly supabase = inject(SUPABASE_CLIENT);
 
@@ -44,8 +43,8 @@ export class AuthService {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/login`
-      }
+        emailRedirectTo: `${window.location.origin}/auth/login`,
+      },
     });
   }
 
@@ -68,7 +67,7 @@ export class AuthService {
    */
   async forgotPassword(email: string) {
     return this.supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`
+      redirectTo: `${window.location.origin}/auth/reset-password`,
     });
   }
 
@@ -87,8 +86,8 @@ export class AuthService {
       type: 'signup',
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/login`
-      }
+        emailRedirectTo: `${window.location.origin}/auth/login`,
+      },
     });
   }
 

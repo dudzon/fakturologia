@@ -1,5 +1,4 @@
 import { InvoiceFormStore, InvoiceItemFormModel } from './invoice-form.store';
-import type { VatRate, Currency } from '../../types';
 
 describe('InvoiceFormStore', () => {
   let store: InvoiceFormStore;

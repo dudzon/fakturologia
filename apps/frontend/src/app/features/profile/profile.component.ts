@@ -1,18 +1,6 @@
-import {
-  Component,
-  inject,
-  signal,
-  computed,
-  OnInit,
-  DestroyRef
-} from '@angular/core';
+import { Component, inject, signal, computed, OnInit, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,7 +17,11 @@ import { ibanValidator, normalizeIban } from '../../shared/validators/iban.valid
 import { invoiceNumberFormatValidator } from '../../shared/validators/invoice-number-format.validator';
 import type { CanDeactivateComponent } from '../../core/guards/can-deactivate.guard';
 import type { UserProfileResponse, UpdateUserProfileCommand } from '../../../types';
-import type { ProfileFormValue, ProfileCompletenessState, ProfileRequiredFieldMeta } from './models/profile-form.model';
+import type {
+  ProfileFormValue,
+  ProfileCompletenessState,
+  ProfileRequiredFieldMeta,
+} from './models/profile-form.model';
 import { LogoUploadComponent } from './components/logo-upload.component';
 import { InvoiceNumberPreviewComponent } from './components/invoice-number-preview.component';
 import { ProfileCompletenessIndicatorComponent } from './components/profile-completeness-indicator.component';
@@ -61,10 +53,10 @@ import { ProfileCompletenessIndicatorComponent } from './components/profile-comp
     MatDividerModule,
     LogoUploadComponent,
     InvoiceNumberPreviewComponent,
-    ProfileCompletenessIndicatorComponent
+    ProfileCompletenessIndicatorComponent,
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit, CanDeactivateComponent {
   private readonly fb = inject(FormBuilder);
@@ -88,7 +80,11 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
   readonly completenessState = computed<ProfileCompletenessState>(() => {
     const p = this.profile();
     if (!p) {
-      return { isComplete: false, completionPercentage: 0, missingFields: ['companyName', 'nip', 'address'] };
+      return {
+        isComplete: false,
+        completionPercentage: 0,
+        missingFields: ['companyName', 'nip', 'address'],
+      };
     }
 
     const missingFields: ('companyName' | 'nip' | 'address')[] = [];
@@ -103,7 +99,7 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
     return {
       isComplete: missingFields.length === 0,
       completionPercentage,
-      missingFields
+      missingFields,
     };
   });
 
@@ -112,7 +108,7 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
     return [
       { key: 'companyName', label: 'Nazwa firmy', filled: !!p?.companyName },
       { key: 'nip', label: 'NIP', filled: !!p?.nip },
-      { key: 'address', label: 'Adres', filled: !!p?.address }
+      { key: 'address', label: 'Adres', filled: !!p?.address },
     ];
   });
 
@@ -122,15 +118,13 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
       nip: ['', [nipValidator()]],
       address: [''],
       bankAccount: ['', [ibanValidator(), Validators.maxLength(32)]],
-      invoiceNumberFormat: ['FV/{YYYY}/{MM}/{NNN}', [invoiceNumberFormatValidator()]]
+      invoiceNumberFormat: ['FV/{YYYY}/{MM}/{NNN}', [invoiceNumberFormatValidator()]],
     });
 
     // Track form changes for unsaved changes warning
-    this.profileForm.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.hasUnsavedChanges.set(this.profileForm.dirty);
-      });
+    this.profileForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.hasUnsavedChanges.set(this.profileForm.dirty);
+    });
   }
 
   ngOnInit(): void {
@@ -143,7 +137,8 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
   loadProfile(): void {
     this.isLoading.set(true);
 
-    this.userService.getProfile()
+    this.userService
+      .getProfile()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (profile) => {
@@ -156,7 +151,7 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
           console.error('Error loading profile:', error);
           this.snackBar.open('Błąd podczas ładowania profilu', 'Zamknij', { duration: 5000 });
           this.isLoading.set(false);
-        }
+        },
       });
   }
 
@@ -177,10 +172,11 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
       nip: normalizeNip(formValue.nip) || undefined,
       address: formValue.address || undefined,
       bankAccount: normalizeIban(formValue.bankAccount) || undefined,
-      invoiceNumberFormat: formValue.invoiceNumberFormat || undefined
+      invoiceNumberFormat: formValue.invoiceNumberFormat || undefined,
     };
 
-    this.userService.updateProfile(command)
+    this.userService
+      .updateProfile(command)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updatedProfile) => {
@@ -194,7 +190,7 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
           console.error('Error saving profile:', error);
           this.handleSaveError(error);
           this.isSaving.set(false);
-        }
+        },
       });
   }
 
@@ -263,7 +259,7 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
       nip: profile.nip ?? '',
       address: profile.address ?? '',
       bankAccount: profile.bankAccount ?? '',
-      invoiceNumberFormat: profile.invoiceNumberFormat ?? 'FV/{YYYY}/{MM}/{NNN}'
+      invoiceNumberFormat: profile.invoiceNumberFormat ?? 'FV/{YYYY}/{MM}/{NNN}',
     });
     this.profileForm.markAsPristine();
   }
@@ -276,12 +272,14 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
     const code = errorResponse?.error?.code;
 
     const errorMessages: Record<string, string> = {
-      'INVALID_NIP': 'Nieprawidłowy format lub suma kontrolna NIP',
-      'INVALID_IBAN': 'Nieprawidłowy format konta bankowego',
-      'INVALID_NUMBER_FORMAT': 'Format numeru faktury musi zawierać {NNN}'
+      INVALID_NIP: 'Nieprawidłowy format lub suma kontrolna NIP',
+      INVALID_IBAN: 'Nieprawidłowy format konta bankowego',
+      INVALID_NUMBER_FORMAT: 'Format numeru faktury musi zawierać {NNN}',
     };
 
     const message = code ? errorMessages[code] : null;
-    this.snackBar.open(message || 'Błąd podczas zapisywania profilu', 'Zamknij', { duration: 5000 });
+    this.snackBar.open(message || 'Błąd podczas zapisywania profilu', 'Zamknij', {
+      duration: 5000,
+    });
   }
 }

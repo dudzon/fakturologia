@@ -8,11 +8,11 @@ let mockAuthService: any;
 let mockRouter: any;
 
 vi.mock('../auth.service', () => ({
-  AuthService: vi.fn()
+  AuthService: vi.fn(),
 }));
 
 vi.mock('@angular/router', () => ({
-  Router: vi.fn()
+  Router: vi.fn(),
 }));
 
 vi.mock('@angular/core', () => ({
@@ -24,7 +24,7 @@ vi.mock('@angular/core', () => ({
       return mockRouter;
     }
     throw new Error(`Unexpected inject token: ${token}`);
-  })
+  }),
 }));
 
 describe('guestGuard', () => {
@@ -33,11 +33,11 @@ describe('guestGuard', () => {
 
   beforeEach(() => {
     authServiceMock = {
-      getSession: vi.fn()
+      getSession: vi.fn(),
     };
 
     routerMock = {
-      createUrlTree: vi.fn()
+      createUrlTree: vi.fn(),
     };
 
     // Assign to module-level variables
@@ -48,7 +48,7 @@ describe('guestGuard', () => {
   it('should allow access when user is not authenticated', async () => {
     authServiceMock.getSession.mockResolvedValue({
       data: { session: null },
-      error: null
+      error: null,
     });
 
     const result = await guestGuard(null as any, null as any);
@@ -62,7 +62,7 @@ describe('guestGuard', () => {
     const mockSession = { user: { id: '1' }, access_token: 'token' };
     authServiceMock.getSession.mockResolvedValue({
       data: { session: mockSession },
-      error: null
+      error: null,
     });
 
     const mockUrlTree = {};
@@ -84,7 +84,7 @@ describe('guestGuard', () => {
   it('should handle null session data', async () => {
     authServiceMock.getSession.mockResolvedValue({
       data: { session: null },
-      error: null
+      error: null,
     });
 
     const result = await guestGuard(null as any, null as any);
@@ -96,7 +96,7 @@ describe('guestGuard', () => {
   it('should handle session data without session property', async () => {
     authServiceMock.getSession.mockResolvedValue({
       data: {},
-      error: null
+      error: null,
     });
 
     const result = await guestGuard(null as any, null as any);

@@ -31,7 +31,7 @@ import { AuthService } from '../../core/auth.service';
     MatIconModule,
     MatButtonModule,
     AuthLayoutComponent,
-    LoadingButtonComponent
+    LoadingButtonComponent,
   ],
   template: `
     <app-auth-layout
@@ -44,12 +44,10 @@ import { AuthService } from '../../core/auth.service';
           <mat-icon class="forgot-password__success-icon">mark_email_read</mat-icon>
           <h2 class="forgot-password__success-title">Sprawdź swoją skrzynkę</h2>
           <p class="forgot-password__success-message">
-            Jeśli konto z adresem <strong>{{ submittedEmail() }}</strong> istnieje,
-            wysłaliśmy na nie link do resetowania hasła.
+            Jeśli konto z adresem <strong>{{ submittedEmail() }}</strong> istnieje, wysłaliśmy na
+            nie link do resetowania hasła.
           </p>
-          <p class="forgot-password__success-hint">
-            Nie widzisz maila? Sprawdź folder spam.
-          </p>
+          <p class="forgot-password__success-hint">Nie widzisz maila? Sprawdź folder spam.</p>
 
           @if (cooldownSeconds() > 0) {
             <p class="forgot-password__cooldown">
@@ -94,12 +92,18 @@ import { AuthService } from '../../core/auth.service';
               formControlName="email"
               placeholder="jan@example.com"
               autocomplete="email"
-            >
+            />
             <mat-icon matPrefix>email</mat-icon>
-            @if (forgotPasswordForm.get('email')?.hasError('required') && forgotPasswordForm.get('email')?.touched) {
+            @if (
+              forgotPasswordForm.get('email')?.hasError('required') &&
+              forgotPasswordForm.get('email')?.touched
+            ) {
               <mat-error>Email jest wymagany</mat-error>
             }
-            @if (forgotPasswordForm.get('email')?.hasError('email') && forgotPasswordForm.get('email')?.touched) {
+            @if (
+              forgotPasswordForm.get('email')?.hasError('email') &&
+              forgotPasswordForm.get('email')?.touched
+            ) {
               <mat-error>Nieprawidłowy format email</mat-error>
             }
           </mat-form-field>
@@ -123,115 +127,117 @@ import { AuthService } from '../../core/auth.service';
       }
     </app-auth-layout>
   `,
-  styles: [`
-    .forgot-password__error {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      background-color: #ffebee;
-      border-radius: 8px;
-      color: #c62828;
-      font-size: 14px;
-    }
+  styles: [
+    `
+      .forgot-password__error {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background-color: #ffebee;
+        border-radius: 8px;
+        color: #c62828;
+        font-size: 14px;
+      }
 
-    .forgot-password__error mat-icon {
-      color: #c62828;
-    }
+      .forgot-password__error mat-icon {
+        color: #c62828;
+      }
 
-    .forgot-password__form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+      .forgot-password__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
 
-    .forgot-password__field {
-      width: 100%;
-    }
+      .forgot-password__field {
+        width: 100%;
+      }
 
-    .forgot-password__submit {
-      width: 100%;
-    }
+      .forgot-password__submit {
+        width: 100%;
+      }
 
-    :host ::ng-deep .forgot-password__submit button {
-      width: 100%;
-      height: 48px;
-      font-size: 16px;
-    }
+      :host ::ng-deep .forgot-password__submit button {
+        width: 100%;
+        height: 48px;
+        font-size: 16px;
+      }
 
-    .forgot-password__footer {
-      display: flex;
-      justify-content: center;
-      margin-top: 24px;
-    }
+      .forgot-password__footer {
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+      }
 
-    .forgot-password__back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #667eea;
-      font-size: 14px;
-      text-decoration: none;
-    }
+      .forgot-password__back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: #667eea;
+        font-size: 14px;
+        text-decoration: none;
+      }
 
-    .forgot-password__back-link:hover {
-      text-decoration: underline;
-    }
+      .forgot-password__back-link:hover {
+        text-decoration: underline;
+      }
 
-    .forgot-password__back-link mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
+      .forgot-password__back-link mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
 
-    /* Success State */
-    .forgot-password__success {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 24px 0;
-    }
+      /* Success State */
+      .forgot-password__success {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px 0;
+      }
 
-    .forgot-password__success-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-      color: #4caf50;
-      margin-bottom: 16px;
-    }
+      .forgot-password__success-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: #4caf50;
+        margin-bottom: 16px;
+      }
 
-    .forgot-password__success-title {
-      margin: 0 0 12px 0;
-      font-size: 20px;
-      font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
-    }
+      .forgot-password__success-title {
+        margin: 0 0 12px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.87);
+      }
 
-    .forgot-password__success-message {
-      margin: 0 0 8px 0;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-      line-height: 1.5;
-    }
+      .forgot-password__success-message {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+        line-height: 1.5;
+      }
 
-    .forgot-password__success-hint {
-      margin: 0 0 16px 0;
-      font-size: 13px;
-      color: rgba(0, 0, 0, 0.4);
-    }
+      .forgot-password__success-hint {
+        margin: 0 0 16px 0;
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.4);
+      }
 
-    .forgot-password__cooldown {
-      margin: 0 0 16px 0;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-    }
+      .forgot-password__cooldown {
+        margin: 0 0 16px 0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+      }
 
-    .forgot-password__resend-btn {
-      margin-bottom: 24px;
-    }
-  `]
+      .forgot-password__resend-btn {
+        margin-bottom: 24px;
+      }
+    `,
+  ],
 })
 export class ForgotPasswordComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
@@ -239,7 +245,7 @@ export class ForgotPasswordComponent implements OnDestroy {
 
   /** Form definition */
   readonly forgotPasswordForm = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]]
+    email: ['', [Validators.required, Validators.email]],
   });
 
   /** UI state signals */

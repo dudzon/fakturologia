@@ -12,15 +12,15 @@ let mockRouter: any;
 let mockSnackBar: any;
 
 vi.mock('../../services/user.service', () => ({
-  UserService: vi.fn()
+  UserService: vi.fn(),
 }));
 
 vi.mock('@angular/router', () => ({
-  Router: vi.fn()
+  Router: vi.fn(),
 }));
 
 vi.mock('@angular/material/snack-bar', () => ({
-  MatSnackBar: vi.fn()
+  MatSnackBar: vi.fn(),
 }));
 
 vi.mock('@angular/core', () => ({
@@ -37,7 +37,7 @@ vi.mock('@angular/core', () => ({
     throw new Error(`Unexpected inject token: ${token}`);
   }),
   Injectable: vi.fn(),
-  signal: vi.fn((val: any) => () => val)
+  signal: vi.fn((val: any) => () => val),
 }));
 
 vi.mock('rxjs', async () => {
@@ -61,7 +61,7 @@ describe('profileCompleteGuard', () => {
     invoiceNumberFormat: 'FV/{YYYY}/{MM}/{NNN}',
     invoiceNumberCounter: 1,
     createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T10:00:00Z'
+    updatedAt: '2024-01-15T10:00:00Z',
   };
 
   const incompleteProfile: UserProfileResponse = {
@@ -75,20 +75,20 @@ describe('profileCompleteGuard', () => {
     invoiceNumberFormat: 'FV/{YYYY}/{MM}/{NNN}',
     invoiceNumberCounter: 1,
     createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T10:00:00Z'
+    updatedAt: '2024-01-15T10:00:00Z',
   };
 
   beforeEach(() => {
     userServiceMock = {
-      getProfile: vi.fn()
+      getProfile: vi.fn(),
     };
 
     routerMock = {
-      navigate: vi.fn()
+      navigate: vi.fn(),
     };
 
     snackBarMock = {
-      open: vi.fn()
+      open: vi.fn(),
     };
 
     // Assign to module-level variables
@@ -121,8 +121,8 @@ describe('profileCompleteGuard', () => {
       'Zamknij',
       {
         duration: 5000,
-        panelClass: ['snackbar-warning']
-      }
+        panelClass: ['snackbar-warning'],
+      },
     );
   });
 
@@ -178,8 +178,8 @@ describe('profileCompleteGuard', () => {
       'Zamknij',
       {
         duration: 5000,
-        panelClass: ['snackbar-warning']
-      }
+        panelClass: ['snackbar-warning'],
+      },
     );
   });
 

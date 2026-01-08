@@ -1,7 +1,10 @@
-import { invoiceNumberFormatValidator, generateInvoiceNumberPreview } from './invoice-number-format.validator';
+import {
+  invoiceNumberFormatValidator,
+  generateInvoiceNumberPreview,
+} from './invoice-number-format.validator';
 
 // Create a mock FormControl-like object
-const createControl = (value: any) => ({ value } as any);
+const createControl = (value: any) => ({ value }) as any;
 
 describe('invoiceNumberFormatValidator', () => {
   it('should return null for empty value', () => {
@@ -21,8 +24,8 @@ describe('invoiceNumberFormatValidator', () => {
     const result = invoiceNumberFormatValidator()(control);
     expect(result).toEqual({
       invoiceNumberFormat: {
-        message: 'Format numeru faktury musi zawierać placeholder {NNN}'
-      }
+        message: 'Format numeru faktury musi zawierać placeholder {NNN}',
+      },
     });
   });
 
@@ -37,8 +40,8 @@ describe('invoiceNumberFormatValidator', () => {
     const result = invoiceNumberFormatValidator()(control);
     expect(result).toEqual({
       invoiceNumberFormat: {
-        message: 'Nieznany placeholder: {INVALID}. Dozwolone: {NNN}, {YYYY}, {YY}, {MM}, {DD}'
-      }
+        message: 'Nieznany placeholder: {INVALID}. Dozwolone: {NNN}, {YYYY}, {YY}, {MM}, {DD}',
+      },
     });
   });
 
@@ -53,8 +56,8 @@ describe('invoiceNumberFormatValidator', () => {
     const result = invoiceNumberFormatValidator()(control);
     expect(result).toEqual({
       invoiceNumberFormat: {
-        message: 'Nieznany placeholder: {UNKNOWN1}. Dozwolone: {NNN}, {YYYY}, {YY}, {MM}, {DD}'
-      }
+        message: 'Nieznany placeholder: {UNKNOWN1}. Dozwolone: {NNN}, {YYYY}, {YY}, {MM}, {DD}',
+      },
     });
   });
 });

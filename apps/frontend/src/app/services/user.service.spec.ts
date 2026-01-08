@@ -4,14 +4,14 @@ import type {
   UserProfileResponse,
   UpdateUserProfileCommand,
   UploadLogoResponse,
-  MessageResponse
+  MessageResponse,
 } from '../../types';
 
 // Create a mock service without importing the actual class
 class MockUserService {
   constructor(
     private http: any,
-    private apiUrl: string
+    private apiUrl: string,
   ) {}
 
   getProfile() {
@@ -53,15 +53,15 @@ describe('UserService', () => {
     invoiceNumberFormat: 'FV/{YYYY}/{MM}/{NNN}',
     invoiceNumberCounter: 1,
     createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T10:00:00Z'
+    updatedAt: '2024-01-15T10:00:00Z',
   };
 
   const mockUploadResponse: UploadLogoResponse = {
-    logoUrl: 'https://example.com/new-logo.png'
+    logoUrl: 'https://example.com/new-logo.png',
   };
 
   const mockMessageResponse: MessageResponse = {
-    message: 'Logo usunięty pomyślnie'
+    message: 'Logo usunięty pomyślnie',
   };
 
   beforeEach(() => {
@@ -69,7 +69,7 @@ describe('UserService', () => {
       get: vi.fn(),
       put: vi.fn(),
       post: vi.fn(),
-      delete: vi.fn()
+      delete: vi.fn(),
     };
 
     service = new MockUserService(httpClientMock, '/api/v1/users');
@@ -96,7 +96,7 @@ describe('UserService', () => {
 
       service.getProfile().subscribe({
         next: () => expect.fail('should have failed'),
-        error: (err: any) => expect(err.status).toBe(500)
+        error: (err: any) => expect(err.status).toBe(500),
       });
 
       expect(httpClientMock.get).toHaveBeenCalledWith('/api/v1/users/profile');
@@ -106,7 +106,7 @@ describe('UserService', () => {
   describe('updateProfile', () => {
     const updateData: UpdateUserProfileCommand = {
       companyName: 'Updated Company',
-      address: 'Updated Address 456'
+      address: 'Updated Address 456',
     };
 
     it('should update user profile', () => {
@@ -141,7 +141,10 @@ describe('UserService', () => {
         expect(response).toEqual(mockUploadResponse);
       });
 
-      expect(httpClientMock.post).toHaveBeenCalledWith('/api/v1/users/profile/logo', expect.any(FormData));
+      expect(httpClientMock.post).toHaveBeenCalledWith(
+        '/api/v1/users/profile/logo',
+        expect.any(FormData),
+      );
       const formData = httpClientMock.post.mock.calls[0][1] as FormData;
       expect(formData.has('file')).toBeTruthy();
     });
@@ -153,10 +156,13 @@ describe('UserService', () => {
 
       service.uploadLogo(file).subscribe({
         next: () => expect.fail('should have failed'),
-        error: (err: any) => expect(err.status).toBe(413)
+        error: (err: any) => expect(err.status).toBe(413),
       });
 
-      expect(httpClientMock.post).toHaveBeenCalledWith('/api/v1/users/profile/logo', expect.any(FormData));
+      expect(httpClientMock.post).toHaveBeenCalledWith(
+        '/api/v1/users/profile/logo',
+        expect.any(FormData),
+      );
     });
   });
 
@@ -177,7 +183,7 @@ describe('UserService', () => {
 
       service.deleteLogo().subscribe({
         next: () => expect.fail('should have failed'),
-        error: (err: any) => expect(err.status).toBe(404)
+        error: (err: any) => expect(err.status).toBe(404),
       });
 
       expect(httpClientMock.delete).toHaveBeenCalledWith('/api/v1/users/profile/logo');

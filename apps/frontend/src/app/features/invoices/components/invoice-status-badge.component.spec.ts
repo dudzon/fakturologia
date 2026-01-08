@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 import { InvoiceStatusBadgeComponent } from './invoice-status-badge.component';
 import type { InvoiceStatus } from '../../../../types';
 
@@ -14,7 +17,7 @@ describe('InvoiceStatusBadgeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InvoiceStatusBadgeComponent]
+      imports: [InvoiceStatusBadgeComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InvoiceStatusBadgeComponent);

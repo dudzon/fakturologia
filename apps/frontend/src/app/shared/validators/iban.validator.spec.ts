@@ -1,7 +1,7 @@
 import { ibanValidator } from './iban.validator';
 
 // Create a mock FormControl-like object
-const createControl = (value: any) => ({ value } as any);
+const createControl = (value: any) => ({ value }) as any;
 
 describe('ibanValidator', () => {
   it('should return null for empty value', () => {

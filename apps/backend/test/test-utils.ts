@@ -2,7 +2,7 @@
  * Test Utilities for NestJS Backend
  * Common testing utilities, mock factories, and helpers
  */
-import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
+import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { of } from 'rxjs';
 
@@ -12,9 +12,13 @@ import { of } from 'rxjs';
 export function createMockSupabaseClient() {
   return {
     auth: {
-      getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
+      getUser: jest
+        .fn()
+        .mockResolvedValue({ data: { user: null }, error: null }),
       admin: {
-        getUserById: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
+        getUserById: jest
+          .fn()
+          .mockResolvedValue({ data: { user: null }, error: null }),
       },
     },
     from: jest.fn().mockReturnValue({
@@ -31,10 +35,16 @@ export function createMockSupabaseClient() {
     }),
     storage: {
       from: jest.fn().mockReturnValue({
-        upload: jest.fn().mockResolvedValue({ data: { path: 'test-path' }, error: null }),
-        download: jest.fn().mockResolvedValue({ data: Buffer.from('test'), error: null }),
+        upload: jest
+          .fn()
+          .mockResolvedValue({ data: { path: 'test-path' }, error: null }),
+        download: jest
+          .fn()
+          .mockResolvedValue({ data: Buffer.from('test'), error: null }),
         remove: jest.fn().mockResolvedValue({ data: null, error: null }),
-        getPublicUrl: jest.fn().mockReturnValue({ data: { publicUrl: 'http://test.com/image.png' } }),
+        getPublicUrl: jest.fn().mockReturnValue({
+          data: { publicUrl: 'http://test.com/image.png' },
+        }),
       }),
     },
   };
@@ -45,7 +55,8 @@ export function createMockSupabaseClient() {
  */
 export function createMockExecutionContext(
   request: Partial<Request> = {},
-  user: any = null
+
+  user: any = null,
 ): ExecutionContext {
   const mockRequest = {
     headers: {},
@@ -134,13 +145,16 @@ export const testContractorFactory = {
     ...overrides,
   }),
 
-  createMany: (count: number, userId: string = 'test-user-id'): TestContractor[] =>
+  createMany: (
+    count: number,
+    userId: string = 'test-user-id',
+  ): TestContractor[] =>
     Array.from({ length: count }, (_, i) =>
       testContractorFactory.create({
         id: `test-contractor-${i}`,
         user_id: userId,
         name: `Contractor ${i + 1}`,
-      })
+      }),
     ),
 };
 
@@ -154,7 +168,9 @@ export const testInvoiceFactory = {
     contractor_id: 'test-contractor-id',
     invoice_number: 'FV/2026/01/001',
     issue_date: new Date().toISOString().split('T')[0],
-    due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split('T')[0],
     status: 'draft',
     notes: '',
     created_at: new Date().toISOString(),
@@ -178,14 +194,17 @@ export const testInvoiceItemFactory = {
     ...overrides,
   }),
 
-  createMany: (count: number, invoiceId: string = 'test-invoice-id'): TestInvoiceItem[] =>
+  createMany: (
+    count: number,
+    invoiceId: string = 'test-invoice-id',
+  ): TestInvoiceItem[] =>
     Array.from({ length: count }, (_, i) =>
       testInvoiceItemFactory.create({
         id: `test-item-${i}`,
         invoice_id: invoiceId,
         name: `Service ${i + 1}`,
         unit_price: 100 * (i + 1),
-      })
+      }),
     ),
 };
 

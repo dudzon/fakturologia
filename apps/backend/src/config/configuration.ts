@@ -21,7 +21,9 @@ export default () => ({
 
   // CORS configuration
   cors: {
-    origins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:4200'],
+    origins: process.env.ALLOWED_ORIGINS?.split(',') || [
+      'http://localhost:4200',
+    ],
   },
 
   // File upload configuration

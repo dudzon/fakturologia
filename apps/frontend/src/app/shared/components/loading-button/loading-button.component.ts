@@ -24,11 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-loading-button',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatProgressSpinnerModule
-  ],
+  imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule],
   template: `
     <button
       mat-raised-button
@@ -39,40 +35,39 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       class="loading-button"
     >
       @if (loading()) {
-        <mat-spinner
-          diameter="20"
-          class="loading-button__spinner"
-        ></mat-spinner>
+        <mat-spinner diameter="20" class="loading-button__spinner"></mat-spinner>
       }
       <span class="loading-button__content" [class.loading-button__content--hidden]="loading()">
         <ng-content></ng-content>
       </span>
     </button>
   `,
-  styles: [`
-    .loading-button {
-      position: relative;
-      min-width: 100px;
-    }
+  styles: [
+    `
+      .loading-button {
+        position: relative;
+        min-width: 100px;
+      }
 
-    .loading-button__spinner {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
+      .loading-button__spinner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
 
-    .loading-button__content {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: opacity 0.15s ease;
-    }
+      .loading-button__content {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: opacity 0.15s ease;
+      }
 
-    .loading-button__content--hidden {
-      opacity: 0;
-    }
-  `]
+      .loading-button__content--hidden {
+        opacity: 0;
+      }
+    `,
+  ],
 })
 export class LoadingButtonComponent {
   /** Whether the button is in loading state */

@@ -1,10 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { ContractorService } from '../services/contractor.service';
-import type {
-  ContractorResponse,
-  ContractorListQuery,
-  PaginationInfo
-} from '../../types';
+import type { ContractorResponse, ContractorListQuery, PaginationInfo } from '../../types';
 
 /**
  * Cache TTL in milliseconds (5 minutes).
@@ -34,7 +30,7 @@ export class ContractorsStore {
     page: 1,
     limit: 20,
     sortBy: 'createdAt',
-    sortOrder: 'desc'
+    sortOrder: 'desc',
   });
 
   // Public readonly signals
@@ -51,9 +47,7 @@ export class ContractorsStore {
     return Date.now() - lastFetch < CACHE_TTL;
   });
 
-  readonly isEmpty = computed(() =>
-    this._contractors().length === 0 && !this._loading()
-  );
+  readonly isEmpty = computed(() => this._contractors().length === 0 && !this._loading());
 
   readonly totalCount = computed(() => this._pagination()?.total ?? 0);
 
@@ -69,12 +63,11 @@ export class ContractorsStore {
     // Merge query with existing state
     const mergedQuery: ContractorListQuery = {
       ...this._query(),
-      ...query
+      ...query,
     };
 
     // Check cache validity (only if query hasn't changed significantly)
-    const queryChanged =
-      JSON.stringify(mergedQuery) !== JSON.stringify(this._query());
+    const queryChanged = JSON.stringify(mergedQuery) !== JSON.stringify(this._query());
 
     if (!forceRefresh && !queryChanged && this.isCacheValid()) {
       return;
@@ -94,9 +87,7 @@ export class ContractorsStore {
       }
     } catch (error) {
       this._error.set(
-        error instanceof Error
-          ? error.message
-          : 'Wystąpił błąd podczas ładowania kontrahentów'
+        error instanceof Error ? error.message : 'Wystąpił błąd podczas ładowania kontrahentów',
       );
     } finally {
       this._loading.set(false);
@@ -109,15 +100,11 @@ export class ContractorsStore {
   async updateQuery(query: Partial<ContractorListQuery>): Promise<void> {
     const newQuery: ContractorListQuery = {
       ...this._query(),
-      ...query
+      ...query,
     };
 
     // Reset to page 1 if search or sort changes
-    if (
-      query.search !== undefined ||
-      query.sortBy !== undefined ||
-      query.sortOrder !== undefined
-    ) {
+    if (query.search !== undefined || query.sortBy !== undefined || query.sortOrder !== undefined) {
       newQuery.page = 1;
     }
 
@@ -144,9 +131,7 @@ export class ContractorsStore {
       // Rollback on error
       this._contractors.set(previousContractors);
       this._error.set(
-        error instanceof Error
-          ? error.message
-          : 'Wystąpił błąd podczas usuwania kontrahenta'
+        error instanceof Error ? error.message : 'Wystąpił błąd podczas usuwania kontrahenta',
       );
       return false;
     }
@@ -179,7 +164,7 @@ export class ContractorsStore {
       page: 1,
       limit: 20,
       sortBy: 'createdAt',
-      sortOrder: 'desc'
+      sortOrder: 'desc',
     });
   }
 }

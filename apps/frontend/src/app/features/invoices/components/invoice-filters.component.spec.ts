@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 import { InvoiceFiltersComponent, InvoiceFiltersViewModel } from './invoice-filters.component';
 import { signal } from '@angular/core';
 
@@ -11,7 +14,7 @@ describe('InvoiceFiltersComponent', () => {
     status: null,
     dateFrom: null,
     dateTo: null,
-    search: ''
+    search: '',
   };
 
   beforeAll(() => {
@@ -20,7 +23,7 @@ describe('InvoiceFiltersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InvoiceFiltersComponent]
+      imports: [InvoiceFiltersComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InvoiceFiltersComponent);
@@ -60,7 +63,7 @@ describe('InvoiceFiltersComponent', () => {
     it('should compute dateFromValue from string', () => {
       fixture.componentRef.setInput('filters', {
         ...defaultFilters,
-        dateFrom: '2024-01-15'
+        dateFrom: '2024-01-15',
       });
       fixture.detectChanges();
 
@@ -77,7 +80,7 @@ describe('InvoiceFiltersComponent', () => {
     it('should compute dateToValue from string', () => {
       fixture.componentRef.setInput('filters', {
         ...defaultFilters,
-        dateTo: '2024-01-31'
+        dateTo: '2024-01-31',
       });
       fixture.detectChanges();
 
@@ -94,7 +97,7 @@ describe('InvoiceFiltersComponent', () => {
     it('should detect active status filter', () => {
       fixture.componentRef.setInput('filters', {
         ...defaultFilters,
-        status: 'paid'
+        status: 'paid',
       });
       fixture.detectChanges();
       expect(component.hasActiveFilters()).toBe(true);
@@ -103,7 +106,7 @@ describe('InvoiceFiltersComponent', () => {
     it('should detect active date filter', () => {
       fixture.componentRef.setInput('filters', {
         ...defaultFilters,
-        dateFrom: '2024-01-01'
+        dateFrom: '2024-01-01',
       });
       fixture.detectChanges();
       expect(component.hasActiveFilters()).toBe(true);
@@ -112,7 +115,7 @@ describe('InvoiceFiltersComponent', () => {
     it('should detect active search filter', () => {
       fixture.componentRef.setInput('filters', {
         ...defaultFilters,
-        search: 'test'
+        search: 'test',
       });
       fixture.detectChanges();
       expect(component.hasActiveFilters()).toBe(true);
@@ -137,7 +140,7 @@ describe('InvoiceFiltersComponent', () => {
       return new Promise<void>((resolve) => {
         fixture.componentRef.setInput('filters', {
           ...defaultFilters,
-          status: 'paid'
+          status: 'paid',
         });
         fixture.detectChanges();
 
@@ -155,7 +158,7 @@ describe('InvoiceFiltersComponent', () => {
         fixture.componentRef.setInput('filters', {
           ...defaultFilters,
           search: 'test',
-          dateFrom: '2024-01-01'
+          dateFrom: '2024-01-01',
         });
         fixture.detectChanges();
 
@@ -189,7 +192,7 @@ describe('InvoiceFiltersComponent', () => {
       return new Promise<void>((resolve) => {
         fixture.componentRef.setInput('filters', {
           ...defaultFilters,
-          dateFrom: '2024-01-01'
+          dateFrom: '2024-01-01',
         });
         fixture.detectChanges();
 
@@ -219,7 +222,7 @@ describe('InvoiceFiltersComponent', () => {
       return new Promise<void>((resolve) => {
         fixture.componentRef.setInput('filters', {
           ...defaultFilters,
-          dateTo: '2024-01-31'
+          dateTo: '2024-01-31',
         });
         fixture.detectChanges();
 
@@ -256,7 +259,7 @@ describe('InvoiceFiltersComponent', () => {
       component.onSearchChange('test');
 
       // Wait for debounce (300ms + buffer)
-      await new Promise(resolve => setTimeout(resolve, 400));
+      await new Promise((resolve) => setTimeout(resolve, 400));
 
       // Should only emit once after debounce
       expect(emissionCount).toBe(1);
@@ -266,7 +269,7 @@ describe('InvoiceFiltersComponent', () => {
       return new Promise<void>((resolve) => {
         fixture.componentRef.setInput('filters', {
           ...defaultFilters,
-          search: 'test'
+          search: 'test',
         });
         fixture.detectChanges();
         component.searchValue.set('test');
@@ -289,7 +292,7 @@ describe('InvoiceFiltersComponent', () => {
           status: 'paid',
           dateFrom: '2024-01-01',
           dateTo: '2024-01-31',
-          search: 'test'
+          search: 'test',
         });
         fixture.detectChanges();
         component.searchValue.set('test');
@@ -319,7 +322,7 @@ describe('InvoiceFiltersComponent', () => {
     it('should mark active status button', () => {
       fixture.componentRef.setInput('filters', {
         ...defaultFilters,
-        status: 'paid'
+        status: 'paid',
       });
       fixture.detectChanges();
 
@@ -327,16 +330,14 @@ describe('InvoiceFiltersComponent', () => {
       const buttons = element.querySelectorAll('.invoice-filters__quick button');
 
       // The 4th button should be 'Opłacone' (paid)
-      const paidButton = Array.from(buttons).find(btn =>
-        btn.textContent?.trim() === 'Opłacone'
-      );
+      const paidButton = Array.from(buttons).find((btn) => btn.textContent?.trim() === 'Opłacone');
       expect(paidButton?.classList.contains('active')).toBe(true);
     });
 
     it('should show clear filters button when filters are active', () => {
       fixture.componentRef.setInput('filters', {
         ...defaultFilters,
-        status: 'paid'
+        status: 'paid',
       });
       fixture.detectChanges();
 

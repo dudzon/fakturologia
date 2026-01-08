@@ -1,19 +1,7 @@
-import {
-  Component,
-  inject,
-  signal,
-  computed,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -42,7 +30,7 @@ import type {
   UpdateInvoiceCommand,
   PaymentMethod,
   Currency,
-  BuyerInfoRequest
+  BuyerInfoRequest,
 } from '../../../types';
 
 /**
@@ -51,7 +39,7 @@ import type {
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
   { value: 'transfer', label: 'Przelew' },
   { value: 'cash', label: 'Gotówka' },
-  { value: 'card', label: 'Karta' }
+  { value: 'card', label: 'Karta' },
 ];
 
 /**
@@ -60,7 +48,7 @@ const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
 const CURRENCIES: { value: Currency; label: string }[] = [
   { value: 'PLN', label: 'PLN - Polski złoty' },
   { value: 'EUR', label: 'EUR - Euro' },
-  { value: 'USD', label: 'USD - Dolar amerykański' }
+  { value: 'USD', label: 'USD - Dolar amerykański' },
 ];
 
 /**
@@ -96,7 +84,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
     LoadingButtonComponent,
     InvoiceItemsTableComponent,
     InvoiceTotalsComponent,
-    ContractorSelectComponent
+    ContractorSelectComponent,
   ],
   providers: [InvoiceFormStore],
   template: `
@@ -111,9 +99,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
           <mat-icon color="warn">error_outline</mat-icon>
           <h2>Błąd</h2>
           <p>{{ loadError() }}</p>
-          <button mat-raised-button color="primary" routerLink="/invoices">
-            Powrót do listy
-          </button>
+          <button mat-raised-button color="primary" routerLink="/invoices">Powrót do listy</button>
         </div>
       } @else {
         <form [formGroup]="form" (ngSubmit)="onSubmit('draft')">
@@ -130,7 +116,9 @@ const CURRENCIES: { value: Currency; label: string }[] = [
             <h1 class="invoice-form__title">
               {{ isEditMode() ? 'Edycja faktury' : 'Nowa faktura' }}
               @if (isEditMode() && existingInvoice()) {
-                <span class="invoice-form__title-number">{{ existingInvoice()!.invoiceNumber }}</span>
+                <span class="invoice-form__title-number">{{
+                  existingInvoice()!.invoiceNumber
+                }}</span>
               }
             </h1>
           </div>
@@ -156,12 +144,11 @@ const CURRENCIES: { value: Currency; label: string }[] = [
 
                 <mat-form-field appearance="outline" class="invoice-form__field">
                   <mat-label>Data wystawienia</mat-label>
-                  <input
-                    matInput
-                    [matDatepicker]="issueDatePicker"
-                    formControlName="issueDate"
-                  />
-                  <mat-datepicker-toggle matIconSuffix [for]="issueDatePicker"></mat-datepicker-toggle>
+                  <input matInput [matDatepicker]="issueDatePicker" formControlName="issueDate" />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="issueDatePicker"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #issueDatePicker></mat-datepicker>
                   @if (form.get('issueDate')?.hasError('required')) {
                     <mat-error>Data wystawienia jest wymagana</mat-error>
@@ -172,18 +159,19 @@ const CURRENCIES: { value: Currency; label: string }[] = [
               <div class="invoice-form__row">
                 <mat-form-field appearance="outline" class="invoice-form__field">
                   <mat-label>Termin płatności</mat-label>
-                  <input
-                    matInput
-                    [matDatepicker]="dueDatePicker"
-                    formControlName="dueDate"
-                  />
-                  <mat-datepicker-toggle matIconSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+                  <input matInput [matDatepicker]="dueDatePicker" formControlName="dueDate" />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="dueDatePicker"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #dueDatePicker></mat-datepicker>
                   @if (form.get('dueDate')?.hasError('required')) {
                     <mat-error>Termin płatności jest wymagany</mat-error>
                   }
                   @if (form.get('dueDate')?.hasError('minDate')) {
-                    <mat-error>Termin płatności nie może być wcześniejszy niż data wystawienia</mat-error>
+                    <mat-error
+                      >Termin płatności nie może być wcześniejszy niż data wystawienia</mat-error
+                    >
                   }
                 </mat-form-field>
 
@@ -196,7 +184,10 @@ const CURRENCIES: { value: Currency; label: string }[] = [
                   </mat-select>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="invoice-form__field invoice-form__field--small">
+                <mat-form-field
+                  appearance="outline"
+                  class="invoice-form__field invoice-form__field--small"
+                >
                   <mat-label>Waluta</mat-label>
                   <mat-select formControlName="currency">
                     @for (curr of currencies; track curr.value) {
@@ -222,7 +213,10 @@ const CURRENCIES: { value: Currency; label: string }[] = [
 
               @if (isManualBuyerMode()) {
                 <div class="invoice-form__row" formGroupName="buyer">
-                  <mat-form-field appearance="outline" class="invoice-form__field invoice-form__field--wide">
+                  <mat-form-field
+                    appearance="outline"
+                    class="invoice-form__field invoice-form__field--wide"
+                  >
                     <mat-label>Nazwa nabywcy</mat-label>
                     <input matInput formControlName="name" />
                     @if (form.get('buyer.name')?.hasError('required')) {
@@ -232,7 +226,10 @@ const CURRENCIES: { value: Currency; label: string }[] = [
                 </div>
 
                 <div class="invoice-form__row" formGroupName="buyer">
-                  <mat-form-field appearance="outline" class="invoice-form__field invoice-form__field--wide">
+                  <mat-form-field
+                    appearance="outline"
+                    class="invoice-form__field invoice-form__field--wide"
+                  >
                     <mat-label>Adres</mat-label>
                     <textarea matInput formControlName="address" rows="2"></textarea>
                   </mat-form-field>
@@ -260,9 +257,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
               <app-invoice-items-table />
 
               @if (!formStore.hasItems()) {
-                <p class="invoice-form__items-hint">
-                  Dodaj co najmniej jedną pozycję do faktury.
-                </p>
+                <p class="invoice-form__items-hint">Dodaj co najmniej jedną pozycję do faktury.</p>
               }
             </mat-card-content>
           </mat-card>
@@ -289,7 +284,10 @@ const CURRENCIES: { value: Currency; label: string }[] = [
               <mat-card-title>Uwagi</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <mat-form-field appearance="outline" class="invoice-form__field invoice-form__field--full">
+              <mat-form-field
+                appearance="outline"
+                class="invoice-form__field invoice-form__field--full"
+              >
                 <mat-label>Uwagi do faktury</mat-label>
                 <textarea
                   matInput
@@ -307,13 +305,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
 
           <!-- Actions -->
           <div class="invoice-form__actions">
-            <button
-              mat-button
-              type="button"
-              routerLink="/invoices"
-            >
-              Anuluj
-            </button>
+            <button mat-button type="button" routerLink="/invoices">Anuluj</button>
 
             <div class="invoice-form__actions-right">
               <app-loading-button
@@ -342,142 +334,144 @@ const CURRENCIES: { value: Currency; label: string }[] = [
       }
     </div>
   `,
-  styles: [`
-    .invoice-form {
-      padding: 24px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .invoice-form__loading,
-    .invoice-form__error {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 24px;
-      text-align: center;
-      gap: 16px;
-      min-height: 400px;
-    }
-
-    .invoice-form__error mat-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-    }
-
-    .invoice-form__header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .invoice-form__title {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 500;
-    }
-
-    .invoice-form__title-number {
-      color: var(--mat-sys-primary);
-    }
-
-    .invoice-form__section {
-      margin-bottom: 24px;
-    }
-
-    .invoice-form__row {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .invoice-form__field {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .invoice-form__field--small {
-      flex: 0 0 120px;
-      min-width: 120px;
-    }
-
-    .invoice-form__field--wide {
-      flex: 2;
-      min-width: 300px;
-    }
-
-    .invoice-form__field--full {
-      width: 100%;
-    }
-
-    .invoice-form__items-hint {
-      text-align: center;
-      color: var(--mat-sys-on-surface-variant);
-      padding: 24px;
-      font-style: italic;
-    }
-
-    .invoice-form__actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 24px 0;
-      position: sticky;
-      bottom: 0;
-      background: var(--mat-sys-background);
-      border-top: 1px solid var(--mat-sys-outline-variant);
-      margin: 0 -24px;
-      padding: 16px 24px;
-    }
-
-    .invoice-form__actions-right {
-      display: flex;
-      gap: 12px;
-    }
-
-    @media (max-width: 599px) {
+  styles: [
+    `
       .invoice-form {
-        padding: 16px;
+        padding: 24px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .invoice-form__loading,
+      .invoice-form__error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+        text-align: center;
+        gap: 16px;
+        min-height: 400px;
+      }
+
+      .invoice-form__error mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+      }
+
+      .invoice-form__header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
       }
 
       .invoice-form__title {
-        font-size: 18px;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 500;
+      }
+
+      .invoice-form__title-number {
+        color: var(--mat-sys-primary);
+      }
+
+      .invoice-form__section {
+        margin-bottom: 24px;
       }
 
       .invoice-form__row {
-        flex-direction: column;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
       }
 
-      .invoice-form__field,
-      .invoice-form__field--small,
+      .invoice-form__field {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .invoice-form__field--small {
+        flex: 0 0 120px;
+        min-width: 120px;
+      }
+
       .invoice-form__field--wide {
-        flex: none;
+        flex: 2;
+        min-width: 300px;
+      }
+
+      .invoice-form__field--full {
         width: 100%;
-        min-width: auto;
+      }
+
+      .invoice-form__items-hint {
+        text-align: center;
+        color: var(--mat-sys-on-surface-variant);
+        padding: 24px;
+        font-style: italic;
       }
 
       .invoice-form__actions {
-        flex-direction: column;
-        gap: 12px;
-        margin: 0 -16px;
-        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 24px 0;
+        position: sticky;
+        bottom: 0;
+        background: var(--mat-sys-background);
+        border-top: 1px solid var(--mat-sys-outline-variant);
+        margin: 0 -24px;
+        padding: 16px 24px;
       }
 
       .invoice-form__actions-right {
-        width: 100%;
-        flex-direction: column;
+        display: flex;
+        gap: 12px;
+      }
 
-        app-loading-button {
+      @media (max-width: 599px) {
+        .invoice-form {
+          padding: 16px;
+        }
+
+        .invoice-form__title {
+          font-size: 18px;
+        }
+
+        .invoice-form__row {
+          flex-direction: column;
+        }
+
+        .invoice-form__field,
+        .invoice-form__field--small,
+        .invoice-form__field--wide {
+          flex: none;
           width: 100%;
+          min-width: auto;
+        }
+
+        .invoice-form__actions {
+          flex-direction: column;
+          gap: 12px;
+          margin: 0 -16px;
+          padding: 16px;
+        }
+
+        .invoice-form__actions-right {
+          width: 100%;
+          flex-direction: column;
+
+          app-loading-button {
+            width: 100%;
+          }
         }
       }
-    }
-  `]
+    `,
+  ],
 })
 export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateComponent {
   private readonly fb = inject(FormBuilder);
@@ -523,9 +517,9 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
     buyer: this.fb.group({
       name: ['', [Validators.required]],
       address: [''],
-      nip: ['', [nipValidator]]
+      nip: ['', [nipValidator]],
     }),
-    notes: ['', [Validators.maxLength(1000)]]
+    notes: ['', [Validators.maxLength(1000)]],
   });
 
   ngOnInit(): void {
@@ -585,11 +579,9 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
 
       // Only draft invoices can be edited
       if (invoice.status !== 'draft') {
-        this.snackBar.open(
-          'Tylko faktury w statusie szkic mogą być edytowane',
-          'Zamknij',
-          { duration: 5000 }
-        );
+        this.snackBar.open('Tylko faktury w statusie szkic mogą być edytowane', 'Zamknij', {
+          duration: 5000,
+        });
         this.router.navigate(['/invoices', id]);
         return;
       }
@@ -606,9 +598,9 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
         buyer: {
           name: invoice.buyer.name,
           address: invoice.buyer.address || '',
-          nip: invoice.buyer.nip || ''
+          nip: invoice.buyer.nip || '',
         },
-        notes: invoice.notes || ''
+        notes: invoice.notes || '',
       });
 
       // Set contractor if exists
@@ -619,7 +611,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
       }
 
       // Initialize items
-      const items: InvoiceItemFormModel[] = invoice.items.map(item => ({
+      const items: InvoiceItemFormModel[] = invoice.items.map((item) => ({
         id: item.id,
         position: item.position,
         name: item.name,
@@ -629,7 +621,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
         vatRate: item.vatRate,
         netAmount: item.netAmount,
         vatAmount: item.vatAmount,
-        grossAmount: item.grossAmount
+        grossAmount: item.grossAmount,
       }));
 
       this.formStore.initializeItems(items);
@@ -638,9 +630,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
       this.loading.set(false);
     } catch (error) {
       this.loadError.set(
-        error instanceof Error
-          ? error.message
-          : 'Wystąpił błąd podczas ładowania faktury'
+        error instanceof Error ? error.message : 'Wystąpił błąd podczas ładowania faktury',
       );
     }
   }
@@ -648,20 +638,22 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   /**
    * Handle contractor selection.
    */
-  onContractorSelected(contractor: { id: string; name: string; address?: string; nip?: string } | null): void {
+  onContractorSelected(
+    contractor: { id: string; name: string; address?: string; nip?: string } | null,
+  ): void {
     if (contractor) {
       this.selectedContractorId.set(contractor.id);
       this.form.patchValue({
         buyer: {
           name: contractor.name,
           address: contractor.address || '',
-          nip: contractor.nip || ''
-        }
+          nip: contractor.nip || '',
+        },
       });
     } else {
       this.selectedContractorId.set(null);
       this.form.patchValue({
-        buyer: { name: '', address: '', nip: '' }
+        buyer: { name: '', address: '', nip: '' },
       });
     }
   }
@@ -686,18 +678,16 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
       this.snackBar.open(
         'Uzupełnij wszystkie wymagane pola przed wystawieniem faktury',
         'Zamknij',
-        { duration: 5000 }
+        { duration: 5000 },
       );
       return;
     }
 
     // Validate items
     if (!this.formStore.hasItems()) {
-      this.snackBar.open(
-        'Dodaj co najmniej jedną pozycję do faktury',
-        'Zamknij',
-        { duration: 5000 }
-      );
+      this.snackBar.open('Dodaj co najmniej jedną pozycję do faktury', 'Zamknij', {
+        duration: 5000,
+      });
       return;
     }
 
@@ -710,7 +700,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
       const buyer: BuyerInfoRequest = {
         name: formValue.buyer.name || '',
         address: formValue.buyer.address || undefined,
-        nip: formValue.buyer.nip || undefined
+        nip: formValue.buyer.nip || undefined,
       };
 
       const items = this.formStore.getItemsForRequest();
@@ -725,7 +715,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
           buyer,
           items,
           notes: formValue.notes || undefined,
-          status
+          status,
         };
 
         const result = await this.invoiceService
@@ -740,7 +730,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
           this.snackBar.open(
             status === 'draft' ? 'Faktura została zapisana' : 'Faktura została wystawiona',
             'Zamknij',
-            { duration: 3000 }
+            { duration: 3000 },
           );
 
           this.router.navigate(['/invoices', result.id]);
@@ -756,7 +746,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
           items,
           notes: formValue.notes || undefined,
           status,
-          contractorId: this.selectedContractorId() || undefined
+          contractorId: this.selectedContractorId() || undefined,
         };
 
         const result = await this.invoiceService.create(command).toPromise();
@@ -769,7 +759,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
           this.snackBar.open(
             status === 'draft' ? 'Faktura została utworzona' : 'Faktura została wystawiona',
             'Zamknij',
-            { duration: 3000 }
+            { duration: 3000 },
           );
 
           this.router.navigate(['/invoices', result.id]);
@@ -779,7 +769,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
       this.snackBar.open(
         error instanceof Error ? error.message : 'Wystąpił błąd podczas zapisywania faktury',
         'Zamknij',
-        { duration: 5000, panelClass: ['snackbar-error'] }
+        { duration: 5000, panelClass: ['snackbar-error'] },
       );
     } finally {
       savingSignal.set(false);

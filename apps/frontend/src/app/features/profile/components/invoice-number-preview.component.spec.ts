@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 
 import { InvoiceNumberPreviewComponent } from './invoice-number-preview.component';
 
@@ -9,10 +12,7 @@ describe('InvoiceNumberPreviewComponent', () => {
   let component: InvoiceNumberPreviewComponent;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(
-      BrowserDynamicTestingModule,
-      platformBrowserDynamicTesting()
-    );
+    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
   });
 
   beforeEach(async () => {

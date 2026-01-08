@@ -11,7 +11,7 @@ import type {
   UpdateInvoiceStatusResponse,
   DuplicateInvoiceCommand,
   DeleteInvoiceResponse,
-  NextInvoiceNumberResponse
+  NextInvoiceNumberResponse,
 } from '../../types';
 import { environment } from '../../environments/environment';
 
@@ -99,7 +99,10 @@ export class InvoiceService {
    * Updates the status of an invoice.
    * Allowed transitions: draft -> unpaid -> paid
    */
-  updateStatus(id: string, data: UpdateInvoiceStatusCommand): Observable<UpdateInvoiceStatusResponse> {
+  updateStatus(
+    id: string,
+    data: UpdateInvoiceStatusCommand,
+  ): Observable<UpdateInvoiceStatusResponse> {
     return this.http.patch<UpdateInvoiceStatusResponse>(`${this.apiUrl}/${id}/status`, data);
   }
 

@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 import { of, throwError } from 'rxjs';
 
 import { LogoUploadComponent } from './logo-upload.component';
@@ -16,23 +19,18 @@ describe('LogoUploadComponent', () => {
   };
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(
-      BrowserDynamicTestingModule,
-      platformBrowserDynamicTesting()
-    );
+    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
   });
 
   beforeEach(async () => {
     mockUserService = {
       uploadLogo: vi.fn(),
-      deleteLogo: vi.fn()
+      deleteLogo: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
       imports: [LogoUploadComponent],
-      providers: [
-        { provide: UserService, useValue: mockUserService }
-      ]
+      providers: [{ provide: UserService, useValue: mockUserService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LogoUploadComponent);
@@ -70,7 +68,9 @@ describe('LogoUploadComponent', () => {
     it('should trigger file input click', () => {
       fixture.detectChanges();
 
-      const fileInput = fixture.nativeElement.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = fixture.nativeElement.querySelector(
+        'input[type="file"]',
+      ) as HTMLInputElement;
       const clickSpy = vi.spyOn(fileInput, 'click');
 
       component.triggerFileInput();
@@ -171,8 +171,8 @@ describe('LogoUploadComponent', () => {
       const error = {
         error: {
           code: 'FILE_TOO_LARGE',
-          message: 'File is too large'
-        }
+          message: 'File is too large',
+        },
       };
       mockUserService.uploadLogo.mockReturnValue(throwError(() => error));
 
@@ -195,8 +195,8 @@ describe('LogoUploadComponent', () => {
       const error = {
         error: {
           code: 'INVALID_FILE_TYPE',
-          message: 'Invalid file type'
-        }
+          message: 'Invalid file type',
+        },
       };
       mockUserService.uploadLogo.mockReturnValue(throwError(() => error));
 
@@ -213,8 +213,8 @@ describe('LogoUploadComponent', () => {
       const error = {
         error: {
           code: 'UNKNOWN_ERROR',
-          message: 'Unknown error'
-        }
+          message: 'Unknown error',
+        },
       };
       mockUserService.uploadLogo.mockReturnValue(throwError(() => error));
 
@@ -261,8 +261,8 @@ describe('LogoUploadComponent', () => {
       const error = {
         error: {
           code: 'LOGO_NOT_FOUND',
-          message: 'Logo not found'
-        }
+          message: 'Logo not found',
+        },
       };
       mockUserService.deleteLogo.mockReturnValue(throwError(() => error));
 
@@ -304,7 +304,7 @@ describe('LogoUploadComponent', () => {
     it('should set isDragOver to true on dragover', () => {
       const event = {
         preventDefault: vi.fn(),
-        stopPropagation: vi.fn()
+        stopPropagation: vi.fn(),
       } as unknown as DragEvent;
 
       component.onDragOver(event);
@@ -319,7 +319,7 @@ describe('LogoUploadComponent', () => {
 
       const event = {
         preventDefault: vi.fn(),
-        stopPropagation: vi.fn()
+        stopPropagation: vi.fn(),
       } as unknown as DragEvent;
 
       component.onDragOver(event);
@@ -333,7 +333,7 @@ describe('LogoUploadComponent', () => {
 
       const event = {
         preventDefault: vi.fn(),
-        stopPropagation: vi.fn()
+        stopPropagation: vi.fn(),
       } as unknown as DragEvent;
 
       component.onDragOver(event);
@@ -346,7 +346,7 @@ describe('LogoUploadComponent', () => {
 
       const event = {
         preventDefault: vi.fn(),
-        stopPropagation: vi.fn()
+        stopPropagation: vi.fn(),
       } as unknown as DragEvent;
 
       component.onDragLeave(event);
@@ -365,8 +365,8 @@ describe('LogoUploadComponent', () => {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
-          files: [file]
-        }
+          files: [file],
+        },
       } as unknown as DragEvent;
 
       component.onDrop(event);
@@ -385,8 +385,8 @@ describe('LogoUploadComponent', () => {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
-          files: [file]
-        }
+          files: [file],
+        },
       } as unknown as DragEvent;
 
       component.onDrop(event);
@@ -403,8 +403,8 @@ describe('LogoUploadComponent', () => {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
-          files: [file]
-        }
+          files: [file],
+        },
       } as unknown as DragEvent;
 
       component.onDrop(event);
@@ -477,7 +477,9 @@ describe('LogoUploadComponent', () => {
       fixture.detectChanges();
 
       const dropZone = fixture.nativeElement.querySelector('.drop-zone') as HTMLElement;
-      const fileInput = fixture.nativeElement.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = fixture.nativeElement.querySelector(
+        'input[type="file"]',
+      ) as HTMLInputElement;
       const clickSpy = vi.spyOn(fileInput, 'click');
 
       dropZone.click();

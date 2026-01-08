@@ -5,20 +5,52 @@ import type { Currency } from '../../../types';
  * Polish number words configuration.
  */
 const ONES = [
-  '', 'jeden', 'dwa', 'trzy', 'cztery', 'pięć',
-  'sześć', 'siedem', 'osiem', 'dziewięć', 'dziesięć',
-  'jedenaście', 'dwanaście', 'trzynaście', 'czternaście', 'piętnaście',
-  'szesnaście', 'siedemnaście', 'osiemnaście', 'dziewiętnaście'
+  '',
+  'jeden',
+  'dwa',
+  'trzy',
+  'cztery',
+  'pięć',
+  'sześć',
+  'siedem',
+  'osiem',
+  'dziewięć',
+  'dziesięć',
+  'jedenaście',
+  'dwanaście',
+  'trzynaście',
+  'czternaście',
+  'piętnaście',
+  'szesnaście',
+  'siedemnaście',
+  'osiemnaście',
+  'dziewiętnaście',
 ];
 
 const TENS = [
-  '', '', 'dwadzieścia', 'trzydzieści', 'czterdzieści', 'pięćdziesiąt',
-  'sześćdziesiąt', 'siedemdziesiąt', 'osiemdziesiąt', 'dziewięćdziesiąt'
+  '',
+  '',
+  'dwadzieścia',
+  'trzydzieści',
+  'czterdzieści',
+  'pięćdziesiąt',
+  'sześćdziesiąt',
+  'siedemdziesiąt',
+  'osiemdziesiąt',
+  'dziewięćdziesiąt',
 ];
 
 const HUNDREDS = [
-  '', 'sto', 'dwieście', 'trzysta', 'czterysta', 'pięćset',
-  'sześćset', 'siedemset', 'osiemset', 'dziewięćset'
+  '',
+  'sto',
+  'dwieście',
+  'trzysta',
+  'czterysta',
+  'pięćset',
+  'sześćset',
+  'siedemset',
+  'osiemset',
+  'dziewięćset',
 ];
 
 /**
@@ -28,25 +60,28 @@ const GROUPS: [string, string, string][] = [
   ['', '', ''],
   ['tysiąc', 'tysiące', 'tysięcy'],
   ['milion', 'miliony', 'milionów'],
-  ['miliard', 'miliardy', 'miliardów']
+  ['miliard', 'miliardy', 'miliardów'],
 ];
 
 /**
  * Currency configuration for words.
  */
-const CURRENCY_WORDS: Record<Currency, { main: [string, string, string]; sub: [string, string, string] }> = {
+const CURRENCY_WORDS: Record<
+  Currency,
+  { main: [string, string, string]; sub: [string, string, string] }
+> = {
   PLN: {
     main: ['złoty', 'złote', 'złotych'],
-    sub: ['grosz', 'grosze', 'groszy']
+    sub: ['grosz', 'grosze', 'groszy'],
   },
   EUR: {
     main: ['euro', 'euro', 'euro'],
-    sub: ['cent', 'centy', 'centów']
+    sub: ['cent', 'centy', 'centów'],
   },
   USD: {
     main: ['dolar', 'dolary', 'dolarów'],
-    sub: ['cent', 'centy', 'centów']
-  }
+    sub: ['cent', 'centy', 'centów'],
+  },
 };
 
 /**

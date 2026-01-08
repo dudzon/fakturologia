@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 
 import { ProfileCompletenessIndicatorComponent } from './profile-completeness-indicator.component';
 import type { UserProfileResponse } from '../../../../types';
@@ -10,10 +13,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
   let component: ProfileCompletenessIndicatorComponent;
 
   beforeAll(() => {
-    TestBed.initTestEnvironment(
-      BrowserDynamicTestingModule,
-      platformBrowserDynamicTesting()
-    );
+    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
   });
 
   beforeEach(async () => {
@@ -63,7 +63,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -87,7 +87,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -111,7 +111,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -135,7 +135,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -159,7 +159,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 50,
         logoUrl: 'https://example.com/logo.png',
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -182,7 +182,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', incompleteProfile);
@@ -193,7 +193,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
       const completeProfile: UserProfileResponse = {
         ...incompleteProfile,
         nip: '1234567890',
-        address: 'Test Address 123'
+        address: 'Test Address 123',
       };
 
       fixture.componentRef.setInput('profile', completeProfile);
@@ -227,7 +227,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -251,14 +251,14 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
       fixture.detectChanges();
 
       const meta = component.requiredFieldsMeta();
-      expect(meta.every(field => field.filled)).toBe(true);
+      expect(meta.every((field) => field.filled)).toBe(true);
     });
   });
 
@@ -275,7 +275,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -305,7 +305,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -327,7 +327,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -351,7 +351,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -385,10 +385,10 @@ describe('ProfileCompletenessIndicatorComponent', () => {
 
       const fieldItems = fixture.nativeElement.querySelectorAll('.field-item');
       const icons = Array.from(fieldItems).map((item: any) =>
-        item.querySelector('mat-icon')?.textContent?.trim()
+        item.querySelector('mat-icon')?.textContent?.trim(),
       );
 
-      expect(icons.every(icon => icon === 'radio_button_unchecked')).toBe(true);
+      expect(icons.every((icon) => icon === 'radio_button_unchecked')).toBe(true);
     });
 
     it('should display check icon for filled fields', () => {
@@ -403,7 +403,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -431,7 +431,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -457,7 +457,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -479,7 +479,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -501,7 +501,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -523,7 +523,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -545,7 +545,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);
@@ -567,7 +567,7 @@ describe('ProfileCompletenessIndicatorComponent', () => {
         invoiceNumberCounter: 1,
         logoUrl: null,
         createdAt: '2024-01-01',
-        updatedAt: '2024-01-01'
+        updatedAt: '2024-01-01',
       };
 
       fixture.componentRef.setInput('profile', profile);

@@ -2,11 +2,7 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { InvoicesStore } from './invoices.store';
 import { InvoiceService } from '../services/invoice.service';
 import { of, throwError } from 'rxjs';
-import type {
-  InvoiceListItem,
-  InvoiceListQuery,
-  PaginationInfo
-} from '../../types';
+import type { InvoiceListItem, PaginationInfo } from '../../types';
 
 // Mock inject from @angular/core
 let mockInvoiceService: any;
@@ -20,13 +16,13 @@ vi.mock('@angular/core', async () => {
         return mockInvoiceService;
       }
       return null;
-    })
+    }),
   };
 });
 
 // Mock the InvoiceService
 vi.mock('../services/invoice.service', () => ({
-  InvoiceService: vi.fn()
+  InvoiceService: vi.fn(),
 }));
 
 describe('InvoicesStore', () => {
@@ -46,7 +42,7 @@ describe('InvoicesStore', () => {
       totalGross: '1230.00',
       currency: 'PLN',
       createdAt: '2024-01-15T10:00:00Z',
-      updatedAt: '2024-01-15T10:00:00Z'
+      updatedAt: '2024-01-15T10:00:00Z',
     },
     {
       id: '2',
@@ -61,25 +57,27 @@ describe('InvoicesStore', () => {
       totalGross: '615.00',
       currency: 'PLN',
       createdAt: '2024-01-20T10:00:00Z',
-      updatedAt: '2024-01-20T10:00:00Z'
-    }
+      updatedAt: '2024-01-20T10:00:00Z',
+    },
   ];
 
   const mockPagination: PaginationInfo = {
     page: 1,
     limit: 20,
     total: 2,
-    totalPages: 1
+    totalPages: 1,
   };
 
   beforeEach(() => {
     // Reset the mock
     mockInvoiceService = {
-      list: vi.fn().mockReturnValue(of({
-        data: mockInvoices,
-        pagination: mockPagination
-      })),
-      delete: vi.fn().mockReturnValue(of(undefined))
+      list: vi.fn().mockReturnValue(
+        of({
+          data: mockInvoices,
+          pagination: mockPagination,
+        }),
+      ),
+      delete: vi.fn().mockReturnValue(of(undefined)),
     };
 
     // Create store instance (inject() will return mockInvoiceService)
@@ -136,7 +134,7 @@ describe('InvoicesStore', () => {
         page: 1,
         limit: 20,
         sortBy: 'issueDate',
-        sortOrder: 'desc'
+        sortOrder: 'desc',
       });
       expect(store.invoices()).toEqual(mockInvoices);
       expect(store.pagination()).toEqual(mockPagination);
@@ -177,7 +175,7 @@ describe('InvoicesStore', () => {
         limit: 20,
         sortBy: 'issueDate',
         sortOrder: 'desc',
-        status: 'paid'
+        status: 'paid',
       });
     });
 
@@ -264,9 +262,7 @@ describe('InvoicesStore', () => {
     it('should update query and reload', async () => {
       await store.updateQuery({ page: 2 });
 
-      expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.objectContaining({ page: 2 })
-      );
+      expect(mockInvoiceService.list).toHaveBeenCalledWith(expect.objectContaining({ page: 2 }));
     });
 
     it('should reset to page 1 when search changes', async () => {
@@ -276,7 +272,7 @@ describe('InvoicesStore', () => {
       await store.updateQuery({ search: 'test' });
 
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.objectContaining({ page: 1, search: 'test' })
+        expect.objectContaining({ page: 1, search: 'test' }),
       );
     });
 
@@ -287,7 +283,7 @@ describe('InvoicesStore', () => {
       await store.updateQuery({ status: 'paid' });
 
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.objectContaining({ page: 1, status: 'paid' })
+        expect.objectContaining({ page: 1, status: 'paid' }),
       );
     });
 
@@ -298,7 +294,7 @@ describe('InvoicesStore', () => {
       await store.updateQuery({ sortBy: 'invoiceNumber' });
 
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.objectContaining({ page: 1, sortBy: 'invoiceNumber' })
+        expect.objectContaining({ page: 1, sortBy: 'invoiceNumber' }),
       );
     });
   });
@@ -308,7 +304,7 @@ describe('InvoicesStore', () => {
       await store.setStatusFilter('paid');
 
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.objectContaining({ status: 'paid' })
+        expect.objectContaining({ status: 'paid' }),
       );
     });
 
@@ -319,7 +315,7 @@ describe('InvoicesStore', () => {
       await store.setStatusFilter(null);
 
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.not.objectContaining({ status: expect.anything() })
+        expect.not.objectContaining({ status: expect.anything() }),
       );
     });
 
@@ -329,8 +325,8 @@ describe('InvoicesStore', () => {
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
         expect.objectContaining({
           dateFrom: '2024-01-01',
-          dateTo: '2024-01-31'
-        })
+          dateTo: '2024-01-31',
+        }),
       );
     });
 
@@ -338,7 +334,7 @@ describe('InvoicesStore', () => {
       await store.setSearch('test query');
 
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.objectContaining({ search: 'test query' })
+        expect.objectContaining({ search: 'test query' }),
       );
     });
 
@@ -349,7 +345,7 @@ describe('InvoicesStore', () => {
       await store.setSearch('');
 
       expect(mockInvoiceService.list).toHaveBeenCalledWith(
-        expect.not.objectContaining({ search: expect.anything() })
+        expect.not.objectContaining({ search: expect.anything() }),
       );
     });
 
@@ -357,7 +353,7 @@ describe('InvoicesStore', () => {
       await store.loadInvoices({
         status: 'paid',
         search: 'test',
-        dateFrom: '2024-01-01'
+        dateFrom: '2024-01-01',
       });
 
       // Note: The current implementation of clearFilters has a bug - it merges

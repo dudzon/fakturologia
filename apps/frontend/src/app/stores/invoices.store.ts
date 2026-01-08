@@ -1,11 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { InvoiceService } from '../services/invoice.service';
-import type {
-  InvoiceListItem,
-  InvoiceListQuery,
-  InvoiceStatus,
-  PaginationInfo
-} from '../../types';
+import type { InvoiceListItem, InvoiceListQuery, InvoiceStatus, PaginationInfo } from '../../types';
 
 /**
  * Cache TTL in milliseconds (5 minutes).
@@ -19,7 +14,7 @@ const DEFAULT_QUERY: InvoiceListQuery = {
   page: 1,
   limit: 20,
   sortBy: 'issueDate',
-  sortOrder: 'desc'
+  sortOrder: 'desc',
 };
 
 /**
@@ -58,9 +53,7 @@ export class InvoicesStore {
     return Date.now() - lastFetch < CACHE_TTL;
   });
 
-  readonly isEmpty = computed(() =>
-    this._invoices().length === 0 && !this._loading()
-  );
+  readonly isEmpty = computed(() => this._invoices().length === 0 && !this._loading());
 
   readonly totalCount = computed(() => this._pagination()?.total ?? 0);
 
@@ -83,12 +76,11 @@ export class InvoicesStore {
     // Merge query with existing state
     const mergedQuery: InvoiceListQuery = {
       ...this._query(),
-      ...query
+      ...query,
     };
 
     // Check cache validity (only if query hasn't changed significantly)
-    const queryChanged =
-      JSON.stringify(mergedQuery) !== JSON.stringify(this._query());
+    const queryChanged = JSON.stringify(mergedQuery) !== JSON.stringify(this._query());
 
     if (!forceRefresh && !queryChanged && this.isCacheValid()) {
       return;
@@ -108,9 +100,7 @@ export class InvoicesStore {
       }
     } catch (error) {
       this._error.set(
-        error instanceof Error
-          ? error.message
-          : 'Wystąpił błąd podczas ładowania faktur'
+        error instanceof Error ? error.message : 'Wystąpił błąd podczas ładowania faktur',
       );
     } finally {
       this._loading.set(false);
@@ -123,7 +113,7 @@ export class InvoicesStore {
   async updateQuery(query: Partial<InvoiceListQuery>): Promise<void> {
     const newQuery: InvoiceListQuery = {
       ...this._query(),
-      ...query
+      ...query,
     };
 
     // Reset to page 1 if search, status, or date filters change
@@ -166,10 +156,13 @@ export class InvoicesStore {
    * Clear all filters and reload invoices.
    */
   async clearFilters(): Promise<void> {
-    await this.loadInvoices({
-      ...DEFAULT_QUERY,
-      page: 1
-    }, true);
+    await this.loadInvoices(
+      {
+        ...DEFAULT_QUERY,
+        page: 1,
+      },
+      true,
+    );
   }
 
   /**
@@ -192,9 +185,7 @@ export class InvoicesStore {
       // Rollback on error
       this._invoices.set(previousInvoices);
       this._error.set(
-        error instanceof Error
-          ? error.message
-          : 'Wystąpił błąd podczas usuwania faktury'
+        error instanceof Error ? error.message : 'Wystąpił błąd podczas usuwania faktury',
       );
       return false;
     }
@@ -205,9 +196,7 @@ export class InvoicesStore {
    */
   updateInvoiceStatus(id: string, newStatus: InvoiceStatus): void {
     this._invoices.update((invoices) =>
-      invoices.map((inv) =>
-        inv.id === id ? { ...inv, status: newStatus } : inv
-      )
+      invoices.map((inv) => (inv.id === id ? { ...inv, status: newStatus } : inv)),
     );
     // Invalidate cache
     this._lastFetch.set(null);

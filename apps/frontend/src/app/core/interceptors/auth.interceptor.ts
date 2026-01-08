@@ -40,13 +40,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         // Sign out user and redirect to login
         authService.signOut().then(() => {
           router.navigate(['/auth/login'], {
-            queryParams: { sessionExpired: 'true' }
+            queryParams: { sessionExpired: 'true' },
           });
         });
       }
 
       // Re-throw error for component-level handling
       return throwError(() => error);
-    })
+    }),
   );
 };

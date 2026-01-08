@@ -1,12 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  signal,
-  inject,
-  ElementRef,
-  viewChild
-} from '@angular/core';
+import { Component, input, output, signal, inject, ElementRef, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,22 +20,13 @@ import { UserService } from '../../../services/user.service';
 @Component({
   selector: 'app-logo-upload',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressBarModule
-  ],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressBarModule],
   template: `
     <div class="logo-upload-container">
       <!-- Current Logo Preview -->
       @if (currentLogoUrl() || previewUrl()) {
         <div class="logo-preview">
-          <img
-            [src]="previewUrl() || currentLogoUrl()"
-            alt="Logo firmy"
-            class="logo-image"
-          />
+          <img [src]="previewUrl() || currentLogoUrl()" alt="Logo firmy" class="logo-image" />
           <div class="logo-actions">
             <button
               mat-icon-button
@@ -113,127 +96,129 @@ import { UserService } from '../../../services/user.service';
       }
     </div>
   `,
-  styles: [`
-    .logo-upload-container {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .drop-zone {
-      border: 2px dashed var(--mat-sys-outline);
-      border-radius: 12px;
-      padding: 32px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background-color: var(--mat-sys-surface-variant);
-
-      &:hover:not(.disabled) {
-        border-color: var(--mat-sys-primary);
-        background-color: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+  styles: [
+    `
+      .logo-upload-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
       }
 
-      &.drag-over {
-        border-color: var(--mat-sys-primary);
-        background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
-        transform: scale(1.01);
+      .drop-zone {
+        border: 2px dashed var(--mat-sys-outline);
+        border-radius: 12px;
+        padding: 32px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: var(--mat-sys-surface-variant);
+
+        &:hover:not(.disabled) {
+          border-color: var(--mat-sys-primary);
+          background-color: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+        }
+
+        &.drag-over {
+          border-color: var(--mat-sys-primary);
+          background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+          transform: scale(1.01);
+        }
+
+        &.disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
       }
 
-      &.disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-    }
-
-    .upload-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      color: var(--mat-sys-primary);
-      margin-bottom: 8px;
-    }
-
-    .drop-text {
-      margin: 0;
-      font-size: 14px;
-      color: var(--mat-sys-on-surface);
-    }
-
-    .drop-hint {
-      font-size: 12px;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .file-requirements {
-      margin: 8px 0 0;
-      font-size: 12px;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .logo-preview {
-      position: relative;
-      display: inline-block;
-      max-width: 200px;
-    }
-
-    .logo-image {
-      max-width: 200px;
-      max-height: 120px;
-      border-radius: 8px;
-      border: 1px solid var(--mat-sys-outline-variant);
-      object-fit: contain;
-      background-color: white;
-    }
-
-    .logo-actions {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      display: flex;
-      gap: 4px;
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 8px;
-      padding: 2px;
-    }
-
-    .hidden-input {
-      display: none;
-    }
-
-    .upload-progress {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      mat-progress-bar {
-        border-radius: 4px;
+      .upload-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        color: var(--mat-sys-primary);
+        margin-bottom: 8px;
       }
 
-      .progress-text {
+      .drop-text {
+        margin: 0;
+        font-size: 14px;
+        color: var(--mat-sys-on-surface);
+      }
+
+      .drop-hint {
         font-size: 12px;
         color: var(--mat-sys-on-surface-variant);
-        text-align: center;
       }
-    }
 
-    .error-message {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      background-color: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
-      color: var(--mat-sys-error);
-      border-radius: 8px;
-      font-size: 13px;
-
-      mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
+      .file-requirements {
+        margin: 8px 0 0;
+        font-size: 12px;
+        color: var(--mat-sys-on-surface-variant);
       }
-    }
-  `]
+
+      .logo-preview {
+        position: relative;
+        display: inline-block;
+        max-width: 200px;
+      }
+
+      .logo-image {
+        max-width: 200px;
+        max-height: 120px;
+        border-radius: 8px;
+        border: 1px solid var(--mat-sys-outline-variant);
+        object-fit: contain;
+        background-color: white;
+      }
+
+      .logo-actions {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        display: flex;
+        gap: 4px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        padding: 2px;
+      }
+
+      .hidden-input {
+        display: none;
+      }
+
+      .upload-progress {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        mat-progress-bar {
+          border-radius: 4px;
+        }
+
+        .progress-text {
+          font-size: 12px;
+          color: var(--mat-sys-on-surface-variant);
+          text-align: center;
+        }
+      }
+
+      .error-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background-color: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+        color: var(--mat-sys-error);
+        border-radius: 8px;
+        font-size: 13px;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    `,
+  ],
 })
 export class LogoUploadComponent {
   private readonly userService = inject(UserService);
@@ -338,7 +323,7 @@ export class LogoUploadComponent {
         const message = this.getErrorMessage(error);
         this.errorMessage.set(message);
         this.uploadError.emit(message);
-      }
+      },
     });
   }
 
@@ -401,7 +386,7 @@ export class LogoUploadComponent {
         const message = this.getErrorMessage(error);
         this.errorMessage.set(message);
         this.uploadError.emit(message);
-      }
+      },
     });
   }
 
@@ -413,9 +398,9 @@ export class LogoUploadComponent {
     const code = errorResponse?.error?.code;
 
     const errorMessages: Record<string, string> = {
-      'INVALID_FILE_TYPE': 'Dozwolone są tylko pliki PNG i JPG',
-      'FILE_TOO_LARGE': 'Plik jest zbyt duży. Maksymalny rozmiar to 2MB',
-      'LOGO_NOT_FOUND': 'Nie znaleziono logo do usunięcia'
+      INVALID_FILE_TYPE: 'Dozwolone są tylko pliki PNG i JPG',
+      FILE_TOO_LARGE: 'Plik jest zbyt duży. Maksymalny rozmiar to 2MB',
+      LOGO_NOT_FOUND: 'Nie znaleziono logo do usunięcia',
     };
 
     return code && errorMessages[code]

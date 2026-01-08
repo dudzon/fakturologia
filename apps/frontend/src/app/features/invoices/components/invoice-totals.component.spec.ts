@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 import { InvoiceTotalsComponent } from './invoice-totals.component';
 import type { InvoiceItemResponse } from '../../../../types';
 
@@ -13,7 +16,7 @@ describe('InvoiceTotalsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InvoiceTotalsComponent]
+      imports: [InvoiceTotalsComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InvoiceTotalsComponent);
@@ -85,7 +88,7 @@ describe('InvoiceTotalsComponent', () => {
         vatRate: '23',
         netAmount: '200.00',
         vatAmount: '46.00',
-        grossAmount: '246.00'
+        grossAmount: '246.00',
       },
       {
         id: '2',
@@ -97,8 +100,8 @@ describe('InvoiceTotalsComponent', () => {
         vatRate: '8',
         netAmount: '50.00',
         vatAmount: '4.00',
-        grossAmount: '54.00'
-      }
+        grossAmount: '54.00',
+      },
     ];
 
     it('should calculate VAT breakdown from items', () => {
@@ -139,7 +142,7 @@ describe('InvoiceTotalsComponent', () => {
       const multipleItemsSameRate: InvoiceItemResponse[] = [
         {
           id: '1',
-        position: 1,
+          position: 1,
           name: 'Item 1',
           quantity: '1',
           unit: 'szt.',
@@ -147,11 +150,11 @@ describe('InvoiceTotalsComponent', () => {
           vatRate: '23',
           netAmount: '100.00',
           vatAmount: '23.00',
-          grossAmount: '123.00'
+          grossAmount: '123.00',
         },
         {
           id: '2',
-        position: 2,
+          position: 2,
           name: 'Item 2',
           quantity: '1',
           unit: 'szt.',
@@ -159,8 +162,8 @@ describe('InvoiceTotalsComponent', () => {
           vatRate: '23',
           netAmount: '50.00',
           vatAmount: '11.50',
-          grossAmount: '61.50'
-        }
+          grossAmount: '61.50',
+        },
       ];
 
       fixture.componentRef.setInput('items', multipleItemsSameRate);
@@ -177,7 +180,7 @@ describe('InvoiceTotalsComponent', () => {
       const mixedRates: InvoiceItemResponse[] = [
         {
           id: '1',
-        position: 1,
+          position: 1,
           name: 'Item 1',
           quantity: '1',
           unit: 'szt.',
@@ -185,11 +188,11 @@ describe('InvoiceTotalsComponent', () => {
           vatRate: 'zw',
           netAmount: '100',
           vatAmount: '0',
-          grossAmount: '100'
+          grossAmount: '100',
         },
         {
           id: '2',
-        position: 2,
+          position: 2,
           name: 'Item 2',
           quantity: '1',
           unit: 'szt.',
@@ -197,11 +200,11 @@ describe('InvoiceTotalsComponent', () => {
           vatRate: '23',
           netAmount: '100',
           vatAmount: '23',
-          grossAmount: '123'
+          grossAmount: '123',
         },
         {
           id: '3',
-        position: 3,
+          position: 3,
           name: 'Item 3',
           quantity: '1',
           unit: 'szt.',
@@ -209,30 +212,32 @@ describe('InvoiceTotalsComponent', () => {
           vatRate: '5',
           netAmount: '100',
           vatAmount: '5',
-          grossAmount: '105'
-        }
+          grossAmount: '105',
+        },
       ];
 
       fixture.componentRef.setInput('items', mixedRates);
       fixture.detectChanges();
 
       const totals = component.vatTotals();
-      expect(totals.map(t => t.rate)).toEqual(['23', '5', 'zw']);
+      expect(totals.map((t) => t.rate)).toEqual(['23', '5', 'zw']);
     });
 
     it('should label zw rate correctly', () => {
-      const zwItem: InvoiceItemResponse[] = [{
-        id: '1',
-        position: 1,
-        name: 'Item',
-        quantity: '1',
-        unit: 'szt.',
-        unitPrice: '100',
-        vatRate: 'zw',
-        netAmount: '100',
-        vatAmount: '0',
-        grossAmount: '100'
-      }];
+      const zwItem: InvoiceItemResponse[] = [
+        {
+          id: '1',
+          position: 1,
+          name: 'Item',
+          quantity: '1',
+          unit: 'szt.',
+          unitPrice: '100',
+          vatRate: 'zw',
+          netAmount: '100',
+          vatAmount: '0',
+          grossAmount: '100',
+        },
+      ];
 
       fixture.componentRef.setInput('items', zwItem);
       fixture.detectChanges();
@@ -275,7 +280,7 @@ describe('InvoiceTotalsComponent', () => {
       const mockItems: InvoiceItemResponse[] = [
         {
           id: '1',
-        position: 1,
+          position: 1,
           name: 'Item 1',
           quantity: '1',
           unit: 'szt.',
@@ -283,8 +288,8 @@ describe('InvoiceTotalsComponent', () => {
           vatRate: '23',
           netAmount: '100',
           vatAmount: '23',
-          grossAmount: '123'
-        }
+          grossAmount: '123',
+        },
       ];
       fixture.componentRef.setInput('items', mockItems);
       fixture.componentRef.setInput('currency', 'PLN');

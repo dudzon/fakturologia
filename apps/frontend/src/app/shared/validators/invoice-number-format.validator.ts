@@ -17,8 +17,8 @@ export function invoiceNumberFormatValidator(): ValidatorFn {
     if (!value.includes('{NNN}')) {
       return {
         invoiceNumberFormat: {
-          message: 'Format numeru faktury musi zawierać placeholder {NNN}'
-        }
+          message: 'Format numeru faktury musi zawierać placeholder {NNN}',
+        },
       };
     }
 
@@ -31,8 +31,8 @@ export function invoiceNumberFormatValidator(): ValidatorFn {
       if (!allowedPlaceholders.includes(placeholder)) {
         return {
           invoiceNumberFormat: {
-            message: `Nieznany placeholder: ${placeholder}. Dozwolone: ${allowedPlaceholders.join(', ')}`
-          }
+            message: `Nieznany placeholder: ${placeholder}. Dozwolone: ${allowedPlaceholders.join(', ')}`,
+          },
         };
       }
     }

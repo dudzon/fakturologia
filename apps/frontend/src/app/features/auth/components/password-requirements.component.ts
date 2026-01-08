@@ -43,54 +43,56 @@ interface PasswordRequirement {
       </ul>
     </div>
   `,
-  styles: [`
-    .password-requirements {
-      margin-top: 12px;
-      padding: 12px;
-      background-color: rgba(0, 0, 0, 0.02);
-      border-radius: 8px;
-    }
+  styles: [
+    `
+      .password-requirements {
+        margin-top: 12px;
+        padding: 12px;
+        background-color: rgba(0, 0, 0, 0.02);
+        border-radius: 8px;
+      }
 
-    .password-requirements__title {
-      margin: 0 0 8px 0;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(0, 0, 0, 0.7);
-    }
+      .password-requirements__title {
+        margin: 0 0 8px 0;
+        font-size: 13px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.7);
+      }
 
-    .password-requirements__list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+      .password-requirements__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
 
-    .password-requirements__item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.6);
-      transition: color 0.2s ease;
-    }
+      .password-requirements__item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.6);
+        transition: color 0.2s ease;
+      }
 
-    .password-requirements__item--met {
-      color: #4caf50;
-    }
+      .password-requirements__item--met {
+        color: #4caf50;
+      }
 
-    .password-requirements__icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-      color: #f44336;
-    }
+      .password-requirements__icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #f44336;
+      }
 
-    .password-requirements__item--met .password-requirements__icon {
-      color: #4caf50;
-    }
-  `]
+      .password-requirements__item--met .password-requirements__icon {
+        color: #4caf50;
+      }
+    `,
+  ],
 })
 export class PasswordRequirementsComponent {
   /** The password to validate */
@@ -100,33 +102,33 @@ export class PasswordRequirementsComponent {
   private readonly requirements: PasswordRequirement[] = [
     {
       label: 'Minimum 8 znaków',
-      validator: (pwd) => pwd.length >= 8
+      validator: (pwd) => pwd.length >= 8,
     },
     {
       label: 'Przynajmniej jedną małą literę (a-z)',
-      validator: (pwd) => /[a-z]/.test(pwd)
+      validator: (pwd) => /[a-z]/.test(pwd),
     },
     {
       label: 'Przynajmniej jedną wielką literę (A-Z)',
-      validator: (pwd) => /[A-Z]/.test(pwd)
+      validator: (pwd) => /[A-Z]/.test(pwd),
     },
     {
       label: 'Przynajmniej jedną cyfrę (0-9)',
-      validator: (pwd) => /\d/.test(pwd)
-    }
+      validator: (pwd) => /\d/.test(pwd),
+    },
   ];
 
   /** Requirements with their current met status */
   readonly requirementsStatus = computed(() => {
     const pwd = this.password() ?? '';
-    return this.requirements.map(req => ({
+    return this.requirements.map((req) => ({
       label: req.label,
-      met: req.validator(pwd)
+      met: req.validator(pwd),
     }));
   });
 
   /** Check if all requirements are met */
   readonly allMet = computed(() => {
-    return this.requirementsStatus().every(req => req.met);
+    return this.requirementsStatus().every((req) => req.met);
   });
 }

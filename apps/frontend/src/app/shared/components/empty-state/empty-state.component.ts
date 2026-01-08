@@ -34,12 +34,7 @@ export interface EmptyStateConfig {
 @Component({
   selector: 'app-empty-state',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatIconModule,
-    MatButtonModule
-  ],
+  imports: [CommonModule, RouterLink, MatIconModule, MatButtonModule],
   template: `
     <div class="empty-state">
       <div class="empty-state__icon-container">
@@ -73,54 +68,56 @@ export interface EmptyStateConfig {
       }
     </div>
   `,
-  styles: [`
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 24px;
-      text-align: center;
-      min-height: 300px;
-    }
+  styles: [
+    `
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+        text-align: center;
+        min-height: 300px;
+      }
 
-    .empty-state__icon-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background-color: var(--mat-sys-surface-container-high);
-      margin-bottom: 24px;
-    }
+      .empty-state__icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: var(--mat-sys-surface-container-high);
+        margin-bottom: 24px;
+      }
 
-    .empty-state__icon {
-      font-size: 40px;
-      width: 40px;
-      height: 40px;
-      color: var(--mat-sys-on-surface-variant);
-    }
+      .empty-state__icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        color: var(--mat-sys-on-surface-variant);
+      }
 
-    .empty-state__title {
-      margin: 0 0 8px;
-      font-size: 20px;
-      font-weight: 500;
-      color: var(--mat-sys-on-surface);
-    }
+      .empty-state__title {
+        margin: 0 0 8px;
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+      }
 
-    .empty-state__description {
-      margin: 0 0 24px;
-      font-size: 14px;
-      color: var(--mat-sys-on-surface-variant);
-      max-width: 400px;
-      line-height: 1.5;
-    }
+      .empty-state__description {
+        margin: 0 0 24px;
+        font-size: 14px;
+        color: var(--mat-sys-on-surface-variant);
+        max-width: 400px;
+        line-height: 1.5;
+      }
 
-    .empty-state__action {
-      min-width: 160px;
-    }
-  `]
+      .empty-state__action {
+        min-width: 160px;
+      }
+    `,
+  ],
 })
 export class EmptyStateComponent {
   /** Material icon name to display */

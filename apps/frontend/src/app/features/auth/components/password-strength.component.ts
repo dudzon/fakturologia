@@ -34,43 +34,45 @@ export type PasswordStrength = 'weak' | 'fair' | 'good' | 'strong';
       </span>
     </div>
   `,
-  styles: [`
-    .password-strength {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 8px;
-    }
+  styles: [
+    `
+      .password-strength {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+      }
 
-    mat-progress-bar {
-      flex: 1;
-      height: 6px;
-      border-radius: 3px;
-    }
+      mat-progress-bar {
+        flex: 1;
+        height: 6px;
+        border-radius: 3px;
+      }
 
-    .password-strength__label {
-      font-size: 12px;
-      font-weight: 500;
-      min-width: 60px;
-      text-align: right;
-    }
+      .password-strength__label {
+        font-size: 12px;
+        font-weight: 500;
+        min-width: 60px;
+        text-align: right;
+      }
 
-    .password-strength__label--weak {
-      color: #f44336;
-    }
+      .password-strength__label--weak {
+        color: #f44336;
+      }
 
-    .password-strength__label--fair {
-      color: #ff9800;
-    }
+      .password-strength__label--fair {
+        color: #ff9800;
+      }
 
-    .password-strength__label--good {
-      color: #2196f3;
-    }
+      .password-strength__label--good {
+        color: #2196f3;
+      }
 
-    .password-strength__label--strong {
-      color: #4caf50;
-    }
-  `]
+      .password-strength__label--strong {
+        color: #4caf50;
+      }
+    `,
+  ],
 })
 export class PasswordStrengthComponent {
   /** The password to evaluate */
@@ -105,7 +107,7 @@ export class PasswordStrengthComponent {
       weak: 'Słabe',
       fair: 'Średnie',
       good: 'Dobre',
-      strong: 'Silne'
+      strong: 'Silne',
     };
     return labels[this.strength()];
   });

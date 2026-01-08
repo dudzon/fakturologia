@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
  */
 export async function renderComponent<T>(
   component: Type<T>,
-  options: RenderComponentOptions<T> = {}
+  options: RenderComponentOptions<T> = {},
 ): Promise<RenderResult<T>> {
   const defaultProviders: Provider[] = [
     { provide: Router, useValue: createMockRouter() },
@@ -30,7 +30,7 @@ export async function renderComponent<T>(
  */
 export async function renderWithSupabase<T>(
   component: Type<T>,
-  options: RenderComponentOptions<T> = {}
+  options: RenderComponentOptions<T> = {},
 ): Promise<RenderResult<T> & { supabaseMock: ReturnType<typeof createMockSupabaseClient> }> {
   const supabaseMock = createMockSupabaseClient();
 

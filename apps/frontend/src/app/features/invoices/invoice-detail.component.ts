@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  computed,
-  OnInit
-} from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +15,7 @@ import { InvoiceStatusBadgeComponent } from './components/invoice-status-badge.c
 import { InvoicePrintPreviewComponent } from './components/invoice-print-preview.component';
 import {
   InvoiceStatusDialogComponent,
-  InvoiceStatusDialogData
+  InvoiceStatusDialogData,
 } from './components/invoice-status-dialog.component';
 import type { InvoiceResponse, InvoiceStatus } from '../../../types';
 
@@ -48,7 +42,7 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
     MatTooltipModule,
     MatDividerModule,
     InvoiceStatusBadgeComponent,
-    InvoicePrintPreviewComponent
+    InvoicePrintPreviewComponent,
   ],
   template: `
     <div class="invoice-detail">
@@ -62,9 +56,7 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
           <mat-icon color="warn">error_outline</mat-icon>
           <h2>Nie można załadować faktury</h2>
           <p>{{ error() }}</p>
-          <button mat-raised-button color="primary" routerLink="/invoices">
-            Powrót do listy
-          </button>
+          <button mat-raised-button color="primary" routerLink="/invoices">Powrót do listy</button>
         </div>
       } @else if (invoice()) {
         <!-- Header Toolbar -->
@@ -78,28 +70,19 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
             >
               <mat-icon>arrow_back</mat-icon>
             </button>
-            <h1 class="invoice-detail__title">
-              Faktura {{ invoice()!.invoiceNumber }}
-            </h1>
+            <h1 class="invoice-detail__title">Faktura {{ invoice()!.invoiceNumber }}</h1>
             <app-invoice-status-badge [status]="invoice()!.status" />
           </div>
 
           <div class="invoice-detail__actions">
             @if (canEdit()) {
-              <a
-                mat-stroked-button
-                [routerLink]="['/invoices', invoice()!.id, 'edit']"
-              >
+              <a mat-stroked-button [routerLink]="['/invoices', invoice()!.id, 'edit']">
                 <mat-icon>edit</mat-icon>
                 Edytuj
               </a>
             }
 
-            <button
-              mat-stroked-button
-              (click)="duplicateInvoice()"
-              [disabled]="duplicating()"
-            >
+            <button mat-stroked-button (click)="duplicateInvoice()" [disabled]="duplicating()">
               @if (duplicating()) {
                 <mat-spinner diameter="20"></mat-spinner>
               } @else {
@@ -109,11 +92,7 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
             </button>
 
             @if (canGeneratePdf()) {
-              <button
-                mat-stroked-button
-                (click)="generatePdf()"
-                [disabled]="generatingPdf()"
-              >
+              <button mat-stroked-button (click)="generatePdf()" [disabled]="generatingPdf()">
                 @if (generatingPdf()) {
                   <mat-spinner diameter="20"></mat-spinner>
                 } @else {
@@ -123,11 +102,7 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
               </button>
             }
 
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="openStatusDialog()"
-            >
+            <button mat-raised-button color="primary" (click)="openStatusDialog()">
               <mat-icon>published_with_changes</mat-icon>
               Zmień status
             </button>
@@ -152,10 +127,7 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
 
         <!-- Footer Actions (Mobile) -->
         <div class="invoice-detail__footer-actions">
-          <button
-            mat-button
-            routerLink="/invoices"
-          >
+          <button mat-button routerLink="/invoices">
             <mat-icon>arrow_back</mat-icon>
             Powrót do listy
           </button>
@@ -163,137 +135,141 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
       }
     </div>
   `,
-  styles: [`
-    .invoice-detail {
-      padding: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .invoice-detail__loading,
-    .invoice-detail__error {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 24px;
-      text-align: center;
-      gap: 16px;
-      min-height: 400px;
-    }
-
-    .invoice-detail__error mat-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-    }
-
-    .invoice-detail__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .invoice-detail__header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .invoice-detail__title {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 500;
-    }
-
-    .invoice-detail__actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-
-      button, a {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      mat-spinner {
-        margin-right: 8px;
-      }
-    }
-
-    .invoice-detail__draft-warning {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px;
-      margin-bottom: 24px;
-      border-radius: 8px;
-      background-color: #fff3e0;
-      color: #e65100;
-
-      mat-icon {
-        flex-shrink: 0;
-      }
-    }
-
-    .invoice-detail__preview {
-      background: var(--mat-sys-surface);
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
-
-    .invoice-detail__footer-actions {
-      display: none;
-      margin-top: 24px;
-      justify-content: center;
-    }
-
-    @media (max-width: 959px) {
+  styles: [
+    `
       .invoice-detail {
-        padding: 16px;
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .invoice-detail__loading,
+      .invoice-detail__error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+        text-align: center;
+        gap: 16px;
+        min-height: 400px;
+      }
+
+      .invoice-detail__error mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
       }
 
       .invoice-detail__header {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 24px;
       }
 
       .invoice-detail__header-left {
-        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
 
       .invoice-detail__title {
-        font-size: 18px;
-        flex: 1;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 500;
       }
 
       .invoice-detail__actions {
-        width: 100%;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
 
-        button, a {
-          flex: 1;
-          justify-content: center;
+        button,
+        a {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        mat-spinner {
+          margin-right: 8px;
         }
       }
-    }
 
-    @media (max-width: 599px) {
-      .invoice-detail__actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+      .invoice-detail__draft-warning {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        margin-bottom: 24px;
+        border-radius: 8px;
+        background-color: #fff3e0;
+        color: #e65100;
+
+        mat-icon {
+          flex-shrink: 0;
+        }
+      }
+
+      .invoice-detail__preview {
+        background: var(--mat-sys-surface);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
       }
 
       .invoice-detail__footer-actions {
-        display: flex;
+        display: none;
+        margin-top: 24px;
+        justify-content: center;
       }
-    }
-  `]
+
+      @media (max-width: 959px) {
+        .invoice-detail {
+          padding: 16px;
+        }
+
+        .invoice-detail__header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .invoice-detail__header-left {
+          width: 100%;
+        }
+
+        .invoice-detail__title {
+          font-size: 18px;
+          flex: 1;
+        }
+
+        .invoice-detail__actions {
+          width: 100%;
+
+          button,
+          a {
+            flex: 1;
+            justify-content: center;
+          }
+        }
+      }
+
+      @media (max-width: 599px) {
+        .invoice-detail__actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+        }
+
+        .invoice-detail__footer-actions {
+          display: flex;
+        }
+      }
+    `,
+  ],
 })
 export class InvoiceDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -340,9 +316,7 @@ export class InvoiceDetailComponent implements OnInit {
       }
     } catch (err) {
       this.error.set(
-        err instanceof Error
-          ? err.message
-          : 'Wystąpił błąd podczas ładowania faktury'
+        err instanceof Error ? err.message : 'Wystąpił błąd podczas ładowania faktury',
       );
     } finally {
       this.loading.set(false);
@@ -359,12 +333,12 @@ export class InvoiceDetailComponent implements OnInit {
     const dialogData: InvoiceStatusDialogData = {
       invoiceId: inv.id,
       invoiceNumber: inv.invoiceNumber,
-      currentStatus: inv.status
+      currentStatus: inv.status,
     };
 
     const dialogRef = this.dialog.open(InvoiceStatusDialogComponent, {
       data: dialogData,
-      width: '400px'
+      width: '400px',
     });
 
     dialogRef.afterClosed().subscribe(async (newStatus: InvoiceStatus | undefined) => {
@@ -375,18 +349,16 @@ export class InvoiceDetailComponent implements OnInit {
             .toPromise();
 
           if (result) {
-            this.invoice.update((current) =>
-              current ? { ...current, status: newStatus } : null
-            );
+            this.invoice.update((current) => (current ? { ...current, status: newStatus } : null));
             this.invoicesStore.updateInvoiceStatus(inv.id, newStatus);
             this.snackBar.open('Status faktury został zmieniony', 'Zamknij', {
-              duration: 3000
+              duration: 3000,
             });
           }
         } catch (error) {
           this.snackBar.open('Błąd podczas zmiany statusu', 'Zamknij', {
             duration: 5000,
-            panelClass: ['snackbar-error']
+            panelClass: ['snackbar-error'],
           });
         }
       }
@@ -406,7 +378,7 @@ export class InvoiceDetailComponent implements OnInit {
       const duplicated = await this.invoiceService.duplicate(inv.id).toPromise();
       if (duplicated) {
         this.snackBar.open('Faktura została zduplikowana', 'Zamknij', {
-          duration: 3000
+          duration: 3000,
         });
         this.invoicesStore.invalidateCache();
         this.router.navigate(['/invoices', duplicated.id, 'edit']);
@@ -414,7 +386,7 @@ export class InvoiceDetailComponent implements OnInit {
     } catch (error) {
       this.snackBar.open('Błąd podczas duplikowania faktury', 'Zamknij', {
         duration: 5000,
-        panelClass: ['snackbar-error']
+        panelClass: ['snackbar-error'],
       });
     } finally {
       this.duplicating.set(false);
@@ -432,7 +404,7 @@ export class InvoiceDetailComponent implements OnInit {
       this.snackBar.open(
         'Nie można wygenerować PDF dla szkicu faktury. Najpierw wystaw fakturę.',
         'Zamknij',
-        { duration: 5000 }
+        { duration: 5000 },
       );
       return;
     }
@@ -442,17 +414,15 @@ export class InvoiceDetailComponent implements OnInit {
     try {
       // TODO: Implement PDF generation with pdfmake in Web Worker
       // For now, show a placeholder message
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      this.snackBar.open(
-        'Generowanie PDF zostanie zaimplementowane wkrótce',
-        'Zamknij',
-        { duration: 3000 }
-      );
+      this.snackBar.open('Generowanie PDF zostanie zaimplementowane wkrótce', 'Zamknij', {
+        duration: 3000,
+      });
     } catch (error) {
       this.snackBar.open('Błąd podczas generowania PDF', 'Zamknij', {
         duration: 5000,
-        panelClass: ['snackbar-error']
+        panelClass: ['snackbar-error'],
       });
     } finally {
       this.generatingPdf.set(false);

@@ -7,9 +7,9 @@ import { UserService } from '../../services/user.service';
 import type { UserProfileResponse } from '../../../types';
 
 // Mock the dependencies
-let mockUserService: any;
-let mockRouter: any;
-let mockSnackBar: any;
+let mockUserService: { getProfile: jest.MockedFunction<UserService['getProfile']> };
+let mockRouter: { navigate: jest.MockedFunction<Router['navigate']> };
+let mockSnackBar: { open: jest.MockedFunction<MatSnackBar['open']> };
 
 vi.mock('../../services/user.service', () => ({
   UserService: vi.fn(),
@@ -46,9 +46,9 @@ vi.mock('rxjs', async () => {
 });
 
 describe('profileCompleteGuard', () => {
-  let userServiceMock: { getProfile: any };
-  let routerMock: { navigate: any };
-  let snackBarMock: { open: any };
+  let userServiceMock: { getProfile: jest.MockedFunction<UserService['getProfile']> };
+  let routerMock: { navigate: jest.MockedFunction<Router['navigate']> };
+  let snackBarMock: { open: jest.MockedFunction<MatSnackBar['open']> };
 
   const completeProfile: UserProfileResponse = {
     id: '1',
@@ -100,7 +100,7 @@ describe('profileCompleteGuard', () => {
   it('should allow access when profile is complete', async () => {
     userServiceMock.getProfile.mockReturnValue(of(completeProfile));
 
-    const result = await profileCompleteGuard(null as any, null as any);
+    const result = await profileCompleteGuard(null as unknown, null as unknown);
 
     expect(result).toBe(true);
     expect(userServiceMock.getProfile).toHaveBeenCalled();
@@ -169,7 +169,7 @@ describe('profileCompleteGuard', () => {
   it('should handle API errors and redirect to profile', async () => {
     userServiceMock.getProfile.mockReturnValue(throwError(new Error('API Error')));
 
-    const result = await profileCompleteGuard(null as any, null as any);
+    const result = await profileCompleteGuard(null as unknown, null as unknown);
 
     expect(result).toBe(false);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/profile']);
@@ -184,9 +184,9 @@ describe('profileCompleteGuard', () => {
   });
 
   it('should handle null profile response', async () => {
-    userServiceMock.getProfile.mockReturnValue(of(null as any));
+    userServiceMock.getProfile.mockReturnValue(of(null as unknown));
 
-    const result = await profileCompleteGuard(null as any, null as any);
+    const result = await profileCompleteGuard(null as unknown, null as unknown);
 
     expect(result).toBe(false);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/profile']);

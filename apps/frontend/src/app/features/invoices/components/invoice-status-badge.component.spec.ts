@@ -4,7 +4,6 @@ import {
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 import { InvoiceStatusBadgeComponent } from './invoice-status-badge.component';
-import type { InvoiceStatus } from '../../../../types';
 
 describe('InvoiceStatusBadgeComponent', () => {
   let component: InvoiceStatusBadgeComponent;

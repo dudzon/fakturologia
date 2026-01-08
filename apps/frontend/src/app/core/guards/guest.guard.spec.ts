@@ -4,8 +4,8 @@ import { guestGuard } from './guest.guard';
 import { AuthService } from '../auth.service';
 
 // Mock the dependencies by importing them first
-let mockAuthService: any;
-let mockRouter: any;
+let mockAuthService: AuthService;
+let mockRouter: Router;
 
 vi.mock('../auth.service', () => ({
   AuthService: vi.fn(),
@@ -16,20 +16,20 @@ vi.mock('@angular/router', () => ({
 }));
 
 vi.mock('@angular/core', () => ({
-  inject: vi.fn((token: any) => {
+  inject: vi.fn((token: unknown) => {
     if (token === AuthService || token.name === 'AuthService') {
       return mockAuthService;
     }
     if (token === Router || token.name === 'Router') {
       return mockRouter;
     }
-    throw new Error(`Unexpected inject token: ${token}`);
+    throw new Error(`Unexpected inject token: ${String(token)}`);
   }),
 }));
 
 describe('guestGuard', () => {
-  let authServiceMock: { getSession: any };
-  let routerMock: { createUrlTree: any };
+  let authServiceMock: { getSession: jest.MockedFunction<AuthService['getSession']> };
+  let routerMock: { createUrlTree: jest.MockedFunction<Router['createUrlTree']> };
 
   beforeEach(() => {
     authServiceMock = {
@@ -51,7 +51,7 @@ describe('guestGuard', () => {
       error: null,
     });
 
-    const result = await guestGuard(null as any, null as any);
+    const result = await guestGuard(null as unknown, null as unknown);
 
     expect(result).toBe(true);
     expect(authServiceMock.getSession).toHaveBeenCalled();
@@ -68,7 +68,7 @@ describe('guestGuard', () => {
     const mockUrlTree = {};
     routerMock.createUrlTree.mockReturnValue(mockUrlTree);
 
-    const result = await guestGuard(null as any, null as any);
+    const result = await guestGuard(null as unknown, null as unknown);
 
     expect(result).toBe(mockUrlTree);
     expect(authServiceMock.getSession).toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe('guestGuard', () => {
   it('should handle auth service errors gracefully', async () => {
     authServiceMock.getSession.mockRejectedValue(new Error('Auth error'));
 
-    await expect(guestGuard(null as any, null as any)).rejects.toThrow('Auth error');
+    await expect(guestGuard(null as unknown, null as unknown)).rejects.toThrow('Auth error');
   });
 
   it('should handle null session data', async () => {
@@ -87,7 +87,7 @@ describe('guestGuard', () => {
       error: null,
     });
 
-    const result = await guestGuard(null as any, null as any);
+    const result = await guestGuard(null as unknown, null as unknown);
 
     expect(result).toBe(true);
     expect(routerMock.createUrlTree).not.toHaveBeenCalled();
@@ -99,7 +99,7 @@ describe('guestGuard', () => {
       error: null,
     });
 
-    const result = await guestGuard(null as any, null as any);
+    const result = await guestGuard(null as unknown, null as unknown);
 
     expect(result).toBe(true);
     expect(routerMock.createUrlTree).not.toHaveBeenCalled();

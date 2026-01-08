@@ -1,8 +1,8 @@
-import { Component, inject, signal, computed, OnInit, DestroyRef, effect } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -23,7 +23,7 @@ import {
   ConfirmDialogComponent,
   ConfirmDialogData,
 } from '../../shared/components/confirm-dialog/confirm-dialog.component';
-import type { ContractorResponse, ContractorListQuery } from '../../../types';
+import type { ContractorResponse } from '../../../types';
 
 /**
  * ContractorListComponent - Main view for managing contractors.
@@ -366,7 +366,7 @@ export class ContractorListComponent implements OnInit {
     // Setup search debounce
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((search) => {
+      .subscribe((_search) => {
         this.store.updateQuery({ search: search || undefined });
       });
   }
@@ -442,7 +442,7 @@ export class ContractorListComponent implements OnInit {
   /**
    * Show delete confirmation dialog.
    */
-  confirmDelete(contractor: ContractorResponse): void {
+  confirmDelete(_contractor: ContractorResponse): void {
     const dialogData: ConfirmDialogData = {
       title: 'Usuń kontrahenta',
       message: `Czy na pewno chcesz usunąć kontrahenta "${contractor.name}"? Ta operacja jest nieodwracalna.`,
@@ -457,7 +457,7 @@ export class ContractorListComponent implements OnInit {
       width: '400px',
     });
 
-    dialogRef.afterClosed().subscribe(async (confirmed: boolean) => {
+    dialogRef.afterClosed().subscribe(async (_confirmed: boolean) => {
       if (confirmed) {
         const success = await this.store.deleteContractor(contractor.id);
 

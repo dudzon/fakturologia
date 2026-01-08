@@ -434,7 +434,7 @@ export class RegisterComponent {
     const { email, password } = this.registerForm.getRawValue();
 
     try {
-      const { data, error } = await this.authService.signUp(email, password);
+      const { _data, error } = await this.authService.signUp(email, password);
 
       if (error) {
         this.handleAuthError(error);

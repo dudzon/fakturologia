@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit, DestroyRef } from '@angular/core';
+import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,11 +15,7 @@ import { ContractorService } from '../../services/contractor.service';
 import { ContractorsStore } from '../../stores/contractors.store';
 import { nipValidator, normalizeNip } from '../../shared/validators/nip.validator';
 import type { CanDeactivateComponent } from '../../core/guards/can-deactivate.guard';
-import type {
-  ContractorResponse,
-  CreateContractorCommand,
-  UpdateContractorCommand,
-} from '../../../types';
+import type { CreateContractorCommand, UpdateContractorCommand } from '../../../types';
 
 /**
  * ContractorFormComponent - Form for creating and editing contractors.
@@ -265,7 +261,7 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
           this.contractorForm.markAsPristine();
           this.isLoading.set(false);
         },
-        error: (error) => {
+        error: (_error) => {
           this.isLoading.set(false);
           this.snackBar.open('Nie udało się załadować danych kontrahenta', 'OK', {
             duration: 5000,
@@ -297,12 +293,12 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
     this.isSaving.set(true);
     this.apiError.set(null);
 
-    const formValue = this.contractorForm.value;
+    const _formValue = this.contractorForm.value;
 
     if (this.isEditMode()) {
-      this.updateContractor(formValue);
+      this.updateContractor(_formValue);
     } else {
-      this.createContractor(formValue);
+      this.createContractor(_formValue);
     }
   }
 
@@ -320,7 +316,7 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
       .create(command)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (contractor) => {
+        next: (_contractor) => {
           this.formSaved = true;
           this.contractorsStore.invalidateCache();
           this.snackBar.open('Kontrahent został dodany', 'OK', {
@@ -352,7 +348,7 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
       .update(id, command)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (contractor) => {
+        next: (_contractor) => {
           this.formSaved = true;
           this.contractorsStore.invalidateCache();
           this.snackBar.open('Zmiany zostały zapisane', 'OK', {

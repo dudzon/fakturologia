@@ -254,7 +254,7 @@ export class InvoiceFiltersComponent {
 
   constructor() {
     // Initialize search value from input
-    const initialFilters = this.filters;
+    const _initialFilters = this.filters();
 
     // Set up search debouncing
     this.searchSubject

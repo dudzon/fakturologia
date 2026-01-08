@@ -281,7 +281,7 @@ export class LoginComponent implements OnInit {
     this.errorMessage.set(null);
     this.showResendVerification.set(false);
 
-    const { email, password, rememberMe } = this.loginForm.getRawValue();
+    const { email, password, _rememberMe } = this.loginForm.getRawValue();
     this.lastAttemptedEmail = email;
 
     try {

@@ -78,7 +78,14 @@ describe('generateInvoiceNumberPreview', () => {
   it('should handle all placeholders', () => {
     const format = 'INV/{YYYY}/{YY}/{MM}/{DD}/{NNN}';
     const result = generateInvoiceNumberPreview(format, 123);
-    expect(result).toBe('INV/2026/26/01/06/123');
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const shortYear = String(year).slice(-2);
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    expect(result).toBe(`INV/${year}/${shortYear}/${month}/${day}/123`);
   });
 
   it('should pad counter with zeros', () => {

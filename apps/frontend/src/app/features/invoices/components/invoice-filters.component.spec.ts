@@ -29,6 +29,7 @@ describe('InvoiceFiltersComponent', () => {
     fixture = TestBed.createComponent(InvoiceFiltersComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('filters', defaultFilters);
+    fixture.detectChanges();
   });
 
   afterEach(() => {
@@ -38,7 +39,6 @@ describe('InvoiceFiltersComponent', () => {
 
   describe('initialization', () => {
     it('should create', () => {
-      fixture.detectChanges();
       expect(component).toBeTruthy();
     });
 

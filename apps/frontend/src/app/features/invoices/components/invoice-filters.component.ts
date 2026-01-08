@@ -253,9 +253,6 @@ export class InvoiceFiltersComponent {
   });
 
   constructor() {
-    // Initialize search value from input
-    const _initialFilters = this.filters();
-
     // Set up search debouncing
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed())

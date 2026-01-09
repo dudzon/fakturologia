@@ -19,6 +19,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { ContractorsStore } from '../../stores/contractors.store';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import {
   ConfirmDialogComponent,
   ConfirmDialogData,
@@ -55,9 +56,23 @@ import type { ContractorResponse } from '../../../types';
     MatDialogModule,
     MatTooltipModule,
     EmptyStateComponent,
+    PageHeaderComponent,
   ],
   template: `
     <div class="contractor-list">
+      <!-- Header -->
+      <app-page-header title="Kontrahenci">
+        <a
+          mat-raised-button
+          color="primary"
+          routerLink="/contractors/new"
+          class="contractor-list__add-btn"
+        >
+          <mat-icon>add</mat-icon>
+          <span class="contractor-list__add-btn-text">Nowy kontrahent</span>
+        </a>
+      </app-page-header>
+
       <!-- Toolbar -->
       <div class="contractor-list__toolbar">
         <mat-form-field
@@ -85,16 +100,6 @@ import type { ContractorResponse } from '../../../types';
             </button>
           }
         </mat-form-field>
-
-        <a
-          mat-raised-button
-          color="primary"
-          routerLink="/contractors/new"
-          class="contractor-list__add-btn"
-        >
-          <mat-icon>add</mat-icon>
-          <span class="contractor-list__add-btn-text">Nowy kontrahent</span>
-        </a>
       </div>
 
       <!-- Loading state -->

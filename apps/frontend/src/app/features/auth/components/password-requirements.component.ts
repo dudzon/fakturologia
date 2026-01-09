@@ -46,7 +46,6 @@ interface PasswordRequirement {
   styles: [
     `
       .password-requirements {
-        margin-top: 12px;
         padding: 12px;
         background-color: rgba(0, 0, 0, 0.02);
         border-radius: 8px;

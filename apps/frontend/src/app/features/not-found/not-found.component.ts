@@ -24,7 +24,6 @@ import { AuthService } from '../../core/auth.service';
         <!-- 404 Illustration -->
         <div class="illustration">
           <span class="error-code">404</span>
-          <mat-icon class="error-icon">search_off</mat-icon>
         </div>
 
         <!-- Message -->

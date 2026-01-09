@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -21,6 +22,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { InvoicesStore } from '../../stores/invoices.store';
 import { InvoiceService } from '../../services/invoice.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import {
   ConfirmDialogComponent,
   ConfirmDialogData,
@@ -67,15 +69,16 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
     MatDialogModule,
     MatTooltipModule,
     MatChipsModule,
+    MatDividerModule,
     EmptyStateComponent,
+    PageHeaderComponent,
     InvoiceStatusBadgeComponent,
     InvoiceFiltersComponent,
   ],
   template: `
     <div class="invoice-list">
       <!-- Header -->
-      <div class="invoice-list__header">
-        <h1 class="invoice-list__title">Faktury</h1>
+      <app-page-header title="Faktury">
         <a
           mat-raised-button
           color="primary"
@@ -85,7 +88,7 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
           <mat-icon>add</mat-icon>
           Nowa faktura
         </a>
-      </div>
+      </app-page-header>
 
       <!-- Filters -->
       <app-invoice-filters
@@ -262,21 +265,6 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
         padding: 24px;
         max-width: 1400px;
         margin: 0 auto;
-      }
-
-      .invoice-list__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-
-      .invoice-list__title {
-        margin: 0;
-        font-size: 28px;
-        font-weight: 500;
       }
 
       .invoice-list__new-btn {

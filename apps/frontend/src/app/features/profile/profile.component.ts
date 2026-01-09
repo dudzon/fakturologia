@@ -25,6 +25,7 @@ import type {
 import { LogoUploadComponent } from './components/logo-upload.component';
 import { InvoiceNumberPreviewComponent } from './components/invoice-number-preview.component';
 import { ProfileCompletenessIndicatorComponent } from './components/profile-completeness-indicator.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 /**
  * ProfileComponent - Main container for company profile management.
@@ -54,6 +55,7 @@ import { ProfileCompletenessIndicatorComponent } from './components/profile-comp
     LogoUploadComponent,
     InvoiceNumberPreviewComponent,
     ProfileCompletenessIndicatorComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',

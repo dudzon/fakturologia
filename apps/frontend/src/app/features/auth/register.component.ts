@@ -278,7 +278,6 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
       .register__form {
         display: flex;
         flex-direction: column;
-        gap: 8px;
       }
 
       .register__field {

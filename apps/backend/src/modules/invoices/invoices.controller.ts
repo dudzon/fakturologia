@@ -44,6 +44,7 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
+import type { User } from '@supabase/supabase-js';
 import { JwtAuthGuard, CurrentUser } from '../../common';
 import { InvoicesService } from './invoices.service';
 import {
@@ -63,14 +64,6 @@ import {
   UpdateInvoiceStatusResponseDto,
 } from './dto/invoice-response.dto';
 import { MessageResponseDto } from '../users/dto';
-
-/**
- * User interface from JWT token
- */
-interface JwtUser {
-  sub: string;
-  email: string;
-}
 
 @ApiTags('Invoices')
 @ApiBearerAuth('access-token')
@@ -155,10 +148,10 @@ export class InvoicesController {
     description: 'Unauthorized - invalid or missing token',
   })
   async findAll(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
     @Query() query: InvoiceListQueryDto,
   ): Promise<InvoiceListResponseDto> {
-    return this.invoicesService.findAll(user.sub, query);
+    return this.invoicesService.findAll(user.id, query);
   }
 
   // ==================== GET /invoices/next-number ====================
@@ -182,9 +175,9 @@ export class InvoicesController {
     description: 'Unauthorized',
   })
   async getNextNumber(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
   ): Promise<NextInvoiceNumberResponseDto> {
-    return this.invoicesService.getNextNumber(user.sub);
+    return this.invoicesService.getNextNumber(user.id);
   }
 
   // ==================== GET /invoices/:id ====================
@@ -217,10 +210,10 @@ export class InvoicesController {
     description: 'Invoice not found',
   })
   async findOne(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<InvoiceResponseDto> {
-    return this.invoicesService.findOne(user.sub, id);
+    return this.invoicesService.findOne(user.id, id);
   }
 
   // ==================== POST /invoices ====================
@@ -248,10 +241,10 @@ export class InvoicesController {
     description: 'Unauthorized',
   })
   async create(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
     @Body() createInvoiceDto: CreateInvoiceDto,
   ): Promise<InvoiceResponseDto> {
-    return this.invoicesService.create(user.sub, createInvoiceDto);
+    return this.invoicesService.create(user.id, createInvoiceDto);
   }
 
   // ==================== PUT /invoices/:id ====================
@@ -288,11 +281,11 @@ export class InvoicesController {
     description: 'Invoice not found',
   })
   async update(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateInvoiceDto: UpdateInvoiceDto,
   ): Promise<InvoiceResponseDto> {
-    return this.invoicesService.update(user.sub, id, updateInvoiceDto);
+    return this.invoicesService.update(user.id, id, updateInvoiceDto);
   }
 
   // ==================== PATCH /invoices/:id/status ====================
@@ -329,11 +322,11 @@ export class InvoicesController {
     description: 'Invoice not found',
   })
   async updateStatus(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateStatusDto: UpdateInvoiceStatusDto,
   ): Promise<UpdateInvoiceStatusResponseDto> {
-    return this.invoicesService.updateStatus(user.sub, id, updateStatusDto);
+    return this.invoicesService.updateStatus(user.id, id, updateStatusDto);
   }
 
   // ==================== POST /invoices/:id/duplicate ====================
@@ -371,11 +364,11 @@ export class InvoicesController {
     description: 'Invoice not found',
   })
   async duplicate(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() duplicateDto: DuplicateInvoiceDto,
   ): Promise<InvoiceResponseDto> {
-    return this.invoicesService.duplicate(user.sub, id, duplicateDto);
+    return this.invoicesService.duplicate(user.id, id, duplicateDto);
   }
 
   // ==================== DELETE /invoices/:id ====================
@@ -407,10 +400,10 @@ export class InvoicesController {
     description: 'Invoice not found',
   })
   async remove(
-    @CurrentUser() user: JwtUser,
+    @CurrentUser() user: User,
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MessageResponseDto> {
-    await this.invoicesService.remove(user.sub, id);
+    await this.invoicesService.remove(user.id, id);
     const response = new MessageResponseDto();
     response.message = 'Invoice deleted successfully';
     return response;

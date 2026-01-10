@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 import { InvoiceFormStore, InvoiceItemFormModel } from '../../../stores/invoice-form.store';
 import {
@@ -66,11 +67,19 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
     MatTooltipModule,
     MatDialogModule,
   ],
+  providers: [
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { verticalPosition: 'top', duration: 3000 } },
+  ],
   template: `
     <div class="items-table">
       @if (formStore.hasItems()) {
         <div class="items-table__container">
-          <table mat-table [dataSource]="formStore.items()" class="items-table__table">
+          <table
+            mat-table
+            [dataSource]="formStore.items()"
+            [trackBy]="trackByIndex"
+            class="items-table__table"
+          >
             <!-- Position Column -->
             <ng-container matColumnDef="position">
               <th mat-header-cell *matHeaderCellDef>Lp.</th>
@@ -78,7 +87,6 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 {{ i + 1 }}
               </td>
             </ng-container>
-
             <!-- Name Column -->
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef>Nazwa towaru/usługi</th>
@@ -98,7 +106,6 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Quantity Column -->
             <ng-container matColumnDef="quantity">
               <th mat-header-cell *matHeaderCellDef>Ilość</th>
@@ -110,17 +117,14 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 >
                   <input
                     matInput
-                    type="number"
+                    type="text"
                     [ngModel]="item.quantity"
                     (ngModelChange)="updateItem(i, 'quantity', $event)"
-                    min="0.01"
-                    step="0.01"
                     required
                   />
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Unit Column -->
             <ng-container matColumnDef="unit">
               <th mat-header-cell *matHeaderCellDef>J.m.</th>
@@ -138,7 +142,6 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Unit Price Column -->
             <ng-container matColumnDef="unitPrice">
               <th mat-header-cell *matHeaderCellDef>Cena netto</th>
@@ -150,17 +153,14 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 >
                   <input
                     matInput
-                    type="number"
+                    type="text"
                     [ngModel]="item.unitPrice"
                     (ngModelChange)="updateItem(i, 'unitPrice', $event)"
-                    min="0"
-                    step="0.01"
                     required
                   />
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- VAT Rate Column -->
             <ng-container matColumnDef="vatRate">
               <th mat-header-cell *matHeaderCellDef>VAT</th>
@@ -181,29 +181,27 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Net Amount Column (readonly) -->
             <ng-container matColumnDef="netAmount">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Netto</th>
-              <td mat-cell *matCellDef="let item" class="text-right">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Netto</th>
+              <td mat-cell *matCellDef="let item" class="text-center">
                 {{ formatCurrency(item.netAmount) }}
               </td>
             </ng-container>
-
             <!-- Gross Amount Column (readonly) -->
             <ng-container matColumnDef="grossAmount">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Brutto</th>
-              <td mat-cell *matCellDef="let item" class="text-right">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Brutto</th>
+              <td mat-cell *matCellDef="let item" class="text-center">
                 {{ formatCurrency(item.grossAmount) }}
               </td>
             </ng-container>
-
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let item; let i = index">
                 <button
                   mat-icon-button
+                  type="button"
                   color="warn"
                   (click)="removeItem(i)"
                   matTooltip="Usuń pozycję"
@@ -213,7 +211,6 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </button>
               </td>
             </ng-container>
-
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
@@ -243,8 +240,10 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
 
         th,
         td {
-          padding: 8px;
-          vertical-align: top;
+          padding: 2px 6px;
+          vertical-align: middle;
+          text-align: center;
+          height: 44px;
         }
 
         th {
@@ -255,13 +254,57 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
           background: var(--mat-sys-surface-container);
         }
 
-        .text-right {
-          text-align: right;
+        .text-center {
+          text-align: center;
+        }
+
+        .items-table__field--number input,
+        .items-table__field--number,
+        .items-table__field--name input,
+        ::ng-deep .mat-mdc-select-value-text,
+        ::ng-deep .mat-mdc-select-value,
+        ::ng-deep .mat-select-value {
+          text-align: center;
+        }
+
+        td.mat-cell:last-child {
+          text-align: center;
+          vertical-align: middle;
         }
       }
 
       .items-table__field {
         width: 100%;
+
+        ::ng-deep .mat-mdc-text-field-wrapper {
+          padding-top: 0;
+          padding-bottom: 0;
+          height: 40px;
+        }
+
+        ::ng-deep .mat-mdc-form-field-flex {
+          align-items: center;
+        }
+
+        ::ng-deep .mat-mdc-form-field-infix {
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+          min-height: auto !important;
+          display: flex;
+          align-items: center;
+          height: 40px;
+        }
+
+        ::ng-deep .mat-mdc-select-trigger {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          width: 100%;
+        }
+
+        ::ng-deep .mat-mdc-input-element {
+          height: 100%;
+        }
 
         ::ng-deep .mat-mdc-form-field-subscript-wrapper {
           display: none;
@@ -273,21 +316,39 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
       }
 
       .items-table__field--number {
-        width: 100px;
+        width: 80px;
+        min-width: 60px;
       }
 
       .items-table__field--unit {
         width: 80px;
+        min-width: 70px;
       }
 
       .items-table__field--vat {
         width: 80px;
+        min-width: 70px;
       }
 
       .items-table__add-row {
-        margin-top: 16px;
+        margin-top: 12px;
         display: flex;
         justify-content: center;
+      }
+
+      button[mat-icon-button] {
+        vertical-align: middle;
+        margin-top: 0;
+        margin-bottom: 0;
+        height: 32px;
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mat-icon {
+        vertical-align: middle;
       }
 
       @media (max-width: 959px) {
@@ -365,9 +426,6 @@ export class InvoiceItemsTableComponent {
     }
   }
 
-  /**
-   * Format currency value.
-   */
   formatCurrency(value: string): string {
     const num = parseFloat(value);
     if (isNaN(num)) return value;
@@ -375,5 +433,12 @@ export class InvoiceItemsTableComponent {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+  }
+
+  /**
+   * Track by index for table performance.
+   */
+  trackByIndex(index: number, item: any): any {
+    return index;
   }
 }

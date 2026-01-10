@@ -1,6 +1,7 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { InvoiceService } from '../../services/invoice.service';
@@ -86,7 +87,10 @@ const CURRENCIES: { value: Currency; label: string }[] = [
     InvoiceTotalsComponent,
     ContractorSelectComponent,
   ],
-  providers: [InvoiceFormStore],
+  providers: [
+    InvoiceFormStore,
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { verticalPosition: 'top', duration: 3000 } },
+  ],
   template: `
     <div class="invoice-form">
       @if (loading()) {
@@ -320,7 +324,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
 
               <app-loading-button
                 [loading]="savingIssue()"
-                [disabled]="savingDraft() || !canIssue()"
+                [disabled]="savingDraft()"
                 type="button"
                 color="primary"
                 (clicked)="onSubmit('unpaid')"
@@ -520,7 +524,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
     buyer: this.fb.group({
       name: ['', [Validators.required]],
       address: [''],
-      nip: ['', [nipValidator]],
+      nip: ['', [nipValidator()]],
     }),
     notes: ['', [Validators.maxLength(1000)]],
   });
@@ -552,7 +556,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   private async initializeNewInvoice(): Promise<void> {
     try {
       // Get next invoice number
-      const nextNumber = await this.invoiceService.getNextNumber().toPromise();
+      const nextNumber = await firstValueFrom(this.invoiceService.getNextNumber());
       if (nextNumber) {
         this.form.patchValue({ invoiceNumber: nextNumber.nextNumber });
       }
@@ -573,7 +577,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
    */
   private async loadExistingInvoice(id: string): Promise<void> {
     try {
-      const invoice = await this.invoiceService.get(id).toPromise();
+      const invoice = await firstValueFrom(this.invoiceService.get(id));
 
       if (!invoice) {
         this.loadError.set('Faktura nie została znaleziona');
@@ -721,9 +725,9 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
           status,
         };
 
-        const result = await this.invoiceService
-          .update(this.existingInvoice()!.id, command)
-          .toPromise();
+        const result = await firstValueFrom(
+          this.invoiceService.update(this.existingInvoice()!.id, command),
+        );
 
         if (result) {
           this.formStore.markAsPristine();
@@ -752,7 +756,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
           contractorId: this.selectedContractorId() || undefined,
         };
 
-        const result = await this.invoiceService.create(command).toPromise();
+        const result = await firstValueFrom(this.invoiceService.create(command));
 
         if (result) {
           this.formStore.markAsPristine();

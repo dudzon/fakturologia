@@ -224,8 +224,8 @@ export class InvoiceFormStore {
   private calculateItemAmounts(
     item: InvoiceItemFormModel,
   ): Pick<InvoiceItemFormModel, 'netAmount' | 'vatAmount' | 'grossAmount'> {
-    const quantity = parseFloat(item.quantity) || 0;
-    const unitPrice = parseFloat(item.unitPrice) || 0;
+    const quantity = parseFloat(item.quantity?.toString().replace(',', '.')) || 0;
+    const unitPrice = parseFloat(item.unitPrice?.toString().replace(',', '.')) || 0;
     const vatPercentage = VAT_PERCENTAGES[item.vatRate];
 
     const netAmount = quantity * unitPrice;

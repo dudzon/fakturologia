@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- generic "Zaloguj się" [ref=e4]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - link "📄 Fakturologia" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e10]:
+          - generic [ref=e11]: 📄
+          - generic [ref=e12]: Fakturologia
+      - heading "Zaloguj się" [level=1] [ref=e13]
+      - paragraph [ref=e14]: Wprowadź dane logowania, aby kontynuować
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - text: Email
+            - generic [ref=e21]: "*"
+          - img [ref=e23]: email
+          - textbox "Email" [ref=e25]:
+            - /placeholder: jan@example.com
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - text: Hasło
+            - generic [ref=e31]: "*"
+          - img [ref=e33]: lock
+          - textbox "Hasło" [ref=e35]
+          - button "Pokaż hasło" [ref=e37] [cursor=pointer]:
+            - img [ref=e38]: visibility_off
+        - generic [ref=e42]:
+          - generic [ref=e44]:
+            - generic [ref=e45] [cursor=pointer]:
+              - checkbox "Zapamiętaj mnie" [ref=e47]
+              - generic:
+                - img
+            - generic [ref=e48] [cursor=pointer]: Zapamiętaj mnie
+          - link "Zapomniałem hasła" [ref=e49] [cursor=pointer]:
+            - /url: /auth/forgot-password
+        - generic [ref=e50]:
+          - button "Zaloguj się" [disabled]:
+            - generic:
+              - generic: Zaloguj się
+      - generic [ref=e51]:
+        - generic [ref=e52]: Nie masz konta?
+        - link "Zarejestruj się" [ref=e53] [cursor=pointer]:
+          - /url: /auth/register
+```

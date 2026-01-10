@@ -30,11 +30,13 @@ export { expect };
 
 /**
  * Test data for authentication tests
+ * Loaded from environment variables (see .env.test)
  */
 export const testUsers = {
   valid: {
-    email: 'test@example.com',
-    password: 'TestPassword123!',
+    email: process.env.E2E_USERNAME,
+    password: process.env.E2E_PASSWORD,
+    id: process.env.E2E_USERNAME_ID
   },
   invalid: {
     email: 'invalid@example.com',

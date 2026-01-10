@@ -372,15 +372,17 @@ export class LogoUploadComponent {
    */
   private uploadFile(file: File): void {
     this.isUploading.set(true);
-
+    // ...existing code...
     this.userService.uploadLogo(file).subscribe({
       next: (response) => {
+        // ...existing code...
         this.isUploading.set(false);
         this.previewUrl.set(null); // Clear preview, use actual URL
+        // ...existing code...
         this.logoUploaded.emit(response.logoUrl);
       },
       error: (error) => {
-        console.error('Error uploading logo:', error);
+        console.error('[LogoUpload] Error uploading logo:', error);
         this.isUploading.set(false);
         this.previewUrl.set(null);
         const message = this.getErrorMessage(error);

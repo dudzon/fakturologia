@@ -1,0 +1,8 @@
+/* Custom style for snackbar action button (OK) */
+.mat-mdc-snack-bar-action {
+  color: #3f51b5 !important; /* Indigo text for contrast */
+}
+
+.mat-mdc-snack-bar-action:hover, .mat-mdc-snack-bar-action:focus {
+  color: #303f9f !important;
+}

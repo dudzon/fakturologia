@@ -126,7 +126,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
           <!-- Invoice Data Section -->
           <mat-card class="invoice-form__section">
             <mat-card-header>
-              <mat-card-title>Dane faktury</mat-card-title>
+              <mat-card-title class="invoice-form__section-title">Dane faktury</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <div class="invoice-form__row">
@@ -202,7 +202,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
           <!-- Buyer Section -->
           <mat-card class="invoice-form__section">
             <mat-card-header>
-              <mat-card-title>Nabywca</mat-card-title>
+              <mat-card-title class="invoice-form__section-title">Nabywca</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <app-contractor-select
@@ -251,7 +251,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
           <!-- Items Section -->
           <mat-card class="invoice-form__section">
             <mat-card-header>
-              <mat-card-title>Pozycje faktury</mat-card-title>
+              <mat-card-title class="invoice-form__section-title">Pozycje faktury</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <app-invoice-items-table />
@@ -265,7 +265,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
           <!-- Totals Section -->
           <mat-card class="invoice-form__section">
             <mat-card-header>
-              <mat-card-title>Podsumowanie</mat-card-title>
+              <mat-card-title class="invoice-form__section-title">Podsumowanie</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <app-invoice-totals
@@ -281,7 +281,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
           <!-- Notes Section -->
           <mat-card class="invoice-form__section">
             <mat-card-header>
-              <mat-card-title>Uwagi</mat-card-title>
+              <mat-card-title class="invoice-form__section-title">Uwagi</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <mat-form-field
@@ -340,6 +340,9 @@ const CURRENCIES: { value: Currency; label: string }[] = [
         padding: 24px;
         max-width: 1000px;
         margin: 0 auto;
+      }
+      .invoice-form__section-title {
+        margin-bottom: 15px;
       }
 
       .invoice-form__loading,
@@ -422,7 +425,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
         padding: 24px 0;
         position: sticky;
         bottom: 0;
-        background: var(--mat-sys-background);
+        background: #fff;
         border-top: 1px solid var(--mat-sys-outline-variant);
         margin: 0 -24px;
         padding: 16px 24px;

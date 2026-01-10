@@ -283,6 +283,7 @@ import type { ContractorResponse } from '../../../types';
       }
 
       .contractor-list__table-container {
+        margin-top: 150px;
         border-radius: 8px;
         overflow: hidden;
       }
@@ -317,6 +318,19 @@ import type { ContractorResponse } from '../../../types';
 
       .contractor-list__actions-cell {
         white-space: nowrap;
+      }
+
+      mat-paginator {
+        background: transparent;
+        margin-top: 16px;
+      }
+
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-trigger {
+        padding-left: 10px;
+      }
+
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-arrow-wrapper {
+        padding-right: 5px;
       }
 
       /* Responsive */

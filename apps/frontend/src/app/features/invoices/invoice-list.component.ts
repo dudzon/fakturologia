@@ -352,6 +352,14 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
         margin-top: 16px;
       }
 
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-trigger {
+        padding-left: 10px;
+      }
+
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-arrow-wrapper {
+        padding-right: 5px;
+      }
+
       .invoice-list__fab {
         position: fixed;
         bottom: 24px;

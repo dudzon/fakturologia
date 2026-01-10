@@ -168,6 +168,10 @@ export interface SelectedContractor {
         flex-direction: column;
         line-height: 1.3;
       }
+      ::ng-deep mat-option.contractor-select__add-option,
+      ::ng-deep mat-option.contractor-select__add-option:hover {
+        background: #fff !important;
+      }
 
       .contractor-select__option-name {
         font-weight: 500;

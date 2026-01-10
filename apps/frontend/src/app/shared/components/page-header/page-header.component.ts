@@ -102,6 +102,10 @@ import { AuthService } from '../../../core/auth.service';
       .page-header__user-menu {
         margin-left: 8px;
       }
+      ::ng-deep .mat-mdc-menu-content {
+        background: #fff !important;
+        z-index: 1200 !important;
+      }
 
       @media (max-width: 959px) {
         .page-header__title {

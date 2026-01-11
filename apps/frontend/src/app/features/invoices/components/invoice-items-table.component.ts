@@ -68,7 +68,10 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
     MatDialogModule,
   ],
   providers: [
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { verticalPosition: 'top', duration: 3000 } },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { verticalPosition: 'top', duration: 3000 },
+    },
   ],
   template: `
     <div class="items-table">

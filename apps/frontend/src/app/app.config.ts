@@ -23,6 +23,9 @@ export const appConfig: ApplicationConfig = {
     provideSupabase(),
     { provide: LOCALE_ID, useValue: 'pl' },
     { provide: MatPaginatorIntl, useClass: PolishMatPaginatorIntl },
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { verticalPosition: 'top', duration: 300000000 } },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { verticalPosition: 'top', duration: 300000000 },
+    },
   ],
 };

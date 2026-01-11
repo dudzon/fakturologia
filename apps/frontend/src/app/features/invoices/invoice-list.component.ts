@@ -193,7 +193,12 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef class="actions-column"></th>
               <td mat-cell *matCellDef="let invoice" class="actions-column">
-                <button mat-icon-button [matMenuTriggerFor]="actionsMenu" aria-label="Akcje" (click)="$event.stopPropagation()">
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="actionsMenu"
+                  aria-label="Akcje"
+                  (click)="$event.stopPropagation()"
+                >
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #actionsMenu="matMenu">

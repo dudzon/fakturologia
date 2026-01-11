@@ -141,7 +141,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
                 }}</mat-error>
               }
               @if (profileForm.get('bankAccount')?.hasError('maxlength')) {
-                <mat-error>Maksymalnie 32 znaki</mat-error>
+                <mat-error>Maksymalnie 36 znaków</mat-error>
               }
             </mat-form-field>
           </mat-card-content>
@@ -455,7 +455,7 @@ export class ProfileComponent implements OnInit, CanDeactivateComponent {
       companyName: ['', [Validators.required]],
       nip: ['', [nipValidator()]],
       address: [''],
-      bankAccount: ['', [ibanValidator(), Validators.maxLength(32)]],
+      bankAccount: ['', [ibanValidator(), Validators.maxLength(36)]],
       invoiceNumberFormat: ['FV/{YYYY}/{MM}/{NNN}', [invoiceNumberFormatValidator()]],
     });
 

@@ -46,7 +46,7 @@ import type { CreateContractorCommand, UpdateContractorCommand } from '../../../
     <div class="contractor-form">
       <mat-card>
         <mat-card-header>
-          <mat-card-title>
+          <mat-card-title class="contractor-form__title">
             @if (isEditMode()) {
               Edytuj kontrahenta
             } @else {
@@ -154,12 +154,19 @@ import type { CreateContractorCommand, UpdateContractorCommand } from '../../../
       .contractor-form {
         padding: 24px;
         max-width: 600px;
+        height: 100vh;
         margin: 0 auto;
+        display: flex;
+        align-items: center;
       }
 
       .contractor-form__field {
         width: 100%;
         margin-bottom: 16px;
+      }
+
+      .contractor-form__title {
+        margin-bottom: 10px;
       }
 
       .contractor-form__loading {

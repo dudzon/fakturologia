@@ -17,6 +17,7 @@ import {
   InvoiceStatusDialogComponent,
   InvoiceStatusDialogData,
 } from './components/invoice-status-dialog.component';
+import { PdfGeneratorService } from '../../core/services/pdf-generator.service';
 import type { InvoiceResponse, InvoiceStatus } from '../../../types';
 
 /**
@@ -93,11 +94,7 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
 
             @if (canGeneratePdf()) {
               <button mat-stroked-button (click)="generatePdf()" [disabled]="generatingPdf()">
-                @if (generatingPdf()) {
-                  <mat-spinner diameter="20"></mat-spinner>
-                } @else {
-                  <mat-icon>picture_as_pdf</mat-icon>
-                }
+                <mat-icon>picture_as_pdf</mat-icon>
                 Generuj PDF
               </button>
             }
@@ -193,10 +190,6 @@ import type { InvoiceResponse, InvoiceStatus } from '../../../types';
           align-items: center;
           gap: 4px;
         }
-
-        mat-spinner {
-          margin-right: 8px;
-        }
       }
 
       .invoice-detail__draft-warning {
@@ -276,6 +269,7 @@ export class InvoiceDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly invoiceService = inject(InvoiceService);
   private readonly invoicesStore = inject(InvoicesStore);
+  private readonly pdfGeneratorService = inject(PdfGeneratorService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -412,11 +406,8 @@ export class InvoiceDetailComponent implements OnInit {
     this.generatingPdf.set(true);
 
     try {
-      // TODO: Implement PDF generation with pdfmake in Web Worker
-      // For now, show a placeholder message
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      this.snackBar.open('Generowanie PDF zostanie zaimplementowane wkrótce', 'Zamknij', {
+      await this.pdfGeneratorService.generateInvoicePdf(inv);
+      this.snackBar.open('PDF został wygenerowany', 'Zamknij', {
         duration: 3000,
       });
     } catch (error) {

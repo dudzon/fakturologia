@@ -741,7 +741,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
             { duration: 3000 },
           );
 
-          this.router.navigate(['/invoices', result.id]);
+          this.router.navigate(['/invoices']);
         }
       } else {
         // Create new invoice
@@ -770,7 +770,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
             { duration: 3000 },
           );
 
-          this.router.navigate(['/invoices', result.id]);
+          this.router.navigate(['/invoices']);
         }
       }
     } catch (error) {

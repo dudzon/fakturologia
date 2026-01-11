@@ -160,6 +160,12 @@ jobs:
           cache: "npm"
           cache-dependency-path: apps/frontend/package-lock.json
 
+      - name: Setup environment file
+        run: |
+          if [ -f src/environments/environment.example.ts ]; then
+            cp src/environments/environment.example.ts src/environments/environment.ts
+          fi
+
       - name: Install dependencies
         run: npm ci
 

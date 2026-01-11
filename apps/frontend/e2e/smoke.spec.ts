@@ -7,5 +7,5 @@ test('landing loads', async ({ page }) => {
 
 test('login page loads', async ({ page }) => {
   await page.goto('/auth/login');
-  await expect(page.getByText('Zaloguj się')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Zaloguj się' })).toBeVisible();
 });

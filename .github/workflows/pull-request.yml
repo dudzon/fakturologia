@@ -134,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_VERSION: "24.9.0"
-      NODE_ENV: integration
+      ENV_NAME: integration
       # Secrets mapping
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}

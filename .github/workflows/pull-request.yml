@@ -160,10 +160,20 @@ jobs:
           cache: "npm"
           cache-dependency-path: apps/frontend/package-lock.json
 
-      - name: Setup environment file
+      - name: Setup environment files
         run: |
+          # Create .env.test for Playwright/Server
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env.test
+          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> .env.test
+          echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.test
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.test
+
+          # Create environment.ts for Angular
           if [ -f src/environments/environment.example.ts ]; then
             cp src/environments/environment.example.ts src/environments/environment.ts
+            # Replace Supabase config with secrets
+            sed -i "s|http://127.0.0.1:54321|${{ secrets.SUPABASE_URL }}|g" src/environments/environment.ts
+            sed -i "s|your-anon-key-here|${{ secrets.SUPABASE_KEY }}|g" src/environments/environment.ts
           fi
 
       - name: Install dependencies

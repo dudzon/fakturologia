@@ -57,13 +57,13 @@ test.describe('User Login', () => {
     await page.waitForURL(/\/invoices/, { timeout: 10000 });
 
     // Act: Open user menu
-    await page.getByRole('button', { name: /menu użytkownika/i }).click();
+    await page.locator('.page-header__user-menu').click();
 
     // Assert: Logout button should be visible
-    await expect(page.getByRole('menuitem', { name: /wyloguj/i })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: /wyloguj się/i })).toBeVisible();
 
     // Act: Click logout
-    await page.getByRole('menuitem', { name: /wyloguj/i }).click();
+    await page.getByRole('menuitem', { name: /wyloguj się/i }).click();
 
     // Assert: Should redirect to login page
     await page.waitForURL(/\/auth\/login/, { timeout: 10000 });

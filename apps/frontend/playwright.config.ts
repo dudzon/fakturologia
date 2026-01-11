@@ -1,4 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+/**
+ * Read environment variables from file.
+ * https://github.com/motdotla/dotenv
+ */
+dotenv.config({ path: path.resolve(__dirname, '../../.env.test') });
+// Fallback to local if root not found or to complement
+dotenv.config({ path: path.resolve(__dirname, '.env.test') });
 
 /**
  * Playwright E2E Test Configuration

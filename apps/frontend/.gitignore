@@ -56,3 +56,8 @@ Thumbs.db
 # Keep production template and example
 !src/environments/environment.prod.ts
 !src/environments/environment.example.ts
+
+# Playwright
+/e2e-results
+/playwright-report
+test_output.txt

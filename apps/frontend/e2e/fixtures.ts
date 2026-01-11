@@ -1,8 +1,9 @@
+/// <reference types="node" />
 /**
  * Playwright Test Fixtures
  * Custom fixtures extending Playwright's test capabilities
  */
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect, Page } from '@playwright/test';
 import { LoginPage } from './pages';
 
 /**
@@ -34,9 +35,9 @@ export { expect };
  */
 export const testUsers = {
   valid: {
-    email: process.env.E2E_USERNAME,
-    password: process.env.E2E_PASSWORD,
-    id: process.env.E2E_USERNAME_ID
+    email: process.env.E2E_USERNAME || '',
+    password: process.env.E2E_PASSWORD || '',
+    id: process.env.E2E_USERNAME_ID || ''
   },
   invalid: {
     email: 'invalid@example.com',
@@ -59,11 +60,7 @@ export const helpers = {
   /**
    * Wait for API response
    */
-  waitForApiResponse: async (
-    page: import('@playwright/test').Page,
-    urlPattern: string | RegExp,
-    timeout = 10000
-  ) => {
+  waitForApiResponse: async (page: Page, urlPattern: string | RegExp, timeout = 10000) => {
     return page.waitForResponse(
       (response) =>
         (typeof urlPattern === 'string'
@@ -76,12 +73,7 @@ export const helpers = {
   /**
    * Mock API response
    */
-  mockApiResponse: async (
-    page: import('@playwright/test').Page,
-    urlPattern: string,
-    responseData: unknown,
-    status = 200
-  ) => {
+  mockApiResponse: async (page: Page, urlPattern: string, responseData: unknown, status = 200) => {
     await page.route(`**/${urlPattern}`, (route) =>
       route.fulfill({
         status,

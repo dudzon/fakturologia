@@ -7,12 +7,12 @@ import { BasePage } from './base.page';
 
 export class LoginPage extends BasePage {
   // Locators
-  private readonly emailInput = () => this.page.getByLabel(/email/i);
-  private readonly passwordInput = () => this.page.getByLabel(/hasło|password/i);
+  private readonly emailInput = () => this.page.locator('input[formControlName="email"]');
+  private readonly passwordInput = () => this.page.locator('input[formControlName="password"]');
   private readonly submitButton = () => this.page.getByRole('button', { name: /zaloguj|login/i });
   private readonly registerLink = () => this.page.getByRole('link', { name: /zarejestruj|register/i });
   private readonly forgotPasswordLink = () => this.page.getByRole('link', { name: /zapomniałem|forgot/i });
-  private readonly errorMessage = () => this.page.locator('[role="alert"], .error-message, mat-error');
+  private readonly errorMessage = () => this.page.locator('[role="alert"], .login__error, mat-error');
 
   constructor(page: Page) {
     super(page);

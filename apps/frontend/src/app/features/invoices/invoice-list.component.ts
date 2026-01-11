@@ -193,7 +193,7 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef class="actions-column"></th>
               <td mat-cell *matCellDef="let invoice" class="actions-column">
-                <button mat-icon-button [matMenuTriggerFor]="actionsMenu" aria-label="Akcje">
+                <button mat-icon-button [matMenuTriggerFor]="actionsMenu" aria-label="Akcje" (click)="$event.stopPropagation()">
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #actionsMenu="matMenu">
@@ -215,12 +215,10 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
                     <mat-icon>published_with_changes</mat-icon>
                     <span>Zmień status</span>
                   </button>
-                  @if (invoice.status === 'draft') {
-                    <button mat-menu-item class="delete-action" (click)="confirmDelete(invoice)">
-                      <mat-icon color="warn">delete</mat-icon>
-                      <span>Usuń</span>
-                    </button>
-                  }
+                  <button mat-menu-item class="delete-action" (click)="confirmDelete(invoice)">
+                    <mat-icon color="warn">delete</mat-icon>
+                    <span>Usuń</span>
+                  </button>
                 </mat-menu>
               </td>
             </ng-container>

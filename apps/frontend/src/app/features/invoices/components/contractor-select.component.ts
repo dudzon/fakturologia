@@ -132,6 +132,7 @@ export interface SelectedContractor {
             </div>
             <button
               mat-icon-button
+              type="button"
               (click)="clearSelection()"
               matTooltip="Usuń wybór"
               aria-label="Usuń wybór kontrahenta"
@@ -157,6 +158,7 @@ export interface SelectedContractor {
 
       .contractor-select__field {
         width: 100%;
+        background-color: #fff;
       }
 
       .contractor-select__loading-text {
@@ -168,6 +170,10 @@ export interface SelectedContractor {
         flex-direction: column;
         line-height: 1.3;
       }
+      ::ng-deep .mat-mdc-autocomplete-panel {
+        background-color: #fff !important;
+      }
+
       ::ng-deep mat-option.contractor-select__add-option,
       ::ng-deep mat-option.contractor-select__add-option:hover {
         background: #fff !important;
@@ -301,6 +307,7 @@ export class ContractorSelectComponent implements OnInit {
    * Handle option selection.
    */
   onOptionSelected(contractor: ContractorResponse): void {
+    if (!contractor) return;
     this.selectedContractor.set(contractor);
     this.searchQuery.set(contractor.name);
     this.contractorSelected.emit({

@@ -88,7 +88,7 @@ export class InvoiceService {
 
   /**
    * DELETE /api/v1/invoices/:id
-   * Soft-deletes an invoice (only draft invoices can be deleted).
+   * Soft-deletes an invoice.
    */
   delete(id: string): Observable<DeleteInvoiceResponse> {
     return this.http.delete<DeleteInvoiceResponse>(`${this.apiUrl}/${id}`);

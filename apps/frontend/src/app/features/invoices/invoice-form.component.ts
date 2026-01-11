@@ -89,7 +89,6 @@ const CURRENCIES: { value: Currency; label: string }[] = [
   ],
   providers: [
     InvoiceFormStore,
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { verticalPosition: 'top', duration: 3000 } },
   ],
   template: `
     <div class="invoice-form">

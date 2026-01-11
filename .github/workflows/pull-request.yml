@@ -204,8 +204,8 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run E2E Tests
-        run: npm run test:e2e
+      - name: Run E2E Tests (excluding auth tests - requires local Supabase)
+        run: npm run test:e2e -- --grep-invert "@auth"
 
       - name: Upload E2E Report
         uses: actions/upload-artifact@v6

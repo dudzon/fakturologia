@@ -488,7 +488,8 @@ create policy "invoice_items_delete_own_authenticated"
 
 -- create the logos bucket (private by default)
 insert into storage.buckets (id, name, public)
-values ('logos', 'logos', false);
+values ('logos', 'logos', false)
+on conflict (id) do nothing;
 
 -- select: users can view only their own logo files
 -- folder structure enforces ownership: files stored in {user_id}/ folder

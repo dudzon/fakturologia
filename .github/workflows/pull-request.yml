@@ -149,9 +149,14 @@ jobs:
           cache: "npm"
           cache-dependency-path: apps/frontend/package-lock.json
 
-      - name: Copy env.test
+      - name: Generate .env.test from secrets
         run: |
-          cp ../../fakturologia.env.test .env.test
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env.test
+          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> .env.test
+          echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.test
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.test
+          echo "E2E_USERNAME=${{ secrets.E2E_USERNAME }}" >> .env.test
+          echo "E2E_PASSWORD=${{ secrets.E2E_PASSWORD }}" >> .env.test
           cat .env.test
 
       - name: Install dependencies

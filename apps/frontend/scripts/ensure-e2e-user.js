@@ -35,6 +35,8 @@ async function ensureUser() {
       throw new Error('[ensure-e2e-user] Unable to create or read E2E user');
     })();
 
+  // Reset password to ensure tests use the expected credentials
+  await ensurePassword(userId, password);
   await ensureProfile(userId, email);
   console.log('[ensure-e2e-user] E2E user ready:', userId);
 }
@@ -69,6 +71,16 @@ async function createUser(email, password) {
   }
 
   return data.user?.id || null;
+}
+
+async function ensurePassword(userId, password) {
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+    password,
+  });
+
+  if (error) {
+    throw error;
+  }
 }
 
 async function ensureProfile(userId, email) {

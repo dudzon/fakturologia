@@ -174,7 +174,7 @@ jobs:
   status-comment:
     name: PR Status Comment
     # Runs ONLY if all needs passed (default behavior)
-    needs: [unit-test-backend, unit-test-frontend, e2e-test]
+    needs: [unit-test-backend, unit-test-frontend, e2e-test-github]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write

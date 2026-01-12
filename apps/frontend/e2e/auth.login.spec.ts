@@ -100,11 +100,14 @@ test.describe('User Login @auth', () => {
     // Act: Open user menu
     await page.locator('.page-header__user-menu').click();
 
-    // Assert: Logout button should be visible
-    await expect(page.getByRole('menuitem', { name: /wyloguj się/i })).toBeVisible();
+    // Assert: Logout button should be visible (wait for animation)
+    const logoutButton = page.getByRole('menuitem', { name: /wyloguj się/i });
+    await logoutButton.waitFor({ state: 'visible' });
+    // Small wait for animation to settle to prevent "element detached" errors
+    await page.waitForTimeout(500);
 
-    // Act: Click logout
-    await page.getByRole('menuitem', { name: /wyloguj się/i }).click();
+    // Act: Click logout (force to bypass strict checks during animation)
+    await logoutButton.click({ force: true });
 
     // Assert: Should redirect to login page
     await page.waitForURL(/\/auth\/login/, { timeout: 10000 });

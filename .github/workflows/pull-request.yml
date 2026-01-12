@@ -18,6 +18,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      # Install backend dependencies
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: apps/backend
+
+      # Start backend server in background
+      - name: Start backend server
+        run: npm run start:dev &
+        working-directory: apps/backend
+
+      # Wait for backend to be ready
+      - name: Wait for backend
+        run: |
+          for i in {1..30}; do
+            if nc -z localhost 3000; then
+              echo "Backend is up!" && break
+            fi
+            echo "Waiting for backend..." && sleep 2
+          done
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:

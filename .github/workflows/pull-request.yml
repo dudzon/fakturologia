@@ -151,7 +151,7 @@ jobs:
 
       - name: Copy env.test
         run: |
-          cp ../../.env.test .env.test
+          cp ../../fakturologia.env.test .env.test
           cat .env.test
 
       - name: Install dependencies

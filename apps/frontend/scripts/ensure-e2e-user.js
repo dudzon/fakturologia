@@ -26,13 +26,10 @@ async function ensureUser() {
   const password = process.env.E2E_PASSWORD;
 
   // Try to fetch existing user
-  const existing = await supabaseAdmin.auth.admin.getUserByEmail(email);
-  if (existing.error) {
-    console.warn('[ensure-e2e-user] Error fetching user, will attempt to create:', existing.error.message);
-  }
+  const existingId = await findUserIdByEmail(email);
 
   const userId =
-    existing.data?.user?.id ||
+    existingId ||
     (await createUser(email, password)) ||
     (() => {
       throw new Error('[ensure-e2e-user] Unable to create or read E2E user');
@@ -40,6 +37,17 @@ async function ensureUser() {
 
   await ensureProfile(userId, email);
   console.log('[ensure-e2e-user] E2E user ready:', userId);
+}
+
+async function findUserIdByEmail(email) {
+  const result = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 });
+
+  if (result.error) {
+    console.warn('[ensure-e2e-user] Error listing users, will attempt creation next:', result.error.message);
+    return null;
+  }
+
+  return result.data?.users?.find((user) => user.email?.toLowerCase() === email.toLowerCase())?.id || null;
 }
 
 async function createUser(email, password) {
@@ -55,8 +63,7 @@ async function createUser(email, password) {
     // If user already exists, return null and let caller retry fetch
     if (error.message?.toLowerCase().includes('already registered')) {
       console.log('[ensure-e2e-user] User already exists, will fetch id next');
-      const retry = await supabaseAdmin.auth.admin.getUserByEmail(email);
-      return retry.data?.user?.id || null;
+      return findUserIdByEmail(email);
     }
     throw error;
   }

@@ -13,6 +13,13 @@ test.describe('User Login @auth', () => {
   let loginPage: LoginPage;
 
   test.beforeEach(async ({ page }) => {
+    // Capture browser console for debugging auth errors
+    page.on('console', msg => {
+      if (msg.type() === 'error' || msg.text().includes('[LoginComponent]')) {
+        console.log(`[Browser Console] ${msg.type()}: ${msg.text()}`);
+      }
+    });
+    
     loginPage = new LoginPage(page);
     // Arrange: Navigate to login page
     await loginPage.goto();

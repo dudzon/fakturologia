@@ -147,7 +147,6 @@ jobs:
           path: apps/frontend/coverage/
           retention-days: 7
 
-
   e2e-test-github:
     name: E2E Tests (GitHub Action)
     needs: [lint-backend, lint-frontend]
@@ -233,6 +232,9 @@ jobs:
       - name: Run E2E Tests
         if: steps.check_secrets.outputs.should_run == 'true'
         run: npm run test:e2e
+        env:
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
       - name: Upload E2E Report
         uses: actions/upload-artifact@v6

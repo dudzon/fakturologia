@@ -331,7 +331,7 @@ export class LoginComponent implements OnInit {
   private handleAuthError(error: { message: string; status?: number }): void {
     // Log actual error for debugging (visible in E2E test output)
     console.error('[LoginComponent] Auth error:', error.message, 'Status:', error.status);
-    
+
     const message = error.message.toLowerCase();
 
     if (

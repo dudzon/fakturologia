@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
   AbstractControl,
-  ValidationErrors
+  ValidationErrors,
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -83,21 +83,17 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
     AuthLayoutComponent,
     PasswordStrengthComponent,
     PasswordRequirementsComponent,
-    LoadingButtonComponent
+    LoadingButtonComponent,
   ],
   template: `
-    <app-auth-layout
-      [title]="getTitle()"
-      [subtitle]="getSubtitle()"
-    >
+    <app-auth-layout [title]="getTitle()" [subtitle]="getSubtitle()">
       @if (tokenError()) {
         <!-- Invalid/Expired Token State -->
         <div class="reset-password__token-error">
           <mat-icon class="reset-password__error-icon">error_outline</mat-icon>
           <h2 class="reset-password__error-title">Link wygasł lub jest nieprawidłowy</h2>
           <p class="reset-password__error-message">
-            Link do resetowania hasła wygasł lub jest nieprawidłowy.
-            Poproś o nowy link resetujący.
+            Link do resetowania hasła wygasł lub jest nieprawidłowy. Poproś o nowy link resetujący.
           </p>
           <a
             routerLink="/auth/forgot-password"
@@ -118,7 +114,8 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
           <mat-icon class="reset-password__success-icon">check_circle</mat-icon>
           <h2 class="reset-password__success-title">Hasło zostało zmienione</h2>
           <p class="reset-password__success-message">
-            Twoje hasło zostało pomyślnie zmienione. Możesz teraz zalogować się używając nowego hasła.
+            Twoje hasło zostało pomyślnie zmienione. Możesz teraz zalogować się używając nowego
+            hasła.
           </p>
           <a
             routerLink="/auth/login"
@@ -138,11 +135,7 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
           </div>
         }
 
-        <form
-          [formGroup]="resetPasswordForm"
-          (ngSubmit)="onSubmit()"
-          class="reset-password__form"
-        >
+        <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmit()" class="reset-password__form">
           <mat-form-field appearance="outline" class="reset-password__field">
             <mat-label>Nowe hasło</mat-label>
             <input
@@ -150,7 +143,7 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
               [type]="hidePassword() ? 'password' : 'text'"
               formControlName="password"
               autocomplete="new-password"
-            >
+            />
             <mat-icon matPrefix>lock</mat-icon>
             <button
               mat-icon-button
@@ -161,10 +154,16 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
             >
               <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            @if (resetPasswordForm.get('password')?.hasError('required') && resetPasswordForm.get('password')?.touched) {
+            @if (
+              resetPasswordForm.get('password')?.hasError('required') &&
+              resetPasswordForm.get('password')?.touched
+            ) {
               <mat-error>Hasło jest wymagane</mat-error>
             }
-            @if (resetPasswordForm.get('password')?.hasError('weakPassword') && resetPasswordForm.get('password')?.touched) {
+            @if (
+              resetPasswordForm.get('password')?.hasError('weakPassword') &&
+              resetPasswordForm.get('password')?.touched
+            ) {
               <mat-error>Hasło nie spełnia wymagań</mat-error>
             }
           </mat-form-field>
@@ -172,14 +171,17 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
           <app-password-strength [password]="resetPasswordForm.get('password')?.value" />
           <app-password-requirements [password]="resetPasswordForm.get('password')?.value" />
 
-          <mat-form-field appearance="outline" class="reset-password__field reset-password__field--confirm">
+          <mat-form-field
+            appearance="outline"
+            class="reset-password__field reset-password__field--confirm"
+          >
             <mat-label>Potwierdź nowe hasło</mat-label>
             <input
               matInput
               [type]="hideConfirmPassword() ? 'password' : 'text'"
               formControlName="confirmPassword"
               autocomplete="new-password"
-            >
+            />
             <mat-icon matPrefix>lock_outline</mat-icon>
             <button
               mat-icon-button
@@ -190,10 +192,16 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
             >
               <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            @if (resetPasswordForm.get('confirmPassword')?.hasError('required') && resetPasswordForm.get('confirmPassword')?.touched) {
+            @if (
+              resetPasswordForm.get('confirmPassword')?.hasError('required') &&
+              resetPasswordForm.get('confirmPassword')?.touched
+            ) {
               <mat-error>Potwierdzenie hasła jest wymagane</mat-error>
             }
-            @if (resetPasswordForm.get('confirmPassword')?.hasError('passwordMismatch') && resetPasswordForm.get('confirmPassword')?.touched) {
+            @if (
+              resetPasswordForm.get('confirmPassword')?.hasError('passwordMismatch') &&
+              resetPasswordForm.get('confirmPassword')?.touched
+            ) {
               <mat-error>Hasła nie są zgodne</mat-error>
             }
           </mat-form-field>
@@ -217,144 +225,146 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
       }
     </app-auth-layout>
   `,
-  styles: [`
-    .reset-password__error {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      background-color: #ffebee;
-      border-radius: 8px;
-      color: #c62828;
-      font-size: 14px;
-    }
+  styles: [
+    `
+      .reset-password__error {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background-color: #ffebee;
+        border-radius: 8px;
+        color: #c62828;
+        font-size: 14px;
+      }
 
-    .reset-password__error mat-icon {
-      color: #c62828;
-    }
+      .reset-password__error mat-icon {
+        color: #c62828;
+      }
 
-    .reset-password__form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+      .reset-password__form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-    .reset-password__field {
-      width: 100%;
-    }
+      .reset-password__field {
+        width: 100%;
+      }
 
-    .reset-password__field--confirm {
-      margin-top: 16px;
-    }
+      .reset-password__field--confirm {
+        margin-top: 16px;
+      }
 
-    .reset-password__submit {
-      width: 100%;
-      margin-top: 16px;
-    }
+      .reset-password__submit {
+        width: 100%;
+        margin-top: 16px;
+      }
 
-    :host ::ng-deep .reset-password__submit button {
-      width: 100%;
-      height: 48px;
-      font-size: 16px;
-    }
+      :host ::ng-deep .reset-password__submit button {
+        width: 100%;
+        height: 48px;
+        font-size: 16px;
+      }
 
-    .reset-password__footer {
-      display: flex;
-      justify-content: center;
-      margin-top: 24px;
-    }
+      .reset-password__footer {
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+      }
 
-    .reset-password__back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #667eea;
-      font-size: 14px;
-      text-decoration: none;
-    }
+      .reset-password__back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: #667eea;
+        font-size: 14px;
+        text-decoration: none;
+      }
 
-    .reset-password__back-link:hover {
-      text-decoration: underline;
-    }
+      .reset-password__back-link:hover {
+        text-decoration: underline;
+      }
 
-    .reset-password__back-link mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
+      .reset-password__back-link mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
 
-    /* Token Error State */
-    .reset-password__token-error {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 24px 0;
-    }
+      /* Token Error State */
+      .reset-password__token-error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px 0;
+      }
 
-    .reset-password__error-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-      color: #f44336;
-      margin-bottom: 16px;
-    }
+      .reset-password__error-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: #f44336;
+        margin-bottom: 16px;
+      }
 
-    .reset-password__error-title {
-      margin: 0 0 12px 0;
-      font-size: 20px;
-      font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
-    }
+      .reset-password__error-title {
+        margin: 0 0 12px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.87);
+      }
 
-    .reset-password__error-message {
-      margin: 0 0 24px 0;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-      line-height: 1.5;
-    }
+      .reset-password__error-message {
+        margin: 0 0 24px 0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+        line-height: 1.5;
+      }
 
-    .reset-password__request-btn {
-      margin-bottom: 16px;
-      min-width: 200px;
-    }
+      .reset-password__request-btn {
+        margin-bottom: 16px;
+        min-width: 200px;
+      }
 
-    /* Success State */
-    .reset-password__success {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 24px 0;
-    }
+      /* Success State */
+      .reset-password__success {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px 0;
+      }
 
-    .reset-password__success-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-      color: #4caf50;
-      margin-bottom: 16px;
-    }
+      .reset-password__success-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: #4caf50;
+        margin-bottom: 16px;
+      }
 
-    .reset-password__success-title {
-      margin: 0 0 12px 0;
-      font-size: 20px;
-      font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
-    }
+      .reset-password__success-title {
+        margin: 0 0 12px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.87);
+      }
 
-    .reset-password__success-message {
-      margin: 0 0 24px 0;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-      line-height: 1.5;
-    }
+      .reset-password__success-message {
+        margin: 0 0 24px 0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+        line-height: 1.5;
+      }
 
-    .reset-password__login-btn {
-      min-width: 200px;
-    }
-  `]
+      .reset-password__login-btn {
+        min-width: 200px;
+      }
+    `,
+  ],
 })
 export class ResetPasswordComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -366,9 +376,9 @@ export class ResetPasswordComponent implements OnInit {
   readonly resetPasswordForm = this.fb.nonNullable.group(
     {
       password: ['', [Validators.required, strongPasswordValidator]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
     },
-    { validators: passwordMatchValidator }
+    { validators: passwordMatchValidator },
   );
 
   /** UI state signals */
@@ -427,14 +437,14 @@ export class ResetPasswordComponent implements OnInit {
    * Toggle password visibility
    */
   togglePasswordVisibility(): void {
-    this.hidePassword.update(v => !v);
+    this.hidePassword.update((v) => !v);
   }
 
   /**
    * Toggle confirm password visibility
    */
   toggleConfirmPasswordVisibility(): void {
-    this.hideConfirmPassword.update(v => !v);
+    this.hideConfirmPassword.update((v) => !v);
   }
 
   /**

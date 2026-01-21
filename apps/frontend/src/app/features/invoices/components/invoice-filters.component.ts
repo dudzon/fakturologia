@@ -37,7 +37,7 @@ const QUICK_FILTERS: QuickFilterOption[] = [
   { value: null, label: 'Wszystkie' },
   { value: 'draft', label: 'Szkice' },
   { value: 'unpaid', label: 'Nieopłacone' },
-  { value: 'paid', label: 'Opłacone' }
+  { value: 'paid', label: 'Opłacone' },
 ];
 
 /**
@@ -69,7 +69,7 @@ const QUICK_FILTERS: QuickFilterOption[] = [
     MatNativeDateModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule
+    MatChipsModule,
   ],
   template: `
     <div class="invoice-filters">
@@ -89,7 +89,11 @@ const QUICK_FILTERS: QuickFilterOption[] = [
       <!-- Advanced Filters Row -->
       <div class="invoice-filters__advanced">
         <!-- Date Range -->
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="invoice-filters__date-range">
+        <mat-form-field
+          appearance="outline"
+          subscriptSizing="dynamic"
+          class="invoice-filters__date-range"
+        >
           <mat-label>Zakres dat</mat-label>
           <mat-date-range-input [rangePicker]="picker">
             <input
@@ -110,7 +114,11 @@ const QUICK_FILTERS: QuickFilterOption[] = [
         </mat-form-field>
 
         <!-- Search -->
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="invoice-filters__search">
+        <mat-form-field
+          appearance="outline"
+          subscriptSizing="dynamic"
+          class="invoice-filters__search"
+        >
           <mat-icon matPrefix>search</mat-icon>
           <mat-label>Szukaj</mat-label>
           <input
@@ -148,66 +156,68 @@ const QUICK_FILTERS: QuickFilterOption[] = [
       </div>
     </div>
   `,
-  styles: [`
-    .invoice-filters {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
+  styles: [
+    `
+      .invoice-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
 
-    .invoice-filters__quick {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      .invoice-filters__quick {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
 
-      button {
-        border-radius: 20px;
+        button {
+          border-radius: 20px;
 
-        &.active {
-          background-color: var(--mat-sys-primary);
-          color: var(--mat-sys-on-primary);
+          &.active {
+            background-color: var(--mat-sys-primary);
+            color: var(--mat-sys-on-primary);
+          }
         }
       }
-    }
 
-    .invoice-filters__advanced {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      align-items: flex-start;
-    }
-
-    .invoice-filters__date-range {
-      min-width: 280px;
-    }
-
-    .invoice-filters__search {
-      flex: 1;
-      min-width: 250px;
-      max-width: 400px;
-    }
-
-    .invoice-filters__clear {
-      align-self: center;
-    }
-
-    @media (max-width: 599px) {
       .invoice-filters__advanced {
-        flex-direction: column;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: flex-start;
       }
 
-      .invoice-filters__date-range,
+      .invoice-filters__date-range {
+        min-width: 280px;
+      }
+
       .invoice-filters__search {
-        width: 100%;
-        max-width: none;
+        flex: 1;
+        min-width: 250px;
+        max-width: 400px;
       }
 
       .invoice-filters__clear {
-        width: 100%;
+        align-self: center;
       }
-    }
-  `]
+
+      @media (max-width: 599px) {
+        .invoice-filters__advanced {
+          flex-direction: column;
+        }
+
+        .invoice-filters__date-range,
+        .invoice-filters__search {
+          width: 100%;
+          max-width: none;
+        }
+
+        .invoice-filters__clear {
+          width: 100%;
+        }
+      }
+    `,
+  ],
 })
 export class InvoiceFiltersComponent {
   /** Current filter values */
@@ -243,17 +253,12 @@ export class InvoiceFiltersComponent {
   });
 
   constructor() {
-    // Initialize search value from input
-    const initialFilters = this.filters;
-
     // Set up search debouncing
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed()
-    ).subscribe(search => {
-      this.emitChange({ search });
-    });
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe((search) => {
+        this.emitChange({ search });
+      });
   }
 
   /**
@@ -304,7 +309,7 @@ export class InvoiceFiltersComponent {
       status: null,
       dateFrom: null,
       dateTo: null,
-      search: ''
+      search: '',
     });
   }
 
@@ -314,7 +319,7 @@ export class InvoiceFiltersComponent {
   private emitChange(changes: Partial<InvoiceFiltersViewModel>): void {
     this.filtersChange.emit({
       ...this.filters(),
-      ...changes
+      ...changes,
     });
   }
 

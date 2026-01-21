@@ -10,11 +10,9 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     loadComponent: () =>
-      import('./features/landing/landing-page.component').then(
-        (m) => m.LandingPageComponent
-      ),
+      import('./features/landing/landing-page.component').then((m) => m.LandingPageComponent),
     canActivate: [guestGuard],
-    title: 'Fakturologia - Proste fakturowanie dla freelancerów'
+    title: 'Fakturologia - Proste fakturowanie dla freelancerów',
   },
 
   // Auth routes (public - guest only)
@@ -25,41 +23,35 @@ export const routes: Routes = [
       {
         path: 'login',
         loadComponent: () =>
-          import('./features/auth/login.component').then(
-            (m) => m.LoginComponent
-          ),
-        title: 'Logowanie - Fakturologia'
+          import('./features/auth/login.component').then((m) => m.LoginComponent),
+        title: 'Logowanie - Fakturologia',
       },
       {
         path: 'register',
         loadComponent: () =>
-          import('./features/auth/register.component').then(
-            (m) => m.RegisterComponent
-          ),
-        title: 'Rejestracja - Fakturologia'
+          import('./features/auth/register.component').then((m) => m.RegisterComponent),
+        title: 'Rejestracja - Fakturologia',
       },
       {
         path: 'forgot-password',
         loadComponent: () =>
           import('./features/auth/forgot-password.component').then(
-            (m) => m.ForgotPasswordComponent
+            (m) => m.ForgotPasswordComponent,
           ),
-        title: 'Zapomniałem hasła - Fakturologia'
+        title: 'Zapomniałem hasła - Fakturologia',
       },
       {
         path: 'reset-password',
         loadComponent: () =>
-          import('./features/auth/reset-password.component').then(
-            (m) => m.ResetPasswordComponent
-          ),
-        title: 'Resetuj hasło - Fakturologia'
+          import('./features/auth/reset-password.component').then((m) => m.ResetPasswordComponent),
+        title: 'Resetuj hasło - Fakturologia',
       },
       {
         path: '',
         redirectTo: 'login',
-        pathMatch: 'full'
-      }
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
 
   // Invoices routes (protected) - Main dashboard
@@ -70,39 +62,33 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./features/invoices/invoice-list.component').then(
-            (m) => m.InvoiceListComponent
-          ),
-        title: 'Faktury - Fakturologia'
+          import('./features/invoices/invoice-list.component').then((m) => m.InvoiceListComponent),
+        title: 'Faktury - Fakturologia',
       },
       {
         path: 'new',
         loadComponent: () =>
-          import('./features/invoices/invoice-form.component').then(
-            (m) => m.InvoiceFormComponent
-          ),
+          import('./features/invoices/invoice-form.component').then((m) => m.InvoiceFormComponent),
         canActivate: [profileCompleteGuard],
         canDeactivate: [canDeactivateGuard],
-        title: 'Nowa faktura - Fakturologia'
+        title: 'Nowa faktura - Fakturologia',
       },
       {
         path: ':id',
         loadComponent: () =>
           import('./features/invoices/invoice-detail.component').then(
-            (m) => m.InvoiceDetailComponent
+            (m) => m.InvoiceDetailComponent,
           ),
-        title: 'Szczegóły faktury - Fakturologia'
+        title: 'Szczegóły faktury - Fakturologia',
       },
       {
         path: ':id/edit',
         loadComponent: () =>
-          import('./features/invoices/invoice-form.component').then(
-            (m) => m.InvoiceFormComponent
-          ),
+          import('./features/invoices/invoice-form.component').then((m) => m.InvoiceFormComponent),
         canDeactivate: [canDeactivateGuard],
-        title: 'Edycja faktury - Fakturologia'
-      }
-    ]
+        title: 'Edycja faktury - Fakturologia',
+      },
+    ],
   },
 
   // Contractors routes (protected)
@@ -114,47 +100,46 @@ export const routes: Routes = [
         path: '',
         loadComponent: () =>
           import('./features/contractors/contractor-list.component').then(
-            (m) => m.ContractorListComponent
+            (m) => m.ContractorListComponent,
           ),
-        title: 'Kontrahenci - Fakturologia'
+        title: 'Kontrahenci - Fakturologia',
       },
       {
         path: 'new',
         loadComponent: () =>
           import('./features/contractors/contractor-form.component').then(
-            (m) => m.ContractorFormComponent
+            (m) => m.ContractorFormComponent,
           ),
         canDeactivate: [canDeactivateGuard],
-        title: 'Nowy kontrahent - Fakturologia'
+        title: 'Nowy kontrahent - Fakturologia',
       },
       {
         path: ':id/edit',
         loadComponent: () =>
           import('./features/contractors/contractor-form.component').then(
-            (m) => m.ContractorFormComponent
+            (m) => m.ContractorFormComponent,
           ),
         canDeactivate: [canDeactivateGuard],
-        title: 'Edycja kontrahenta - Fakturologia'
-      }
-    ]
+        title: 'Edycja kontrahenta - Fakturologia',
+      },
+    ],
   },
 
   // Profile route (protected)
   {
     path: 'profile',
     loadComponent: () =>
-      import('./features/profile/profile.component').then(m => m.ProfileComponent),
+      import('./features/profile/profile.component').then((m) => m.ProfileComponent),
     canActivate: [authGuard],
     canDeactivate: [canDeactivateGuard],
-    title: 'Profil firmy - Fakturologia'
+    title: 'Profil firmy - Fakturologia',
   },
 
   // 404 Not Found (catch-all, must be last)
   {
     path: '**',
     loadComponent: () =>
-      import('./features/not-found/not-found.component').then(m => m.NotFoundComponent),
-    title: '404 - Strona nie znaleziona - Fakturologia'
-  }
+      import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),
+    title: '404 - Strona nie znaleziona - Fakturologia',
+  },
 ];
-

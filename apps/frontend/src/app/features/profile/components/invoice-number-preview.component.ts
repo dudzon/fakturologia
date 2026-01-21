@@ -25,57 +25,57 @@ import { generateInvoiceNumberPreview } from '../../../shared/validators/invoice
       } @else {
         <div class="preview-empty">Wprowadź format, aby zobaczyć podgląd</div>
       }
-      <div class="preview-hint">
-        Następna faktura będzie miała numer {{ counter() }}
-      </div>
+      <div class="preview-hint">Następna faktura będzie miała numer {{ counter() }}</div>
     </div>
   `,
-  styles: [`
-    .preview-container {
-      background-color: var(--mat-sys-surface-variant);
-      border-radius: 8px;
-      padding: 16px;
-      margin-top: 8px;
-    }
-
-    .preview-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--mat-sys-on-surface-variant);
-      margin-bottom: 8px;
-
-      mat-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
+  styles: [
+    `
+      .preview-container {
+        background-color: var(--mat-sys-surface-variant);
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 8px;
       }
-    }
 
-    .preview-number {
-      font-size: 18px;
-      font-weight: 500;
-      font-family: 'Roboto Mono', monospace;
-      color: var(--mat-sys-primary);
-      background-color: var(--mat-sys-surface);
-      padding: 8px 12px;
-      border-radius: 4px;
-      display: inline-block;
-    }
+      .preview-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--mat-sys-on-surface-variant);
+        margin-bottom: 8px;
 
-    .preview-empty {
-      font-size: 14px;
-      color: var(--mat-sys-on-surface-variant);
-      font-style: italic;
-    }
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
 
-    .preview-hint {
-      font-size: 11px;
-      color: var(--mat-sys-on-surface-variant);
-      margin-top: 8px;
-    }
-  `]
+      .preview-number {
+        font-size: 18px;
+        font-weight: 500;
+        font-family: 'Roboto Mono', monospace;
+        color: var(--mat-sys-primary);
+        background-color: var(--mat-sys-surface);
+        padding: 8px 12px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      .preview-empty {
+        font-size: 14px;
+        color: var(--mat-sys-on-surface-variant);
+        font-style: italic;
+      }
+
+      .preview-hint {
+        font-size: 11px;
+        color: var(--mat-sys-on-surface-variant);
+        margin-top: 8px;
+      }
+    `,
+  ],
 })
 export class InvoiceNumberPreviewComponent {
   /**

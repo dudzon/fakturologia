@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
   AbstractControl,
-  ValidationErrors
+  ValidationErrors,
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -86,7 +86,7 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
     AuthLayoutComponent,
     PasswordStrengthComponent,
     PasswordRequirementsComponent,
-    LoadingButtonComponent
+    LoadingButtonComponent,
   ],
   template: `
     <app-auth-layout
@@ -99,13 +99,16 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
           <mat-icon class="register__success-icon">mark_email_read</mat-icon>
           <h2 class="register__success-title">Sprawdź swoją skrzynkę</h2>
           <p class="register__success-message">
-            Wysłaliśmy link weryfikacyjny na adres <strong>{{ registeredEmail() }}</strong>.
-            Kliknij w link, aby aktywować konto.
+            Wysłaliśmy link weryfikacyjny na adres <strong>{{ registeredEmail() }}</strong
+            >. Kliknij w link, aby aktywować konto.
           </p>
-          <p class="register__success-hint">
-            Nie widzisz maila? Sprawdź folder spam.
-          </p>
-          <a routerLink="/auth/login" mat-stroked-button color="primary" class="register__success-btn">
+          <p class="register__success-hint">Nie widzisz maila? Sprawdź folder spam.</p>
+          <a
+            routerLink="/auth/login"
+            mat-stroked-button
+            color="primary"
+            class="register__success-btn"
+          >
             Przejdź do logowania
           </a>
         </div>
@@ -118,11 +121,7 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
           </div>
         }
 
-        <form
-          [formGroup]="registerForm"
-          (ngSubmit)="onSubmit()"
-          class="register__form"
-        >
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register__form">
           <mat-form-field appearance="outline" class="register__field">
             <mat-label>Email</mat-label>
             <input
@@ -131,12 +130,16 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
               formControlName="email"
               placeholder="jan@example.com"
               autocomplete="email"
-            >
+            />
             <mat-icon matPrefix>email</mat-icon>
-            @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
+            @if (
+              registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched
+            ) {
               <mat-error>Email jest wymagany</mat-error>
             }
-            @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
+            @if (
+              registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched
+            ) {
               <mat-error>Nieprawidłowy format email</mat-error>
             }
           </mat-form-field>
@@ -148,7 +151,7 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
               [type]="hidePassword() ? 'password' : 'text'"
               formControlName="password"
               autocomplete="new-password"
-            >
+            />
             <mat-icon matPrefix>lock</mat-icon>
             <button
               mat-icon-button
@@ -159,10 +162,16 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
             >
               <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+            @if (
+              registerForm.get('password')?.hasError('required') &&
+              registerForm.get('password')?.touched
+            ) {
               <mat-error>Hasło jest wymagane</mat-error>
             }
-            @if (registerForm.get('password')?.hasError('weakPassword') && registerForm.get('password')?.touched) {
+            @if (
+              registerForm.get('password')?.hasError('weakPassword') &&
+              registerForm.get('password')?.touched
+            ) {
               <mat-error>Hasło nie spełnia wymagań</mat-error>
             }
           </mat-form-field>
@@ -177,7 +186,7 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
               [type]="hideConfirmPassword() ? 'password' : 'text'"
               formControlName="confirmPassword"
               autocomplete="new-password"
-            >
+            />
             <mat-icon matPrefix>lock_outline</mat-icon>
             <button
               mat-icon-button
@@ -188,10 +197,16 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
             >
               <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
+            @if (
+              registerForm.get('confirmPassword')?.hasError('required') &&
+              registerForm.get('confirmPassword')?.touched
+            ) {
               <mat-error>Potwierdzenie hasła jest wymagane</mat-error>
             }
-            @if (registerForm.get('confirmPassword')?.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+            @if (
+              registerForm.get('confirmPassword')?.hasError('passwordMismatch') &&
+              registerForm.get('confirmPassword')?.touched
+            ) {
               <mat-error>Hasła nie są zgodne</mat-error>
             }
           </mat-form-field>
@@ -199,15 +214,28 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
           <div class="register__terms">
             <mat-checkbox formControlName="acceptTerms" color="primary">
               Akceptuję
-              <a href="/regulamin" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
+              <a
+                href="/regulamin"
+                target="_blank"
+                rel="noopener"
+                (click)="$event.stopPropagation()"
+              >
                 regulamin
               </a>
               i
-              <a href="/polityka-prywatnosci" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
+              <a
+                href="/polityka-prywatnosci"
+                target="_blank"
+                rel="noopener"
+                (click)="$event.stopPropagation()"
+              >
                 politykę prywatności
               </a>
             </mat-checkbox>
-            @if (registerForm.get('acceptTerms')?.hasError('requiredTrue') && registerForm.get('acceptTerms')?.touched) {
+            @if (
+              registerForm.get('acceptTerms')?.hasError('requiredTrue') &&
+              registerForm.get('acceptTerms')?.touched
+            ) {
               <mat-error class="register__terms-error">Musisz zaakceptować regulamin</mat-error>
             }
           </div>
@@ -229,127 +257,128 @@ function strongPasswordValidator(control: AbstractControl): ValidationErrors | n
       }
     </app-auth-layout>
   `,
-  styles: [`
-    .register__error {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      background-color: #ffebee;
-      border-radius: 8px;
-      color: #c62828;
-      font-size: 14px;
-    }
+  styles: [
+    `
+      .register__error {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background-color: #ffebee;
+        border-radius: 8px;
+        color: #c62828;
+        font-size: 14px;
+      }
 
-    .register__error mat-icon {
-      color: #c62828;
-    }
+      .register__error mat-icon {
+        color: #c62828;
+      }
 
-    .register__form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+      .register__form {
+        display: flex;
+        flex-direction: column;
+      }
 
-    .register__field {
-      width: 100%;
-    }
+      .register__field {
+        width: 100%;
+      }
 
-    .register__field--confirm {
-      margin-top: 16px;
-    }
+      .register__field--confirm {
+        margin-top: 16px;
+      }
 
-    .register__terms {
-      margin: 16px 0;
-    }
+      .register__terms {
+        margin: 16px 0;
+      }
 
-    .register__terms a {
-      color: #667eea;
-      text-decoration: none;
-    }
+      .register__terms a {
+        color: #667eea;
+        text-decoration: none;
+      }
 
-    .register__terms a:hover {
-      text-decoration: underline;
-    }
+      .register__terms a:hover {
+        text-decoration: underline;
+      }
 
-    .register__terms-error {
-      display: block;
-      margin-top: 4px;
-      font-size: 12px;
-    }
+      .register__terms-error {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+      }
 
-    .register__submit {
-      width: 100%;
-      margin-top: 8px;
-    }
+      .register__submit {
+        width: 100%;
+        margin-top: 8px;
+      }
 
-    :host ::ng-deep .register__submit button {
-      width: 100%;
-      height: 48px;
-      font-size: 16px;
-    }
+      :host ::ng-deep .register__submit button {
+        width: 100%;
+        height: 48px;
+        font-size: 16px;
+      }
 
-    .register__footer {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 24px;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-    }
+      .register__footer {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 24px;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+      }
 
-    .register__login-link {
-      color: #667eea;
-      font-weight: 500;
-      text-decoration: none;
-    }
+      .register__login-link {
+        color: #667eea;
+        font-weight: 500;
+        text-decoration: none;
+      }
 
-    .register__login-link:hover {
-      text-decoration: underline;
-    }
+      .register__login-link:hover {
+        text-decoration: underline;
+      }
 
-    /* Success State */
-    .register__success {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 24px 0;
-    }
+      /* Success State */
+      .register__success {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px 0;
+      }
 
-    .register__success-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-      color: #4caf50;
-      margin-bottom: 16px;
-    }
+      .register__success-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: #4caf50;
+        margin-bottom: 16px;
+      }
 
-    .register__success-title {
-      margin: 0 0 12px 0;
-      font-size: 20px;
-      font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
-    }
+      .register__success-title {
+        margin: 0 0 12px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.87);
+      }
 
-    .register__success-message {
-      margin: 0 0 8px 0;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-      line-height: 1.5;
-    }
+      .register__success-message {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+        line-height: 1.5;
+      }
 
-    .register__success-hint {
-      margin: 0 0 24px 0;
-      font-size: 13px;
-      color: rgba(0, 0, 0, 0.4);
-    }
+      .register__success-hint {
+        margin: 0 0 24px 0;
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.4);
+      }
 
-    .register__success-btn {
-      min-width: 200px;
-    }
-  `]
+      .register__success-btn {
+        min-width: 200px;
+      }
+    `,
+  ],
 })
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
@@ -362,9 +391,9 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, strongPasswordValidator]],
       confirmPassword: ['', [Validators.required]],
-      acceptTerms: [false, [Validators.requiredTrue]]
+      acceptTerms: [false, [Validators.requiredTrue]],
     },
-    { validators: passwordMatchValidator }
+    { validators: passwordMatchValidator },
   );
 
   /** UI state signals */
@@ -379,14 +408,14 @@ export class RegisterComponent {
    * Toggle password visibility
    */
   togglePasswordVisibility(): void {
-    this.hidePassword.update(v => !v);
+    this.hidePassword.update((v) => !v);
   }
 
   /**
    * Toggle confirm password visibility
    */
   toggleConfirmPasswordVisibility(): void {
-    this.hideConfirmPassword.update(v => !v);
+    this.hideConfirmPassword.update((v) => !v);
   }
 
   /**

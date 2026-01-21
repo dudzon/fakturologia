@@ -35,13 +35,10 @@ import { AuthService } from '../../core/auth.service';
     MatIconModule,
     MatButtonModule,
     AuthLayoutComponent,
-    LoadingButtonComponent
+    LoadingButtonComponent,
   ],
   template: `
-    <app-auth-layout
-      title="Zaloguj się"
-      subtitle="Wprowadź dane logowania, aby kontynuować"
-    >
+    <app-auth-layout title="Zaloguj się" subtitle="Wprowadź dane logowania, aby kontynuować">
       @if (sessionExpired()) {
         <div class="login__info" role="status">
           <mat-icon>info_outline</mat-icon>
@@ -76,7 +73,7 @@ import { AuthService } from '../../core/auth.service';
             formControlName="email"
             placeholder="jan@example.com"
             autocomplete="email"
-          >
+          />
           <mat-icon matPrefix>email</mat-icon>
           @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
             <mat-error>Email jest wymagany</mat-error>
@@ -93,7 +90,7 @@ import { AuthService } from '../../core/auth.service';
             [type]="hidePassword() ? 'password' : 'text'"
             formControlName="password"
             autocomplete="current-password"
-          >
+          />
           <mat-icon matPrefix>lock</mat-icon>
           <button
             mat-icon-button
@@ -104,7 +101,9 @@ import { AuthService } from '../../core/auth.service';
           >
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+          @if (
+            loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched
+          ) {
             <mat-error>Hasło jest wymagane</mat-error>
           }
         </mat-form-field>
@@ -113,9 +112,7 @@ import { AuthService } from '../../core/auth.service';
           <mat-checkbox formControlName="rememberMe" color="primary">
             Zapamiętaj mnie
           </mat-checkbox>
-          <a routerLink="/auth/forgot-password" class="login__forgot-link">
-            Zapomniałem hasła
-          </a>
+          <a routerLink="/auth/forgot-password" class="login__forgot-link"> Zapomniałem hasła </a>
         </div>
 
         <app-loading-button
@@ -134,101 +131,103 @@ import { AuthService } from '../../core/auth.service';
       </div>
     </app-auth-layout>
   `,
-  styles: [`
-    .login__info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      background-color: #e3f2fd;
-      border-radius: 8px;
-      color: #1565c0;
-      font-size: 14px;
-    }
+  styles: [
+    `
+      .login__info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background-color: #e3f2fd;
+        border-radius: 8px;
+        color: #1565c0;
+        font-size: 14px;
+      }
 
-    .login__info mat-icon {
-      color: #1565c0;
-    }
+      .login__info mat-icon {
+        color: #1565c0;
+      }
 
-    .login__error {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      background-color: #ffebee;
-      border-radius: 8px;
-      color: #c62828;
-      font-size: 14px;
-    }
+      .login__error {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background-color: #ffebee;
+        border-radius: 8px;
+        color: #c62828;
+        font-size: 14px;
+      }
 
-    .login__error mat-icon {
-      color: #c62828;
-    }
+      .login__error mat-icon {
+        color: #c62828;
+      }
 
-    .login__resend-btn {
-      margin-left: auto;
-    }
+      .login__resend-btn {
+        margin-left: auto;
+      }
 
-    .login__form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+      .login__form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-    .login__field {
-      width: 100%;
-    }
+      .login__field {
+        width: 100%;
+      }
 
-    .login__options {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 8px 0 16px;
-    }
+      .login__options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 8px 0 16px;
+      }
 
-    .login__forgot-link {
-      font-size: 14px;
-      color: #667eea;
-      text-decoration: none;
-    }
+      .login__forgot-link {
+        font-size: 14px;
+        color: #667eea;
+        text-decoration: none;
+      }
 
-    .login__forgot-link:hover {
-      text-decoration: underline;
-    }
+      .login__forgot-link:hover {
+        text-decoration: underline;
+      }
 
-    .login__submit {
-      width: 100%;
-      margin-top: 8px;
-    }
+      .login__submit {
+        width: 100%;
+        margin-top: 8px;
+      }
 
-    :host ::ng-deep .login__submit button {
-      width: 100%;
-      height: 48px;
-      font-size: 16px;
-    }
+      :host ::ng-deep .login__submit button {
+        width: 100%;
+        height: 48px;
+        font-size: 16px;
+      }
 
-    .login__footer {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 24px;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-    }
+      .login__footer {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 24px;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+      }
 
-    .login__register-link {
-      color: #667eea;
-      font-weight: 500;
-      text-decoration: none;
-    }
+      .login__register-link {
+        color: #667eea;
+        font-weight: 500;
+        text-decoration: none;
+      }
 
-    .login__register-link:hover {
-      text-decoration: underline;
-    }
-  `]
+      .login__register-link:hover {
+        text-decoration: underline;
+      }
+    `,
+  ],
 })
 export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -240,7 +239,7 @@ export class LoginComponent implements OnInit {
   readonly loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
-    rememberMe: [false]
+    rememberMe: [false],
   });
 
   /** UI state signals */
@@ -266,7 +265,7 @@ export class LoginComponent implements OnInit {
    * Toggle password field visibility
    */
   togglePasswordVisibility(): void {
-    this.hidePassword.update(v => !v);
+    this.hidePassword.update((v) => !v);
   }
 
   /**
@@ -332,10 +331,15 @@ export class LoginComponent implements OnInit {
   private handleAuthError(error: { message: string; status?: number }): void {
     const message = error.message.toLowerCase();
 
-    if (message.includes('invalid login credentials') || message.includes('invalid email or password')) {
+    if (
+      message.includes('invalid login credentials') ||
+      message.includes('invalid email or password')
+    ) {
       this.errorMessage.set('Nieprawidłowy email lub hasło');
     } else if (message.includes('email not confirmed')) {
-      this.errorMessage.set('Adres email nie został zweryfikowany. Kliknij link w mailu, który wysłaliśmy.');
+      this.errorMessage.set(
+        'Adres email nie został zweryfikowany. Kliknij link w mailu, który wysłaliśmy.',
+      );
       this.showResendVerification.set(true);
     } else if (message.includes('too many requests')) {
       this.errorMessage.set('Zbyt wiele prób logowania. Spróbuj ponownie za 15 minut.');

@@ -1,16 +1,8 @@
-import {
-  Component,
-  inject,
-  signal,
-  computed,
-  OnInit,
-  DestroyRef,
-  effect
-} from '@angular/core';
+import { Component, inject, signal, computed, OnInit, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -27,11 +19,12 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { ContractorsStore } from '../../stores/contractors.store';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import {
   ConfirmDialogComponent,
-  ConfirmDialogData
+  ConfirmDialogData,
 } from '../../shared/components/confirm-dialog/confirm-dialog.component';
-import type { ContractorResponse, ContractorListQuery } from '../../../types';
+import type { ContractorResponse } from '../../../types';
 
 /**
  * ContractorListComponent - Main view for managing contractors.
@@ -62,13 +55,31 @@ import type { ContractorResponse, ContractorListQuery } from '../../../types';
     MatSnackBarModule,
     MatDialogModule,
     MatTooltipModule,
-    EmptyStateComponent
+    EmptyStateComponent,
+    PageHeaderComponent,
   ],
   template: `
     <div class="contractor-list">
+      <!-- Header -->
+      <app-page-header title="Kontrahenci">
+        <a
+          mat-raised-button
+          color="primary"
+          routerLink="/contractors/new"
+          class="contractor-list__add-btn"
+        >
+          <mat-icon>add</mat-icon>
+          <span class="contractor-list__add-btn-text">Nowy kontrahent</span>
+        </a>
+      </app-page-header>
+
       <!-- Toolbar -->
       <div class="contractor-list__toolbar">
-        <mat-form-field class="contractor-list__search" appearance="outline" subscriptSizing="dynamic">
+        <mat-form-field
+          class="contractor-list__search"
+          appearance="outline"
+          subscriptSizing="dynamic"
+        >
           <mat-icon matPrefix>search</mat-icon>
           <input
             matInput
@@ -89,16 +100,6 @@ import type { ContractorResponse, ContractorListQuery } from '../../../types';
             </button>
           }
         </mat-form-field>
-
-        <a
-          mat-raised-button
-          color="primary"
-          routerLink="/contractors/new"
-          class="contractor-list__add-btn"
-        >
-          <mat-icon>add</mat-icon>
-          <span class="contractor-list__add-btn-text">Nowy kontrahent</span>
-        </a>
       </div>
 
       <!-- Loading state -->
@@ -113,9 +114,7 @@ import type { ContractorResponse, ContractorListQuery } from '../../../types';
         <div class="contractor-list__error">
           <mat-icon>error_outline</mat-icon>
           <p>{{ store.error() }}</p>
-          <button mat-button color="primary" (click)="reload()">
-            Spróbuj ponownie
-          </button>
+          <button mat-button color="primary" (click)="reload()">Spróbuj ponownie</button>
         </div>
       }
 
@@ -180,7 +179,7 @@ import type { ContractorResponse, ContractorListQuery } from '../../../types';
             <ng-container matColumnDef="createdAt">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Data utworzenia</th>
               <td mat-cell *matCellDef="let contractor">
-                {{ contractor.createdAt | date:'dd.MM.yyyy' }}
+                {{ contractor.createdAt | date: 'dd.MM.yyyy' }}
               </td>
             </ng-container>
 
@@ -210,7 +209,7 @@ import type { ContractorResponse, ContractorListQuery } from '../../../types';
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
 
           <mat-paginator
@@ -226,123 +225,139 @@ import type { ContractorResponse, ContractorListQuery } from '../../../types';
       }
     </div>
   `,
-  styles: [`
-    .contractor-list {
-      padding: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .contractor-list__toolbar {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 24px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .contractor-list__search {
-      flex: 1;
-      min-width: 250px;
-      max-width: 400px;
-    }
-
-    .contractor-list__add-btn {
-      white-space: nowrap;
-    }
-
-    .contractor-list__add-btn mat-icon {
-      margin-right: 8px;
-    }
-
-    .contractor-list__loading {
-      display: flex;
-      justify-content: center;
-      padding: 48px;
-    }
-
-    .contractor-list__error {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 48px;
-      text-align: center;
-      color: var(--mat-sys-error);
-    }
-
-    .contractor-list__error mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      margin-bottom: 16px;
-    }
-
-    .contractor-list__error p {
-      margin: 0 0 16px;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .contractor-list__table-container {
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .contractor-list__table-container table {
-      width: 100%;
-    }
-
-    .contractor-list__name {
-      font-weight: 500;
-    }
-
-    .contractor-list__address {
-      color: var(--mat-sys-on-surface-variant);
-      max-width: 300px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: block;
-    }
-
-    .contractor-list__nip {
-      font-family: monospace;
-      letter-spacing: 0.5px;
-    }
-
-    .contractor-list__actions-header,
-    .contractor-list__actions-cell {
-      width: 100px;
-      text-align: center;
-    }
-
-    .contractor-list__actions-cell {
-      white-space: nowrap;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
+  styles: [
+    `
       .contractor-list {
-        padding: 16px;
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
       }
 
       .contractor-list__toolbar {
-        flex-direction: column;
-        align-items: stretch;
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        align-items: center;
+        flex-wrap: wrap;
       }
 
       .contractor-list__search {
-        max-width: none;
+        flex: 1;
+        min-width: 250px;
+        max-width: 400px;
       }
 
-      .contractor-list__add-btn-text {
-        display: none;
+      .contractor-list__add-btn {
+        white-space: nowrap;
       }
 
       .contractor-list__add-btn mat-icon {
-        margin-right: 0;
+        margin-right: 8px;
       }
-    }
-  `]
+
+      .contractor-list__loading {
+        display: flex;
+        justify-content: center;
+        padding: 48px;
+      }
+
+      .contractor-list__error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px;
+        text-align: center;
+        color: var(--mat-sys-error);
+      }
+
+      .contractor-list__error mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+      }
+
+      .contractor-list__error p {
+        margin: 0 0 16px;
+        color: var(--mat-sys-on-surface-variant);
+      }
+
+      .contractor-list__table-container {
+        margin-top: 150px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .contractor-list__table-container table {
+        width: 100%;
+      }
+
+      .contractor-list__name {
+        font-weight: 500;
+      }
+
+      .contractor-list__address {
+        color: var(--mat-sys-on-surface-variant);
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+      }
+
+      .contractor-list__nip {
+        font-family: monospace;
+        letter-spacing: 0.5px;
+      }
+
+      .contractor-list__actions-header,
+      .contractor-list__actions-cell {
+        width: 100px;
+        text-align: center;
+      }
+
+      .contractor-list__actions-cell {
+        white-space: nowrap;
+      }
+
+      mat-paginator {
+        background: transparent;
+        margin-top: 16px;
+      }
+
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-trigger {
+        padding-left: 10px;
+      }
+
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-arrow-wrapper {
+        padding-right: 5px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .contractor-list {
+          padding: 16px;
+        }
+
+        .contractor-list__toolbar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .contractor-list__search {
+          max-width: none;
+        }
+
+        .contractor-list__add-btn-text {
+          display: none;
+        }
+
+        .contractor-list__add-btn mat-icon {
+          margin-right: 0;
+        }
+      }
+    `,
+  ],
 })
 export class ContractorListComponent implements OnInit {
   readonly store = inject(ContractorsStore);
@@ -356,8 +371,8 @@ export class ContractorListComponent implements OnInit {
   readonly sortDirection = signal<'asc' | 'desc'>('desc');
 
   // Computed signals
-  readonly noResultsDescription = computed(() =>
-    `Nie znaleziono kontrahentów dla: „${this.searchQuery()}"`
+  readonly noResultsDescription = computed(
+    () => `Nie znaleziono kontrahentów dla: „${this.searchQuery()}"`,
   );
 
   // Table configuration
@@ -368,13 +383,11 @@ export class ContractorListComponent implements OnInit {
 
   constructor() {
     // Setup search debounce
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe((search) => {
-      this.store.updateQuery({ search: search || undefined });
-    });
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((search) => {
+        this.store.updateQuery({ search: search || undefined });
+      });
   }
 
   ngOnInit(): void {
@@ -412,7 +425,7 @@ export class ContractorListComponent implements OnInit {
 
     this.store.updateQuery({
       sortBy: this.sortBy(),
-      sortOrder: this.sortDirection()
+      sortOrder: this.sortDirection(),
     });
   }
 
@@ -422,7 +435,7 @@ export class ContractorListComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.store.updateQuery({
       page: event.pageIndex + 1,
-      limit: event.pageSize
+      limit: event.pageSize,
     });
   }
 
@@ -455,12 +468,12 @@ export class ContractorListComponent implements OnInit {
       confirmText: 'Usuń',
       cancelText: 'Anuluj',
       confirmColor: 'warn',
-      icon: 'delete'
+      icon: 'delete',
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: dialogData,
-      width: '400px'
+      width: '400px',
     });
 
     dialogRef.afterClosed().subscribe(async (confirmed: boolean) => {
@@ -469,14 +482,12 @@ export class ContractorListComponent implements OnInit {
 
         if (success) {
           this.snackBar.open('Kontrahent został usunięty', 'OK', {
-            duration: 3000
+            duration: 3000,
           });
         } else {
-          this.snackBar.open(
-            this.store.error() || 'Wystąpił błąd podczas usuwania',
-            'OK',
-            { duration: 5000 }
-          );
+          this.snackBar.open(this.store.error() || 'Wystąpił błąd podczas usuwania', 'OK', {
+            duration: 5000,
+          });
         }
       }
     });

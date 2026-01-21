@@ -20,18 +20,18 @@ const STATUS_CONFIG: Record<InvoiceStatus, StatusConfig> = {
   draft: {
     label: 'Szkic',
     icon: 'edit_note',
-    cssClass: 'status-badge--draft'
+    cssClass: 'status-badge--draft',
   },
   unpaid: {
     label: 'Nieopłacona',
     icon: 'schedule',
-    cssClass: 'status-badge--unpaid'
+    cssClass: 'status-badge--unpaid',
   },
   paid: {
     label: 'Opłacona',
     icon: 'check_circle',
-    cssClass: 'status-badge--paid'
-  }
+    cssClass: 'status-badge--paid',
+  },
 };
 
 /**
@@ -50,11 +50,7 @@ const STATUS_CONFIG: Record<InvoiceStatus, StatusConfig> = {
 @Component({
   selector: 'app-invoice-status-badge',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatChipsModule,
-    MatIconModule
-  ],
+  imports: [CommonModule, MatChipsModule, MatIconModule],
   template: `
     <span
       class="status-badge"
@@ -65,43 +61,45 @@ const STATUS_CONFIG: Record<InvoiceStatus, StatusConfig> = {
       <span class="status-badge__label">{{ config().label }}</span>
     </span>
   `,
-  styles: [`
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 12px;
-      font-weight: 500;
-      white-space: nowrap;
-    }
+  styles: [
+    `
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
 
-    .status-badge__icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-    }
+      .status-badge__icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
 
-    .status-badge__label {
-      line-height: 1;
-    }
+      .status-badge__label {
+        line-height: 1;
+      }
 
-    .status-badge--draft {
-      background-color: var(--mat-sys-surface-container-high);
-      color: var(--mat-sys-on-surface-variant);
-    }
+      .status-badge--draft {
+        background-color: var(--mat-sys-surface-container-high);
+        color: var(--mat-sys-on-surface-variant);
+      }
 
-    .status-badge--unpaid {
-      background-color: #fff3e0;
-      color: #e65100;
-    }
+      .status-badge--unpaid {
+        background-color: #fff3e0;
+        color: #e65100;
+      }
 
-    .status-badge--paid {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-    }
-  `]
+      .status-badge--paid {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+      }
+    `,
+  ],
 })
 export class InvoiceStatusBadgeComponent {
   /** Invoice status to display */

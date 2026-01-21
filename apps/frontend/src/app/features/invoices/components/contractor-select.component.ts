@@ -1,13 +1,4 @@
-import {
-  Component,
-  inject,
-  input,
-  output,
-  signal,
-  computed,
-  OnInit,
-  DestroyRef
-} from '@angular/core';
+import { Component, inject, input, output, signal, OnInit, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -66,16 +57,13 @@ export interface SelectedContractor {
     MatIconModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   template: `
     <div class="contractor-select">
       <!-- Manual Mode Toggle -->
       <div class="contractor-select__toggle">
-        <mat-slide-toggle
-          [checked]="isManualMode()"
-          (change)="toggleManualMode($event.checked)"
-        >
+        <mat-slide-toggle [checked]="isManualMode()" (change)="toggleManualMode($event.checked)">
           Wprowadź dane ręcznie
         </mat-slide-toggle>
       </div>
@@ -105,9 +93,7 @@ export interface SelectedContractor {
                 <span class="contractor-select__loading-text">Wyszukiwanie...</span>
               </mat-option>
             } @else if (contractors().length === 0 && searchQuery()) {
-              <mat-option disabled>
-                Nie znaleziono kontrahentów
-              </mat-option>
+              <mat-option disabled> Nie znaleziono kontrahentów </mat-option>
             } @else {
               @for (contractor of contractors(); track contractor.id) {
                 <mat-option [value]="contractor">
@@ -146,6 +132,7 @@ export interface SelectedContractor {
             </div>
             <button
               mat-icon-button
+              type="button"
               (click)="clearSelection()"
               matTooltip="Usuń wybór"
               aria-label="Usuń wybór kontrahenta"
@@ -157,72 +144,83 @@ export interface SelectedContractor {
       }
     </div>
   `,
-  styles: [`
-    .contractor-select {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .contractor-select__toggle {
-      margin-bottom: 8px;
-    }
-
-    .contractor-select__field {
-      width: 100%;
-    }
-
-    .contractor-select__loading-text {
-      margin-left: 12px;
-    }
-
-    .contractor-select__option {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.3;
-    }
-
-    .contractor-select__option-name {
-      font-weight: 500;
-    }
-
-    .contractor-select__option-nip {
-      font-size: 12px;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .contractor-select__add-option {
-      border-top: 1px solid var(--mat-sys-outline-variant);
-      margin-top: 8px;
-      color: var(--mat-sys-primary);
-
-      mat-icon {
-        margin-right: 8px;
-      }
-    }
-
-    .contractor-select__selected {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 16px;
-      background: var(--mat-sys-surface-container);
-      border-radius: 8px;
-      border-left: 4px solid var(--mat-sys-primary);
-    }
-
-    .contractor-select__selected-info {
-      strong {
-        font-size: 16px;
+  styles: [
+    `
+      .contractor-select {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
       }
 
-      p {
-        margin: 4px 0 0;
-        font-size: 14px;
+      .contractor-select__toggle {
+        margin-bottom: 8px;
+      }
+
+      .contractor-select__field {
+        width: 100%;
+        background-color: #fff;
+      }
+
+      .contractor-select__loading-text {
+        margin-left: 12px;
+      }
+
+      .contractor-select__option {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.3;
+      }
+      ::ng-deep .mat-mdc-autocomplete-panel {
+        background-color: #fff !important;
+      }
+
+      ::ng-deep mat-option.contractor-select__add-option,
+      ::ng-deep mat-option.contractor-select__add-option:hover {
+        background: #fff !important;
+      }
+
+      .contractor-select__option-name {
+        font-weight: 500;
+      }
+
+      .contractor-select__option-nip {
+        font-size: 12px;
         color: var(--mat-sys-on-surface-variant);
       }
-    }
-  `]
+
+      .contractor-select__add-option {
+        border-top: 1px solid var(--mat-sys-outline-variant);
+        margin-top: 8px;
+        color: var(--mat-sys-primary);
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+
+      .contractor-select__selected {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 16px;
+        background: var(--mat-sys-surface-container);
+        border-radius: 8px;
+        border-left: 4px solid var(--mat-sys-primary);
+      }
+
+      .contractor-select__selected-info {
+        strong {
+          font-size: 16px;
+        }
+
+        p {
+          margin: 4px 0 0;
+          font-size: 14px;
+          color: var(--mat-sys-on-surface-variant);
+        }
+      }
+    `,
+  ],
 })
 export class ContractorSelectComponent implements OnInit {
   private readonly contractorService = inject(ContractorService);
@@ -251,25 +249,27 @@ export class ContractorSelectComponent implements OnInit {
 
   ngOnInit(): void {
     // Set up search debouncing
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(query => {
-        if (!query || query.length < 2) {
-          this.contractors.set([]);
-          return of(null);
-        }
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((query) => {
+          if (!query || query.length < 2) {
+            this.contractors.set([]);
+            return of(null);
+          }
 
-        this.loading.set(true);
-        return this.contractorService.list({ search: query, limit: 10 });
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(response => {
-      this.loading.set(false);
-      if (response) {
-        this.contractors.set(response.data);
-      }
-    });
+          this.loading.set(true);
+          return this.contractorService.list({ search: query, limit: 10 });
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((response) => {
+        this.loading.set(false);
+        if (response) {
+          this.contractors.set(response.data);
+        }
+      });
 
     // Load selected contractor if ID provided
     const selectedId = this.selectedContractorId();
@@ -307,13 +307,14 @@ export class ContractorSelectComponent implements OnInit {
    * Handle option selection.
    */
   onOptionSelected(contractor: ContractorResponse): void {
+    if (!contractor) return;
     this.selectedContractor.set(contractor);
     this.searchQuery.set(contractor.name);
     this.contractorSelected.emit({
       id: contractor.id,
       name: contractor.name,
       address: contractor.address ?? undefined,
-      nip: contractor.nip ?? undefined
+      nip: contractor.nip ?? undefined,
     });
   }
 

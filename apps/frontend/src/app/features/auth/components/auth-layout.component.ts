@@ -19,11 +19,7 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatCardModule
-  ],
+  imports: [CommonModule, RouterLink, MatCardModule],
   template: `
     <div class="auth-layout">
       <div class="auth-layout__container">
@@ -48,88 +44,89 @@ import { MatCardModule } from '@angular/material/card';
       </div>
     </div>
   `,
-  styles: [`
-    .auth-layout {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 16px;
-    }
-
-    .auth-layout__container {
-      width: 100%;
-      max-width: 440px;
-    }
-
-    .auth-layout__card {
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    }
-
-    .auth-layout__header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 24px;
-      padding: 0;
-    }
-
-    .auth-layout__logo-link {
-      text-decoration: none;
-      color: inherit;
-      margin-bottom: 24px;
-    }
-
-    .auth-layout__logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .auth-layout__logo-icon {
-      font-size: 32px;
-    }
-
-    .auth-layout__logo-text {
-      font-size: 24px;
-      font-weight: 700;
-      color: #667eea;
-    }
-
-    .auth-layout__title {
-      margin: 0 0 8px 0;
-      font-size: 24px;
-      font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
-    }
-
-    .auth-layout__subtitle {
-      margin: 0;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-      line-height: 1.5;
-    }
-
-    .auth-layout__content {
-      padding: 0;
-    }
-
-    @media (max-width: 480px) {
+  styles: [
+    `
       .auth-layout {
-        padding: 8px;
-        align-items: flex-start;
-        padding-top: 40px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      .auth-layout__container {
+        width: 100%;
+        max-width: 440px;
       }
 
       .auth-layout__card {
-        padding: 24px 16px;
+        padding: 32px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
       }
-    }
-  `]
+
+      .auth-layout__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 24px;
+        padding: 0;
+      }
+
+      .auth-layout__logo-link {
+        text-decoration: none;
+        color: inherit;
+        margin-bottom: 24px;
+      }
+
+      .auth-layout__logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .auth-layout__logo-icon {
+        font-size: 32px;
+      }
+
+      .auth-layout__logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      .auth-layout__title {
+        margin: 0 0 8px 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.87);
+      }
+
+      .auth-layout__subtitle {
+        margin: 0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+        line-height: 1.5;
+      }
+
+      .auth-layout__content {
+        padding: 0;
+      }
+
+      @media (max-width: 480px) {
+        .auth-layout {
+          padding: 8px;
+          align-items: flex-start;
+          padding-top: 40px;
+        }
+
+        .auth-layout__card {
+          padding: 24px 16px;
+        }
+      }
+    `,
+  ],
 })
 export class AuthLayoutComponent {
   /** Page title displayed in the card */

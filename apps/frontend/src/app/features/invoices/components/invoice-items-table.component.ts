@@ -9,11 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 import { InvoiceFormStore, InvoiceItemFormModel } from '../../../stores/invoice-form.store';
 import {
   ConfirmDialogComponent,
-  ConfirmDialogData
+  ConfirmDialogData,
 } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import type { VatRate } from '../../../../types';
 
@@ -28,7 +29,7 @@ const UNIT_OPTIONS = [
   { value: 'mb', label: 'mb' },
   { value: 'm²', label: 'm²' },
   { value: 'kg', label: 'kg' },
-  { value: 'l', label: 'l' }
+  { value: 'l', label: 'l' },
 ];
 
 /**
@@ -39,7 +40,7 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
   { value: '8', label: '8%' },
   { value: '5', label: '5%' },
   { value: '0', label: '0%' },
-  { value: 'zw', label: 'zw.' }
+  { value: 'zw', label: 'zw.' },
 ];
 
 /**
@@ -64,13 +65,24 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+  ],
+  providers: [
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { verticalPosition: 'top', duration: 3000 },
+    },
   ],
   template: `
     <div class="items-table">
       @if (formStore.hasItems()) {
         <div class="items-table__container">
-          <table mat-table [dataSource]="formStore.items()" class="items-table__table">
+          <table
+            mat-table
+            [dataSource]="formStore.items()"
+            [trackBy]="trackByIndex"
+            class="items-table__table"
+          >
             <!-- Position Column -->
             <ng-container matColumnDef="position">
               <th mat-header-cell *matHeaderCellDef>Lp.</th>
@@ -78,12 +90,15 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 {{ i + 1 }}
               </td>
             </ng-container>
-
             <!-- Name Column -->
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef>Nazwa towaru/usługi</th>
               <td mat-cell *matCellDef="let item; let i = index">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="items-table__field items-table__field--name">
+                <mat-form-field
+                  appearance="outline"
+                  subscriptSizing="dynamic"
+                  class="items-table__field items-table__field--name"
+                >
                   <input
                     matInput
                     [ngModel]="item.name"
@@ -94,34 +109,35 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Quantity Column -->
             <ng-container matColumnDef="quantity">
               <th mat-header-cell *matHeaderCellDef>Ilość</th>
               <td mat-cell *matCellDef="let item; let i = index">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="items-table__field items-table__field--number">
+                <mat-form-field
+                  appearance="outline"
+                  subscriptSizing="dynamic"
+                  class="items-table__field items-table__field--number"
+                >
                   <input
                     matInput
-                    type="number"
+                    type="text"
                     [ngModel]="item.quantity"
                     (ngModelChange)="updateItem(i, 'quantity', $event)"
-                    min="0.01"
-                    step="0.01"
                     required
                   />
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Unit Column -->
             <ng-container matColumnDef="unit">
               <th mat-header-cell *matHeaderCellDef>J.m.</th>
               <td mat-cell *matCellDef="let item; let i = index">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="items-table__field items-table__field--unit">
-                  <mat-select
-                    [ngModel]="item.unit"
-                    (ngModelChange)="updateItem(i, 'unit', $event)"
-                  >
+                <mat-form-field
+                  appearance="outline"
+                  subscriptSizing="dynamic"
+                  class="items-table__field items-table__field--unit"
+                >
+                  <mat-select [ngModel]="item.unit" (ngModelChange)="updateItem(i, 'unit', $event)">
                     @for (unit of unitOptions; track unit.value) {
                       <mat-option [value]="unit.value">{{ unit.label }}</mat-option>
                     }
@@ -129,30 +145,34 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Unit Price Column -->
             <ng-container matColumnDef="unitPrice">
               <th mat-header-cell *matHeaderCellDef>Cena netto</th>
               <td mat-cell *matCellDef="let item; let i = index">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="items-table__field items-table__field--number">
+                <mat-form-field
+                  appearance="outline"
+                  subscriptSizing="dynamic"
+                  class="items-table__field items-table__field--number"
+                >
                   <input
                     matInput
-                    type="number"
+                    type="text"
                     [ngModel]="item.unitPrice"
                     (ngModelChange)="updateItem(i, 'unitPrice', $event)"
-                    min="0"
-                    step="0.01"
                     required
                   />
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- VAT Rate Column -->
             <ng-container matColumnDef="vatRate">
               <th mat-header-cell *matHeaderCellDef>VAT</th>
               <td mat-cell *matCellDef="let item; let i = index">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="items-table__field items-table__field--vat">
+                <mat-form-field
+                  appearance="outline"
+                  subscriptSizing="dynamic"
+                  class="items-table__field items-table__field--vat"
+                >
                   <mat-select
                     [ngModel]="item.vatRate"
                     (ngModelChange)="updateItem(i, 'vatRate', $event)"
@@ -164,29 +184,27 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </mat-form-field>
               </td>
             </ng-container>
-
             <!-- Net Amount Column (readonly) -->
             <ng-container matColumnDef="netAmount">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Netto</th>
-              <td mat-cell *matCellDef="let item" class="text-right">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Netto</th>
+              <td mat-cell *matCellDef="let item" class="text-center">
                 {{ formatCurrency(item.netAmount) }}
               </td>
             </ng-container>
-
             <!-- Gross Amount Column (readonly) -->
             <ng-container matColumnDef="grossAmount">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Brutto</th>
-              <td mat-cell *matCellDef="let item" class="text-right">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Brutto</th>
+              <td mat-cell *matCellDef="let item" class="text-center">
                 {{ formatCurrency(item.grossAmount) }}
               </td>
             </ng-container>
-
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let item; let i = index">
                 <button
                   mat-icon-button
+                  type="button"
                   color="warn"
                   (click)="removeItem(i)"
                   matTooltip="Usuń pozycję"
@@ -196,7 +214,6 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
                 </button>
               </td>
             </ng-container>
-
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
@@ -205,86 +222,148 @@ const VAT_RATE_OPTIONS: { value: VatRate; label: string }[] = [
 
       <!-- Add Item Button -->
       <div class="items-table__add-row">
-        <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="addItem()"
-        >
+        <button mat-stroked-button color="primary" type="button" (click)="addItem()">
           <mat-icon>add</mat-icon>
           Dodaj pozycję
         </button>
       </div>
     </div>
   `,
-  styles: [`
-    .items-table__container {
-      overflow-x: auto;
-      border: 1px solid var(--mat-sys-outline-variant);
-      border-radius: 8px;
-    }
-
-    .items-table__table {
-      width: 100%;
-      min-width: 900px;
-
-      th, td {
-        padding: 8px;
-        vertical-align: top;
-      }
-
-      th {
-        font-weight: 500;
-        font-size: 12px;
-        text-transform: uppercase;
-        color: var(--mat-sys-on-surface-variant);
-        background: var(--mat-sys-surface-container);
-      }
-
-      .text-right {
-        text-align: right;
-      }
-    }
-
-    .items-table__field {
-      width: 100%;
-
-      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-        display: none;
-      }
-    }
-
-    .items-table__field--name {
-      min-width: 200px;
-    }
-
-    .items-table__field--number {
-      width: 100px;
-    }
-
-    .items-table__field--unit {
-      width: 80px;
-    }
-
-    .items-table__field--vat {
-      width: 80px;
-    }
-
-    .items-table__add-row {
-      margin-top: 16px;
-      display: flex;
-      justify-content: center;
-    }
-
-    @media (max-width: 959px) {
+  styles: [
+    `
       .items-table__container {
-        margin: 0 -16px;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
+        overflow-x: auto;
+        border: 1px solid var(--mat-sys-outline-variant);
+        border-radius: 8px;
       }
-    }
-  `]
+
+      .items-table__table {
+        width: 100%;
+        min-width: 900px;
+
+        th,
+        td {
+          padding: 2px 6px;
+          vertical-align: middle;
+          text-align: center;
+          height: 44px;
+        }
+
+        th {
+          font-weight: 500;
+          font-size: 12px;
+          text-transform: uppercase;
+          color: var(--mat-sys-on-surface-variant);
+          background: var(--mat-sys-surface-container);
+        }
+
+        .text-center {
+          text-align: center;
+        }
+
+        .items-table__field--number input,
+        .items-table__field--number,
+        .items-table__field--name input,
+        ::ng-deep .mat-mdc-select-value-text,
+        ::ng-deep .mat-mdc-select-value,
+        ::ng-deep .mat-select-value {
+          text-align: center;
+        }
+
+        td.mat-cell:last-child {
+          text-align: center;
+          vertical-align: middle;
+        }
+      }
+
+      .items-table__field {
+        width: 100%;
+
+        ::ng-deep .mat-mdc-text-field-wrapper {
+          padding-top: 0;
+          padding-bottom: 0;
+          height: 40px;
+        }
+
+        ::ng-deep .mat-mdc-form-field-flex {
+          align-items: center;
+        }
+
+        ::ng-deep .mat-mdc-form-field-infix {
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+          min-height: auto !important;
+          display: flex;
+          align-items: center;
+          height: 40px;
+        }
+
+        ::ng-deep .mat-mdc-select-trigger {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          width: 100%;
+        }
+
+        ::ng-deep .mat-mdc-input-element {
+          height: 100%;
+        }
+
+        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+          display: none;
+        }
+      }
+
+      .items-table__field--name {
+        min-width: 200px;
+      }
+
+      .items-table__field--number {
+        width: 80px;
+        min-width: 60px;
+      }
+
+      .items-table__field--unit {
+        width: 80px;
+        min-width: 70px;
+      }
+
+      .items-table__field--vat {
+        width: 80px;
+        min-width: 70px;
+      }
+
+      .items-table__add-row {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+      }
+
+      button[mat-icon-button] {
+        vertical-align: middle;
+        margin-top: 0;
+        margin-bottom: 0;
+        height: 32px;
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mat-icon {
+        vertical-align: middle;
+      }
+
+      @media (max-width: 959px) {
+        .items-table__container {
+          margin: 0 -16px;
+          border-radius: 0;
+          border-left: none;
+          border-right: none;
+        }
+      }
+    `,
+  ],
 })
 export class InvoiceItemsTableComponent {
   readonly formStore = inject(InvoiceFormStore);
@@ -302,7 +381,7 @@ export class InvoiceItemsTableComponent {
     'vatRate',
     'netAmount',
     'grossAmount',
-    'actions'
+    'actions',
   ];
 
   /**
@@ -328,15 +407,16 @@ export class InvoiceItemsTableComponent {
     if (items.length === 1) {
       const dialogData: ConfirmDialogData = {
         title: 'Usuń pozycję',
-        message: 'Czy na pewno chcesz usunąć ostatnią pozycję? Faktura musi zawierać co najmniej jedną pozycję.',
+        message:
+          'Czy na pewno chcesz usunąć ostatnią pozycję? Faktura musi zawierać co najmniej jedną pozycję.',
         confirmText: 'Usuń',
         cancelText: 'Anuluj',
-        confirmColor: 'warn'
+        confirmColor: 'warn',
       };
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         data: dialogData,
-        width: '400px'
+        width: '400px',
       });
 
       dialogRef.afterClosed().subscribe((confirmed: boolean) => {
@@ -349,15 +429,19 @@ export class InvoiceItemsTableComponent {
     }
   }
 
-  /**
-   * Format currency value.
-   */
   formatCurrency(value: string): string {
     const num = parseFloat(value);
     if (isNaN(num)) return value;
     return num.toLocaleString('pl-PL', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
+  }
+
+  /**
+   * Track by index for table performance.
+   */
+  trackByIndex(index: number, item: any): any {
+    return index;
   }
 }

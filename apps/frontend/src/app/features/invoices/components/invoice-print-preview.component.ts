@@ -10,7 +10,7 @@ import type { InvoiceResponse } from '../../../../types';
 const PAYMENT_METHOD_LABELS: Record<string, string> = {
   transfer: 'Przelew',
   cash: 'Gotówka',
-  card: 'Karta'
+  card: 'Karta',
 };
 
 /**
@@ -33,10 +33,7 @@ const PAYMENT_METHOD_LABELS: Record<string, string> = {
 @Component({
   selector: 'app-invoice-print-preview',
   standalone: true,
-  imports: [
-    CommonModule,
-    InvoiceTotalsComponent
-  ],
+  imports: [CommonModule, InvoiceTotalsComponent],
   template: `
     <div class="invoice-preview">
       <!-- Header: Seller Info & Logo -->
@@ -69,15 +66,21 @@ const PAYMENT_METHOD_LABELS: Record<string, string> = {
       <div class="invoice-preview__dates">
         <div class="invoice-preview__date-item">
           <span class="invoice-preview__date-label">Data wystawienia:</span>
-          <span class="invoice-preview__date-value">{{ invoice().issueDate | date:'dd.MM.yyyy' }}</span>
+          <span class="invoice-preview__date-value">{{
+            invoice().issueDate | date: 'dd.MM.yyyy'
+          }}</span>
         </div>
         <div class="invoice-preview__date-item">
           <span class="invoice-preview__date-label">Data sprzedaży:</span>
-          <span class="invoice-preview__date-value">{{ invoice().issueDate | date:'dd.MM.yyyy' }}</span>
+          <span class="invoice-preview__date-value">{{
+            invoice().issueDate | date: 'dd.MM.yyyy'
+          }}</span>
         </div>
         <div class="invoice-preview__date-item">
           <span class="invoice-preview__date-label">Termin płatności:</span>
-          <span class="invoice-preview__date-value">{{ invoice().dueDate | date:'dd.MM.yyyy' }}</span>
+          <span class="invoice-preview__date-value">{{
+            invoice().dueDate | date: 'dd.MM.yyyy'
+          }}</span>
         </div>
         <div class="invoice-preview__date-item">
           <span class="invoice-preview__date-label">Metoda płatności:</span>
@@ -162,7 +165,9 @@ const PAYMENT_METHOD_LABELS: Record<string, string> = {
         <h2 class="invoice-preview__section-title">Dane do przelewu</h2>
         <p class="invoice-preview__bank-account">
           <span class="invoice-preview__bank-label">Numer konta:</span>
-          <span class="invoice-preview__bank-value">{{ formatIban(invoice().seller.bankAccount) }}</span>
+          <span class="invoice-preview__bank-value">{{
+            formatIban(invoice().seller.bankAccount)
+          }}</span>
         </p>
       </section>
 
@@ -179,274 +184,300 @@ const PAYMENT_METHOD_LABELS: Record<string, string> = {
       </footer>
     </div>
   `,
-  styles: [`
-    .invoice-preview {
-      padding: 40px;
-      background: white;
-      color: #333;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* Header */
-    .invoice-preview__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 32px;
-      padding-bottom: 24px;
-      border-bottom: 2px solid #e0e0e0;
-    }
-
-    .invoice-preview__seller-title {
-      margin: 0 0 8px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: #666;
-    }
-
-    .invoice-preview__company-name {
-      margin: 0 0 4px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .invoice-preview__address,
-    .invoice-preview__nip {
-      margin: 0 0 4px;
-      color: #555;
-    }
-
-    .invoice-preview__logo {
-      flex-shrink: 0;
-      max-width: 150px;
-    }
-
-    .invoice-preview__logo-img {
-      max-width: 100%;
-      max-height: 80px;
-      object-fit: contain;
-    }
-
-    /* Title */
-    .invoice-preview__title-section {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .invoice-preview__title {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-
-    .invoice-preview__number {
-      margin: 4px 0 0;
-      font-size: 16px;
-      color: #666;
-    }
-
-    /* Dates */
-    .invoice-preview__dates {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px 24px;
-      margin-bottom: 32px;
-      padding: 16px;
-      background: #f5f5f5;
-      border-radius: 8px;
-    }
-
-    .invoice-preview__date-item {
-      display: flex;
-      gap: 8px;
-    }
-
-    .invoice-preview__date-label {
-      color: #666;
-    }
-
-    .invoice-preview__date-value {
-      font-weight: 500;
-    }
-
-    /* Buyer */
-    .invoice-preview__buyer {
-      margin-bottom: 32px;
-      padding: 16px;
-      background: #fafafa;
-      border-left: 4px solid var(--mat-sys-primary, #1976d2);
-      border-radius: 0 8px 8px 0;
-    }
-
-    .invoice-preview__section-title {
-      margin: 0 0 12px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: #666;
-    }
-
-    /* Items Table */
-    .invoice-preview__items {
-      margin-bottom: 24px;
-    }
-
-    .invoice-preview__items-table-container {
-      overflow-x: auto;
-    }
-
-    .invoice-preview__items-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-
-      th, td {
-        padding: 10px 8px;
-        border: 1px solid #e0e0e0;
-        text-align: left;
+  styles: [
+    `
+      .invoice-preview {
+        padding: 40px;
+        background: white;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
       }
 
-      th {
-        background: #f5f5f5;
+      /* Header */
+      .invoice-preview__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .invoice-preview__seller-title {
+        margin: 0 0 8px;
+        font-size: 12px;
         font-weight: 600;
-        font-size: 11px;
         text-transform: uppercase;
+        color: #666;
+      }
+
+      .invoice-preview__company-name {
+        margin: 0 0 4px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .invoice-preview__address,
+      .invoice-preview__nip {
+        margin: 0 0 4px;
         color: #555;
       }
 
-      tbody tr:nth-child(even) {
-        background: #fafafa;
-      }
-
-      .col-lp { width: 40px; text-align: center; }
-      .col-name { min-width: 200px; }
-      .col-unit { width: 60px; text-align: center; }
-      .col-qty { width: 70px; text-align: right; }
-      .col-price { width: 100px; text-align: right; }
-      .col-vat { width: 60px; text-align: center; }
-      .col-net { width: 110px; text-align: right; }
-      .col-gross { width: 110px; text-align: right; }
-    }
-
-    /* Amount in Words */
-    .invoice-preview__amount-words {
-      display: flex;
-      gap: 8px;
-      margin: 24px 0;
-      padding: 12px 16px;
-      background: #fff3e0;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .invoice-preview__amount-words-label {
-      font-weight: 500;
-      flex-shrink: 0;
-    }
-
-    .invoice-preview__amount-words-value {
-      font-style: italic;
-    }
-
-    /* Notes */
-    .invoice-preview__notes {
-      margin-bottom: 24px;
-      padding: 16px;
-      background: #f9f9f9;
-      border-radius: 8px;
-    }
-
-    .invoice-preview__notes-text {
-      margin: 0;
-      white-space: pre-wrap;
-    }
-
-    /* Bank Info */
-    .invoice-preview__bank-info {
-      margin-bottom: 48px;
-      padding: 16px;
-      background: #e3f2fd;
-      border-radius: 8px;
-    }
-
-    .invoice-preview__bank-account {
-      margin: 0;
-      display: flex;
-      gap: 12px;
-    }
-
-    .invoice-preview__bank-label {
-      color: #555;
-    }
-
-    .invoice-preview__bank-value {
-      font-family: 'Courier New', monospace;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-
-    /* Footer */
-    .invoice-preview__footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 48px;
-      margin-top: 48px;
-      padding-top: 32px;
-    }
-
-    .invoice-preview__signature {
-      flex: 1;
-      text-align: center;
-      font-size: 11px;
-      color: #888;
-    }
-
-    .invoice-preview__signature-line {
-      height: 1px;
-      background: #ccc;
-      margin-bottom: 8px;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .invoice-preview {
-        padding: 24px 16px;
-      }
-
-      .invoice-preview__header {
-        flex-direction: column-reverse;
-        gap: 16px;
-      }
-
       .invoice-preview__logo {
-        align-self: flex-end;
+        flex-shrink: 0;
+        max-width: 150px;
+      }
+
+      .invoice-preview__logo-img {
+        max-width: 100%;
+        max-height: 80px;
+        object-fit: contain;
+      }
+
+      /* Title */
+      .invoice-preview__title-section {
+        text-align: center;
+        margin-bottom: 24px;
       }
 
       .invoice-preview__title {
-        font-size: 22px;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 2px;
       }
 
+      .invoice-preview__number {
+        margin: 4px 0 0;
+        font-size: 16px;
+        color: #666;
+      }
+
+      /* Dates */
       .invoice-preview__dates {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px 24px;
+        margin-bottom: 32px;
+        padding: 16px;
+        background: #f5f5f5;
+        border-radius: 8px;
       }
 
+      .invoice-preview__date-item {
+        display: flex;
+        gap: 8px;
+      }
+
+      .invoice-preview__date-label {
+        color: #666;
+      }
+
+      .invoice-preview__date-value {
+        font-weight: 500;
+      }
+
+      /* Buyer */
+      .invoice-preview__buyer {
+        margin-bottom: 32px;
+        padding: 16px;
+        background: #fafafa;
+        border-left: 4px solid var(--mat-sys-primary, #1976d2);
+        border-radius: 0 8px 8px 0;
+      }
+
+      .invoice-preview__section-title {
+        margin: 0 0 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #666;
+      }
+
+      /* Items Table */
+      .invoice-preview__items {
+        margin-bottom: 24px;
+      }
+
+      .invoice-preview__items-table-container {
+        overflow-x: auto;
+      }
+
+      .invoice-preview__items-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+
+        th,
+        td {
+          padding: 10px 8px;
+          border: 1px solid #e0e0e0;
+          text-align: left;
+        }
+
+        th {
+          background: #f5f5f5;
+          font-weight: 600;
+          font-size: 11px;
+          text-transform: uppercase;
+          color: #555;
+        }
+
+        tbody tr:nth-child(even) {
+          background: #fafafa;
+        }
+
+        .col-lp {
+          width: 40px;
+          text-align: center;
+        }
+        .col-name {
+          min-width: 200px;
+        }
+        .col-unit {
+          width: 60px;
+          text-align: center;
+        }
+        .col-qty {
+          width: 70px;
+          text-align: right;
+        }
+        .col-price {
+          width: 100px;
+          text-align: right;
+        }
+        .col-vat {
+          width: 60px;
+          text-align: center;
+        }
+        .col-net {
+          width: 110px;
+          text-align: right;
+        }
+        .col-gross {
+          width: 110px;
+          text-align: right;
+        }
+      }
+
+      /* Amount in Words */
+      .invoice-preview__amount-words {
+        display: flex;
+        gap: 8px;
+        margin: 24px 0;
+        padding: 12px 16px;
+        background: #fff3e0;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .invoice-preview__amount-words-label {
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+
+      .invoice-preview__amount-words-value {
+        font-style: italic;
+      }
+
+      /* Notes */
+      .invoice-preview__notes {
+        margin-bottom: 24px;
+        padding: 16px;
+        background: #f9f9f9;
+        border-radius: 8px;
+      }
+
+      .invoice-preview__notes-text {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      /* Bank Info */
+      .invoice-preview__bank-info {
+        margin-bottom: 48px;
+        padding: 16px;
+        background: #e3f2fd;
+        border-radius: 8px;
+      }
+
+      .invoice-preview__bank-account {
+        margin: 0;
+        display: flex;
+        gap: 12px;
+      }
+
+      .invoice-preview__bank-label {
+        color: #555;
+      }
+
+      .invoice-preview__bank-value {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+
+      /* Footer */
       .invoice-preview__footer {
-        flex-direction: column;
-        gap: 32px;
+        display: flex;
+        justify-content: space-between;
+        gap: 48px;
+        margin-top: 48px;
+        padding-top: 32px;
       }
-    }
 
-    @media print {
-      .invoice-preview {
-        padding: 0;
-        box-shadow: none;
+      .invoice-preview__signature {
+        flex: 1;
+        text-align: center;
+        font-size: 11px;
+        color: #888;
       }
-    }
-  `]
+
+      .invoice-preview__signature-line {
+        height: 1px;
+        background: #ccc;
+        margin-bottom: 8px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .invoice-preview {
+          padding: 24px 16px;
+        }
+
+        .invoice-preview__header {
+          flex-direction: column-reverse;
+          gap: 16px;
+        }
+
+        .invoice-preview__logo {
+          align-self: flex-end;
+        }
+
+        .invoice-preview__title {
+          font-size: 22px;
+        }
+
+        .invoice-preview__dates {
+          grid-template-columns: 1fr;
+        }
+
+        .invoice-preview__footer {
+          flex-direction: column;
+          gap: 32px;
+        }
+      }
+
+      @media print {
+        .invoice-preview {
+          padding: 0;
+          box-shadow: none;
+        }
+      }
+    `,
+  ],
 })
 export class InvoicePrintPreviewComponent {
   private readonly amountToWordsService = inject(AmountToWordsService);
@@ -478,7 +509,7 @@ export class InvoicePrintPreviewComponent {
     if (isNaN(num)) return value;
     return num.toLocaleString('pl-PL', {
       minimumFractionDigits: 0,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
   }
 
@@ -490,7 +521,7 @@ export class InvoicePrintPreviewComponent {
     if (isNaN(num)) return value;
     return num.toLocaleString('pl-PL', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
   }
 

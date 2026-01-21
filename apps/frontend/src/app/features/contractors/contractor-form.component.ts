@@ -1,19 +1,7 @@
-import {
-  Component,
-  inject,
-  signal,
-  computed,
-  OnInit,
-  DestroyRef
-} from '@angular/core';
+import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,11 +15,7 @@ import { ContractorService } from '../../services/contractor.service';
 import { ContractorsStore } from '../../stores/contractors.store';
 import { nipValidator, normalizeNip } from '../../shared/validators/nip.validator';
 import type { CanDeactivateComponent } from '../../core/guards/can-deactivate.guard';
-import type {
-  ContractorResponse,
-  CreateContractorCommand,
-  UpdateContractorCommand
-} from '../../../types';
+import type { CreateContractorCommand, UpdateContractorCommand } from '../../../types';
 
 /**
  * ContractorFormComponent - Form for creating and editing contractors.
@@ -56,13 +40,13 @@ import type {
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   template: `
     <div class="contractor-form">
       <mat-card>
         <mat-card-header>
-          <mat-card-title>
+          <mat-card-title class="contractor-form__title">
             @if (isEditMode()) {
               Edytuj kontrahenta
             } @else {
@@ -87,8 +71,13 @@ import type {
                   placeholder="np. Firma ABC Sp. z o.o."
                   maxlength="255"
                 />
-                <mat-hint align="end">{{ contractorForm.get('name')?.value?.length || 0 }}/255</mat-hint>
-                @if (contractorForm.get('name')?.hasError('required') && contractorForm.get('name')?.touched) {
+                <mat-hint align="end"
+                  >{{ contractorForm.get('name')?.value?.length || 0 }}/255</mat-hint
+                >
+                @if (
+                  contractorForm.get('name')?.hasError('required') &&
+                  contractorForm.get('name')?.touched
+                ) {
                   <mat-error>Nazwa kontrahenta jest wymagana</mat-error>
                 }
                 @if (contractorForm.get('name')?.hasError('maxlength')) {
@@ -106,7 +95,9 @@ import type {
                   rows="3"
                   maxlength="500"
                 ></textarea>
-                <mat-hint align="end">{{ contractorForm.get('address')?.value?.length || 0 }}/500</mat-hint>
+                <mat-hint align="end"
+                  >{{ contractorForm.get('address')?.value?.length || 0 }}/500</mat-hint
+                >
                 @if (contractorForm.get('address')?.hasError('maxlength')) {
                   <mat-error>Adres może mieć maksymalnie 500 znaków</mat-error>
                 }
@@ -123,7 +114,9 @@ import type {
                   (blur)="onNipBlur()"
                 />
                 <mat-hint>10 cyfr, opcjonalnie z myślnikami</mat-hint>
-                @if (contractorForm.get('nip')?.hasError('nip') && contractorForm.get('nip')?.touched) {
+                @if (
+                  contractorForm.get('nip')?.hasError('nip') && contractorForm.get('nip')?.touched
+                ) {
                   <mat-error>{{ contractorForm.get('nip')?.getError('nip')?.message }}</mat-error>
                 }
               </mat-form-field>
@@ -140,9 +133,7 @@ import type {
         </mat-card-content>
 
         <mat-card-actions align="end">
-          <a mat-button routerLink="/contractors" [disabled]="isSaving()">
-            Anuluj
-          </a>
+          <a mat-button routerLink="/contractors" [disabled]="isSaving()"> Anuluj </a>
           <button
             mat-raised-button
             color="primary"
@@ -158,56 +149,65 @@ import type {
       </mat-card>
     </div>
   `,
-  styles: [`
-    .contractor-form {
-      padding: 24px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .contractor-form__field {
-      width: 100%;
-      margin-bottom: 16px;
-    }
-
-    .contractor-form__loading {
-      display: flex;
-      justify-content: center;
-      padding: 48px;
-    }
-
-    .contractor-form__api-error {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      background-color: var(--mat-sys-error-container);
-      color: var(--mat-sys-on-error-container);
-      border-radius: 8px;
-    }
-
-    .contractor-form__api-error mat-icon {
-      flex-shrink: 0;
-    }
-
-    .contractor-form__btn-spinner {
-      display: inline-block;
-      margin-right: 8px;
-    }
-
-    mat-card-actions {
-      padding: 16px !important;
-      gap: 8px;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
+  styles: [
+    `
       .contractor-form {
-        padding: 16px;
+        padding: 24px;
+        max-width: 600px;
+        height: 100vh;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
       }
-    }
-  `]
+
+      .contractor-form__field {
+        width: 100%;
+        margin-bottom: 16px;
+      }
+
+      .contractor-form__title {
+        margin-bottom: 10px;
+      }
+
+      .contractor-form__loading {
+        display: flex;
+        justify-content: center;
+        padding: 48px;
+      }
+
+      .contractor-form__api-error {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background-color: var(--mat-sys-error-container);
+        color: var(--mat-sys-on-error-container);
+        border-radius: 8px;
+      }
+
+      .contractor-form__api-error mat-icon {
+        flex-shrink: 0;
+      }
+
+      .contractor-form__btn-spinner {
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      mat-card-actions {
+        padding: 16px !important;
+        gap: 8px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .contractor-form {
+          padding: 16px;
+        }
+      }
+    `,
+  ],
 })
 export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
   private readonly fb = inject(FormBuilder);
@@ -235,7 +235,7 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
     this.contractorForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
       address: ['', [Validators.maxLength(500)]],
-      nip: ['', [nipValidator()]]
+      nip: ['', [nipValidator()]],
     });
   }
 
@@ -255,26 +255,27 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
   private loadContractor(id: string): void {
     this.isLoading.set(true);
 
-    this.contractorService.get(id).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (contractor) => {
-        this.contractorForm.patchValue({
-          name: contractor.name,
-          address: contractor.address || '',
-          nip: contractor.nip || ''
-        });
-        this.contractorForm.markAsPristine();
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        this.isLoading.set(false);
-        this.snackBar.open('Nie udało się załadować danych kontrahenta', 'OK', {
-          duration: 5000
-        });
-        this.router.navigate(['/contractors']);
-      }
-    });
+    this.contractorService
+      .get(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (contractor) => {
+          this.contractorForm.patchValue({
+            name: contractor.name,
+            address: contractor.address || '',
+            nip: contractor.nip || '',
+          });
+          this.contractorForm.markAsPristine();
+          this.isLoading.set(false);
+        },
+        error: (_error) => {
+          this.isLoading.set(false);
+          this.snackBar.open('Nie udało się załadować danych kontrahenta', 'OK', {
+            duration: 5000,
+          });
+          this.router.navigate(['/contractors']);
+        },
+      });
   }
 
   /**
@@ -299,12 +300,12 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
     this.isSaving.set(true);
     this.apiError.set(null);
 
-    const formValue = this.contractorForm.value;
+    const _formValue = this.contractorForm.value;
 
     if (this.isEditMode()) {
-      this.updateContractor(formValue);
+      this.updateContractor(_formValue);
     } else {
-      this.createContractor(formValue);
+      this.createContractor(_formValue);
     }
   }
 
@@ -315,25 +316,26 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
     const command: CreateContractorCommand = {
       name: formValue.name.trim(),
       address: formValue.address?.trim() || undefined,
-      nip: formValue.nip?.trim() || undefined
+      nip: formValue.nip?.trim() || undefined,
     };
 
-    this.contractorService.create(command).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (contractor) => {
-        this.formSaved = true;
-        this.contractorsStore.invalidateCache();
-        this.snackBar.open('Kontrahent został dodany', 'OK', {
-          duration: 3000
-        });
-        this.router.navigate(['/contractors']);
-      },
-      error: (error) => {
-        this.isSaving.set(false);
-        this.handleApiError(error);
-      }
-    });
+    this.contractorService
+      .create(command)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (_contractor) => {
+          this.formSaved = true;
+          this.contractorsStore.invalidateCache();
+          this.snackBar.open('Kontrahent został dodany', 'OK', {
+            duration: 3000,
+          });
+          this.router.navigate(['/contractors']);
+        },
+        error: (error) => {
+          this.isSaving.set(false);
+          this.handleApiError(error);
+        },
+      });
   }
 
   /**
@@ -346,25 +348,26 @@ export class ContractorFormComponent implements OnInit, CanDeactivateComponent {
     const command: UpdateContractorCommand = {
       name: formValue.name.trim(),
       address: formValue.address?.trim() || undefined,
-      nip: formValue.nip?.trim() || undefined
+      nip: formValue.nip?.trim() || undefined,
     };
 
-    this.contractorService.update(id, command).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (contractor) => {
-        this.formSaved = true;
-        this.contractorsStore.invalidateCache();
-        this.snackBar.open('Zmiany zostały zapisane', 'OK', {
-          duration: 3000
-        });
-        this.router.navigate(['/contractors']);
-      },
-      error: (error) => {
-        this.isSaving.set(false);
-        this.handleApiError(error);
-      }
-    });
+    this.contractorService
+      .update(id, command)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (_contractor) => {
+          this.formSaved = true;
+          this.contractorsStore.invalidateCache();
+          this.snackBar.open('Zmiany zostały zapisane', 'OK', {
+            duration: 3000,
+          });
+          this.router.navigate(['/contractors']);
+        },
+        error: (error) => {
+          this.isSaving.set(false);
+          this.handleApiError(error);
+        },
+      });
   }
 
   /**

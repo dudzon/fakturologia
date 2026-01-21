@@ -4,7 +4,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import type { UserProfileResponse } from '../../../../types';
-import type { ProfileCompletenessState, ProfileRequiredFieldMeta } from '../models/profile-form.model';
+import type {
+  ProfileCompletenessState,
+  ProfileRequiredFieldMeta,
+} from '../models/profile-form.model';
 
 /**
  * ProfileCompletenessIndicatorComponent - Visualizes profile completion status.
@@ -18,7 +21,10 @@ import type { ProfileCompletenessState, ProfileRequiredFieldMeta } from '../mode
   imports: [CommonModule, MatIconModule, MatProgressBarModule],
   template: `
     @if (!completenessState().isComplete) {
-      <div class="completeness-container" [class.warning]="completenessState().completionPercentage < 100">
+      <div
+        class="completeness-container"
+        [class.warning]="completenessState().completionPercentage < 100"
+      >
         <div class="completeness-header">
           <mat-icon>info</mat-icon>
           <span class="completeness-title">
@@ -61,97 +67,99 @@ import type { ProfileCompletenessState, ProfileRequiredFieldMeta } from '../mode
       </div>
     }
   `,
-  styles: [`
-    .completeness-container {
-      background-color: var(--mat-sys-surface-variant);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 8px;
+  styles: [
+    `
+      .completeness-container {
+        background-color: var(--mat-sys-surface-variant);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 8px;
 
-      &.warning {
-        background-color: color-mix(in srgb, var(--mat-sys-tertiary) 12%, transparent);
-        border: 1px solid var(--mat-sys-tertiary);
+        &.warning {
+          background-color: color-mix(in srgb, var(--mat-sys-tertiary) 12%, transparent);
+          border: 1px solid var(--mat-sys-tertiary);
+        }
+
+        &.complete {
+          background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+          border: 1px solid var(--mat-sys-primary);
+        }
       }
 
-      &.complete {
-        background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
-        border: 1px solid var(--mat-sys-primary);
-      }
-    }
-
-    .completeness-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-
-      mat-icon {
-        color: var(--mat-sys-tertiary);
-      }
-
-      .complete & mat-icon {
-        color: var(--mat-sys-primary);
-      }
-    }
-
-    .completeness-title {
-      font-weight: 500;
-      font-size: 14px;
-      color: var(--mat-sys-on-surface);
-    }
-
-    .completeness-progress {
-      margin-bottom: 8px;
-      border-radius: 4px;
-      height: 8px;
-    }
-
-    .completeness-details {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 12px;
-    }
-
-    .progress-text {
-      font-size: 12px;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .required-fields {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .field-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--mat-sys-on-surface-variant);
-
-      mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        color: var(--mat-sys-outline);
-      }
-
-      &.filled {
-        color: var(--mat-sys-on-surface);
+      .completeness-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
 
         mat-icon {
+          color: var(--mat-sys-tertiary);
+        }
+
+        .complete & mat-icon {
           color: var(--mat-sys-primary);
         }
       }
-    }
 
-    .complete-message {
-      font-size: 13px;
-      color: var(--mat-sys-on-surface-variant);
-      margin: 0;
-    }
-  `]
+      .completeness-title {
+        font-weight: 500;
+        font-size: 14px;
+        color: var(--mat-sys-on-surface);
+      }
+
+      .completeness-progress {
+        margin-bottom: 8px;
+        border-radius: 4px;
+        height: 8px;
+      }
+
+      .completeness-details {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 12px;
+      }
+
+      .progress-text {
+        font-size: 12px;
+        color: var(--mat-sys-on-surface-variant);
+      }
+
+      .required-fields {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .field-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--mat-sys-on-surface-variant);
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: var(--mat-sys-outline);
+        }
+
+        &.filled {
+          color: var(--mat-sys-on-surface);
+
+          mat-icon {
+            color: var(--mat-sys-primary);
+          }
+        }
+      }
+
+      .complete-message {
+        font-size: 13px;
+        color: var(--mat-sys-on-surface-variant);
+        margin: 0;
+      }
+    `,
+  ],
 })
 export class ProfileCompletenessIndicatorComponent {
   /**
@@ -169,7 +177,7 @@ export class ProfileCompletenessIndicatorComponent {
       return {
         isComplete: false,
         completionPercentage: 0,
-        missingFields: ['companyName', 'nip', 'address']
+        missingFields: ['companyName', 'nip', 'address'],
       };
     }
 
@@ -185,7 +193,7 @@ export class ProfileCompletenessIndicatorComponent {
     return {
       isComplete: missingFields.length === 0,
       completionPercentage,
-      missingFields
+      missingFields,
     };
   });
 
@@ -197,7 +205,7 @@ export class ProfileCompletenessIndicatorComponent {
     return [
       { key: 'companyName', label: 'Nazwa firmy', filled: !!p?.companyName },
       { key: 'nip', label: 'NIP', filled: !!p?.nip },
-      { key: 'address', label: 'Adres', filled: !!p?.address }
+      { key: 'address', label: 'Adres', filled: !!p?.address },
     ];
   });
 }

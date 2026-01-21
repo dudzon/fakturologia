@@ -11,7 +11,7 @@ import type {
   UpdateInvoiceStatusResponse,
   DuplicateInvoiceCommand,
   DeleteInvoiceResponse,
-  NextInvoiceNumberResponse
+  NextInvoiceNumberResponse,
 } from '../../types';
 import { environment } from '../../environments/environment';
 
@@ -88,7 +88,7 @@ export class InvoiceService {
 
   /**
    * DELETE /api/v1/invoices/:id
-   * Soft-deletes an invoice (only draft invoices can be deleted).
+   * Soft-deletes an invoice.
    */
   delete(id: string): Observable<DeleteInvoiceResponse> {
     return this.http.delete<DeleteInvoiceResponse>(`${this.apiUrl}/${id}`);
@@ -99,7 +99,10 @@ export class InvoiceService {
    * Updates the status of an invoice.
    * Allowed transitions: draft -> unpaid -> paid
    */
-  updateStatus(id: string, data: UpdateInvoiceStatusCommand): Observable<UpdateInvoiceStatusResponse> {
+  updateStatus(
+    id: string,
+    data: UpdateInvoiceStatusCommand,
+  ): Observable<UpdateInvoiceStatusResponse> {
     return this.http.patch<UpdateInvoiceStatusResponse>(`${this.apiUrl}/${id}/status`, data);
   }
 

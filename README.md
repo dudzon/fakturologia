@@ -99,6 +99,37 @@ cd apps/frontend
 npm start
 ```
 
+## Testy
+
+### Stos testowy
+
+- Frontend – testy jednostkowe i komponentów: Vitest + Angular Testing Library (środowisko: Happy DOM/JSDOM)
+- Backend – testy jednostkowe: Jest
+- E2E – testy end‑to‑end: Playwright (Chromium/WebKit/Firefox)
+
+### Uruchamianie testów
+
+- Frontend (Vitest):
+
+```bash
+cd apps/frontend
+npx vitest
+```
+
+- Backend (Jest):
+
+```bash
+cd apps/backend
+npm test
+```
+
+- E2E (Playwright):
+
+```bash
+cd apps/frontend
+npx playwright test
+```
+
 ## Bezpieczeństwo
 
 ⚠️ **WAŻNE:** Pliki zawierające sekrety są ignorowane przez git:

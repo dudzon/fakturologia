@@ -5,7 +5,7 @@ import type {
   UserProfileResponse,
   UpdateUserProfileCommand,
   UploadLogoResponse,
-  MessageResponse
+  MessageResponse,
 } from '../../types';
 import { environment } from '../../environments/environment';
 

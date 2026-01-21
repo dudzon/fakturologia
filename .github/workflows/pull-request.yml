@@ -1,0 +1,276 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  lint-backend:
+    name: Lint Backend
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: "24.9.0"
+    defaults:
+      run:
+        working-directory: apps/backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      # Install backend dependencies
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: apps/backend
+
+      # Start backend server in background
+      - name: Start backend server
+        run: npm run start:dev &
+        working-directory: apps/backend
+
+      # Wait for backend to be ready
+      - name: Wait for backend
+        run: |
+          for i in {1..30}; do
+            if nc -z localhost 3000; then
+              echo "Backend is up!" && break
+            fi
+            echo "Waiting for backend..." && sleep 2
+          done
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: apps/backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+  lint-frontend:
+    name: Lint Frontend
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: "24.9.0"
+    defaults:
+      run:
+        working-directory: apps/frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npx ng lint
+
+  unit-test-backend:
+    name: Unit Tests (Backend)
+    # Run after linting
+    needs: [lint-backend, lint-frontend]
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: "24.9.0"
+    defaults:
+      run:
+        working-directory: apps/backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: apps/backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+  unit-test-frontend:
+    name: Unit Tests (Frontend)
+    # Run after linting
+    needs: [lint-backend, lint-frontend]
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: "24.9.0"
+    defaults:
+      run:
+        working-directory: apps/frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Ensure environment file exists if previously needed, relying on original workflow precedent or skipping if not strictly required by 'ng test' in this project.
+      # Original workflow had: cp src/environments/environment.example.ts src/environments/environment.ts
+      # We'll add a check or just copy it to be safe.
+      - name: Setup environment file
+        run: |
+          if [ -f src/environments/environment.example.ts ]; then
+            cp src/environments/environment.example.ts src/environments/environment.ts
+          fi
+
+      - name: Run unit tests with coverage
+        run: npm run test:unit:cov
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: coverage-frontend
+          path: apps/frontend/coverage/
+          retention-days: 7
+
+  e2e-test-github:
+    name: E2E Tests (GitHub Action)
+    needs: [lint-backend, lint-frontend]
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: "24.9.0"
+      ENV_NAME: integration
+    defaults:
+      run:
+        working-directory: apps/frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Check required secrets
+        id: check_secrets
+        run: |
+          missing=()
+          [ -z "${{ secrets.SUPABASE_URL }}" ] && missing+=("SUPABASE_URL")
+          [ -z "${{ secrets.SUPABASE_KEY }}" ] && missing+=("SUPABASE_KEY")
+          [ -z "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ] && missing+=("SUPABASE_SERVICE_ROLE_KEY")
+          [ -z "${{ secrets.E2E_USERNAME }}" ] && missing+=("E2E_USERNAME")
+          [ -z "${{ secrets.E2E_PASSWORD }}" ] && missing+=("E2E_PASSWORD")
+
+          if [ ${#missing[@]} -eq 0 ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "should_run=false" >> "$GITHUB_OUTPUT"
+          echo "Skipping E2E job; missing secrets: ${missing[*]}"
+          exit 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        if: steps.check_secrets.outputs.should_run == 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Generate .env.test from secrets
+        if: steps.check_secrets.outputs.should_run == 'true'
+        run: |
+          {
+            echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}";
+            echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}";
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}";
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}";
+            echo "E2E_USERNAME=${{ secrets.E2E_USERNAME }}";
+            echo "E2E_PASSWORD=${{ secrets.E2E_PASSWORD }}";
+          } > .env.test
+
+      - name: Generate environment.ts for Angular
+        if: steps.check_secrets.outputs.should_run == 'true'
+        run: |
+          mkdir -p src/environments
+          echo "// Auto-generated by GitHub Actions" > src/environments/environment.ts
+          echo "export const environment = {" >> src/environments/environment.ts
+          echo "  production: false," >> src/environments/environment.ts
+          echo "  apiUrl: 'http://localhost:3000'," >> src/environments/environment.ts
+          echo "  supabaseUrl: '${{ secrets.SUPABASE_URL }}'," >> src/environments/environment.ts
+          echo "  supabaseKey: '${{ secrets.SUPABASE_KEY }}'," >> src/environments/environment.ts
+          echo "};" >> src/environments/environment.ts
+
+      - name: Install dependencies
+        if: steps.check_secrets.outputs.should_run == 'true'
+        run: npm ci
+
+      - name: Ensure E2E user exists in Supabase
+        if: steps.check_secrets.outputs.should_run == 'true'
+        run: node scripts/ensure-e2e-user.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+      - name: Install Playwright Browsers
+        if: steps.check_secrets.outputs.should_run == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E Tests
+        if: steps.check_secrets.outputs.should_run == 'true'
+        run: npm run test:e2e
+        env:
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+      - name: Upload E2E Report
+        uses: actions/upload-artifact@v6
+        if: always() && steps.check_secrets.outputs.should_run == 'true'
+        with:
+          name: playwright-report-github
+          path: apps/frontend/playwright-report/
+          retention-days: 7
+
+  status-comment:
+    name: PR Status Comment
+    # Runs ONLY if all needs passed (default behavior)
+    needs: [unit-test-backend, unit-test-frontend, e2e-test-github]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Post success comment
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const comment = `## ✅ Pull Request Checks Passed
+
+            All checks passed successfully!
+
+            | Job | Status |
+            |-----|--------|
+            | Linting | ✅ Passed |
+            | Unit Tests | ✅ Passed |
+            | E2E Tests | ✅ Passed |
+
+            ready to merge!`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

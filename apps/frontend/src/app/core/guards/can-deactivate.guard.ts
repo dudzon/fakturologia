@@ -1,9 +1,12 @@
 import { inject } from '@angular/core';
 import { CanDeactivateFn } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
-import { ConfirmDialogComponent, ConfirmDialogData } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData,
+} from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 /**
  * Interface for components that can be checked for unsaved changes.
@@ -19,7 +22,7 @@ export interface CanDeactivateComponent {
  * with a canDeactivate() method that returns true if it's safe to leave.
  */
 export const canDeactivateGuard: CanDeactivateFn<CanDeactivateComponent> = (
-  component
+  component,
 ): Observable<boolean> | boolean => {
   // If component allows deactivation, proceed
   if (component.canDeactivate()) {
@@ -31,19 +34,18 @@ export const canDeactivateGuard: CanDeactivateFn<CanDeactivateComponent> = (
 
   const dialogData: ConfirmDialogData = {
     title: 'Niezapisane zmiany',
-    message: 'Masz niezapisane zmiany. Czy na pewno chcesz opuścić tę stronę? Wszystkie niezapisane dane zostaną utracone.',
+    message:
+      'Masz niezapisane zmiany. Czy na pewno chcesz opuścić tę stronę? Wszystkie niezapisane dane zostaną utracone.',
     confirmText: 'Opuść stronę',
     cancelText: 'Zostań',
-    confirmColor: 'warn'
+    confirmColor: 'warn',
   };
 
   const dialogRef = dialog.open(ConfirmDialogComponent, {
     data: dialogData,
     width: '400px',
-    disableClose: true
+    disableClose: true,
   });
 
-  return dialogRef.afterClosed().pipe(
-    map((result: boolean) => result === true)
-  );
+  return dialogRef.afterClosed().pipe(map((result: boolean) => result === true));
 };

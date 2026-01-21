@@ -1,12 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  computed,
-  OnInit,
-  DestroyRef,
-  effect
-} from '@angular/core';
+import { Component, inject, signal, computed, OnInit, DestroyRef, effect } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -29,13 +22,20 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { InvoicesStore } from '../../stores/invoices.store';
 import { InvoiceService } from '../../services/invoice.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import {
   ConfirmDialogComponent,
-  ConfirmDialogData
+  ConfirmDialogData,
 } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { InvoiceStatusBadgeComponent } from './components/invoice-status-badge.component';
-import { InvoiceFiltersComponent, InvoiceFiltersViewModel } from './components/invoice-filters.component';
-import { InvoiceStatusDialogComponent, InvoiceStatusDialogData } from './components/invoice-status-dialog.component';
+import {
+  InvoiceFiltersComponent,
+  InvoiceFiltersViewModel,
+} from './components/invoice-filters.component';
+import {
+  InvoiceStatusDialogComponent,
+  InvoiceStatusDialogData,
+} from './components/invoice-status-dialog.component';
 import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../types';
 
 /**
@@ -69,15 +69,16 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
     MatDialogModule,
     MatTooltipModule,
     MatChipsModule,
+    MatDividerModule,
     EmptyStateComponent,
+    PageHeaderComponent,
     InvoiceStatusBadgeComponent,
-    InvoiceFiltersComponent
+    InvoiceFiltersComponent,
   ],
   template: `
     <div class="invoice-list">
       <!-- Header -->
-      <div class="invoice-list__header">
-        <h1 class="invoice-list__title">Faktury</h1>
+      <app-page-header title="Faktury">
         <a
           mat-raised-button
           color="primary"
@@ -87,7 +88,7 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
           <mat-icon>add</mat-icon>
           Nowa faktura
         </a>
-      </div>
+      </app-page-header>
 
       <!-- Filters -->
       <app-invoice-filters
@@ -105,9 +106,7 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
         <div class="invoice-list__error">
           <mat-icon color="warn">error_outline</mat-icon>
           <p>{{ store.error() }}</p>
-          <button mat-button color="primary" (click)="reload()">
-            Spróbuj ponownie
-          </button>
+          <button mat-button color="primary" (click)="reload()">Spróbuj ponownie</button>
         </div>
       } @else if (store.isEmpty() && !store.hasFilters()) {
         <app-empty-state
@@ -139,10 +138,7 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
             <ng-container matColumnDef="invoiceNumber">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Numer</th>
               <td mat-cell *matCellDef="let invoice">
-                <a
-                  [routerLink]="['/invoices', invoice.id]"
-                  class="invoice-list__link"
-                >
+                <a [routerLink]="['/invoices', invoice.id]" class="invoice-list__link">
                   {{ invoice.invoiceNumber }}
                 </a>
               </td>
@@ -160,7 +156,7 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
             <ng-container matColumnDef="issueDate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Data wystawienia</th>
               <td mat-cell *matCellDef="let invoice">
-                {{ invoice.issueDate | date:'dd.MM.yyyy' }}
+                {{ invoice.issueDate | date: 'dd.MM.yyyy' }}
               </td>
             </ng-container>
 
@@ -168,21 +164,20 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
             <ng-container matColumnDef="dueDate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Termin płatności</th>
               <td mat-cell *matCellDef="let invoice" [class.overdue]="isOverdue(invoice)">
-                {{ invoice.dueDate | date:'dd.MM.yyyy' }}
+                {{ invoice.dueDate | date: 'dd.MM.yyyy' }}
                 @if (isOverdue(invoice)) {
-                  <mat-icon
-                    class="overdue-icon"
-                    matTooltip="Po terminie"
-                  >warning</mat-icon>
+                  <mat-icon class="overdue-icon" matTooltip="Po terminie">warning</mat-icon>
                 }
               </td>
             </ng-container>
 
             <!-- Total Gross Column -->
             <ng-container matColumnDef="totalGross">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Kwota brutto</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">
+                Kwota brutto
+              </th>
               <td mat-cell *matCellDef="let invoice" class="text-right">
-                {{ invoice.totalGross | currency:invoice.currency:'symbol':'1.2-2':'pl' }}
+                {{ invoice.totalGross | currency: invoice.currency : 'symbol' : '1.2-2' : 'pl' }}
               </td>
             </ng-container>
 
@@ -202,6 +197,7 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
                   mat-icon-button
                   [matMenuTriggerFor]="actionsMenu"
                   aria-label="Akcje"
+                  (click)="$event.stopPropagation()"
                 >
                   <mat-icon>more_vert</mat-icon>
                 </button>
@@ -224,16 +220,10 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
                     <mat-icon>published_with_changes</mat-icon>
                     <span>Zmień status</span>
                   </button>
-                  @if (invoice.status === 'draft') {
-                    <button
-                      mat-menu-item
-                      class="delete-action"
-                      (click)="confirmDelete(invoice)"
-                    >
-                      <mat-icon color="warn">delete</mat-icon>
-                      <span>Usuń</span>
-                    </button>
-                  }
+                  <button mat-menu-item class="delete-action" (click)="confirmDelete(invoice)">
+                    <mat-icon color="warn">delete</mat-icon>
+                    <span>Usuń</span>
+                  </button>
                 </mat-menu>
               </td>
             </ng-container>
@@ -272,135 +262,130 @@ import type { InvoiceListItem, InvoiceStatus, InvoiceListQuery } from '../../../
       </a>
     </div>
   `,
-  styles: [`
-    .invoice-list {
-      padding: 24px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .invoice-list__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .invoice-list__title {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 500;
-    }
-
-    .invoice-list__new-btn {
-      @media (max-width: 599px) {
-        display: none;
-      }
-    }
-
-    .invoice-list__loading,
-    .invoice-list__error {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 24px;
-      text-align: center;
-      gap: 16px;
-    }
-
-    .invoice-list__error mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-    }
-
-    .invoice-list__table-container {
-      overflow-x: auto;
-      border-radius: 8px;
-      background: var(--mat-sys-surface);
-    }
-
-    .invoice-list__table {
-      width: 100%;
-      min-width: 800px;
-    }
-
-    .invoice-list__link {
-      color: var(--mat-sys-primary);
-      text-decoration: none;
-      font-weight: 500;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .invoice-list__row {
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-
-      &:hover {
-        background-color: var(--mat-sys-surface-container-low);
-      }
-    }
-
-    .text-right {
-      text-align: right !important;
-    }
-
-    .actions-column {
-      width: 48px;
-      text-align: center;
-    }
-
-    .overdue {
-      color: #c62828;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .overdue-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      color: #c62828;
-    }
-
-    .delete-action {
-      color: var(--mat-sys-error);
-    }
-
-    mat-paginator {
-      background: transparent;
-      margin-top: 16px;
-    }
-
-    .invoice-list__fab {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 100;
-
-      @media (min-width: 600px) {
-        display: none;
-      }
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 959px) {
+  styles: [
+    `
       .invoice-list {
-        padding: 16px;
+        padding: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
       }
 
-      .invoice-list__title {
-        font-size: 24px;
+      .invoice-list__new-btn {
+        @media (max-width: 599px) {
+          display: none;
+        }
       }
-    }
-  `]
+
+      .invoice-list__loading,
+      .invoice-list__error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .invoice-list__error mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+      }
+
+      .invoice-list__table-container {
+        overflow-x: auto;
+        border-radius: 8px;
+        background: var(--mat-sys-surface);
+      }
+
+      .invoice-list__table {
+        width: 100%;
+        min-width: 800px;
+      }
+
+      .invoice-list__link {
+        color: var(--mat-sys-primary);
+        text-decoration: none;
+        font-weight: 500;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .invoice-list__row {
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+          background-color: var(--mat-sys-surface-container-low);
+        }
+      }
+
+      .text-right {
+        text-align: right !important;
+      }
+
+      .actions-column {
+        width: 48px;
+        text-align: center;
+      }
+
+      .overdue {
+        color: #c62828;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .overdue-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #c62828;
+      }
+
+      .delete-action {
+        color: var(--mat-sys-error);
+      }
+
+      mat-paginator {
+        background: transparent;
+        margin-top: 16px;
+      }
+
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-trigger {
+        padding-left: 10px;
+      }
+
+      mat-paginator ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-arrow-wrapper {
+        padding-right: 5px;
+      }
+
+      .invoice-list__fab {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 100;
+
+        @media (min-width: 600px) {
+          display: none;
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 959px) {
+        .invoice-list {
+          padding: 16px;
+        }
+
+        .invoice-list__title {
+          font-size: 24px;
+        }
+      }
+    `,
+  ],
 })
 export class InvoiceListComponent implements OnInit {
   readonly store = inject(InvoicesStore);
@@ -419,7 +404,7 @@ export class InvoiceListComponent implements OnInit {
     'dueDate',
     'totalGross',
     'status',
-    'actions'
+    'actions',
   ];
 
   /** Current filters view model derived from store query */
@@ -429,7 +414,7 @@ export class InvoiceListComponent implements OnInit {
       status: query.status ?? null,
       dateFrom: query.dateFrom ?? null,
       dateTo: query.dateTo ?? null,
-      search: query.search ?? ''
+      search: query.search ?? '',
     };
   });
 
@@ -459,7 +444,7 @@ export class InvoiceListComponent implements OnInit {
       dateFrom: params['dateFrom'],
       dateTo: params['dateTo'],
       sortBy: params['sortBy'],
-      sortOrder: params['sortOrder'] as 'asc' | 'desc' | undefined
+      sortOrder: params['sortOrder'] as 'asc' | 'desc' | undefined,
     };
 
     this.store.loadInvoices(query);
@@ -502,7 +487,7 @@ export class InvoiceListComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
-      replaceUrl: true
+      replaceUrl: true,
     });
   }
 
@@ -514,7 +499,7 @@ export class InvoiceListComponent implements OnInit {
       status: filters.status ?? undefined,
       dateFrom: filters.dateFrom ?? undefined,
       dateTo: filters.dateTo ?? undefined,
-      search: filters.search || undefined
+      search: filters.search || undefined,
     };
 
     this.updateQueryParams(query);
@@ -525,14 +510,20 @@ export class InvoiceListComponent implements OnInit {
    * Handle sort change.
    */
   async onSortChange(sort: Sort): Promise<void> {
-    const validSortFields = ['invoiceNumber', 'issueDate', 'dueDate', 'totalGross', 'createdAt'] as const;
-    const sortField = validSortFields.includes(sort.active as typeof validSortFields[number])
+    const validSortFields = [
+      'invoiceNumber',
+      'issueDate',
+      'dueDate',
+      'totalGross',
+      'createdAt',
+    ] as const;
+    const sortField = validSortFields.includes(sort.active as (typeof validSortFields)[number])
       ? (sort.active as InvoiceListQuery['sortBy'])
       : 'issueDate';
 
     const query: Partial<InvoiceListQuery> = {
       sortBy: sortField,
-      sortOrder: (sort.direction || 'desc') as 'asc' | 'desc'
+      sortOrder: sort.direction || 'desc',
     };
 
     this.updateQueryParams(query);
@@ -545,7 +536,7 @@ export class InvoiceListComponent implements OnInit {
   async onPageChange(event: PageEvent): Promise<void> {
     const query: Partial<InvoiceListQuery> = {
       page: event.pageIndex + 1,
-      limit: event.pageSize
+      limit: event.pageSize,
     };
 
     this.updateQueryParams(query);
@@ -559,7 +550,7 @@ export class InvoiceListComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {},
-      replaceUrl: true
+      replaceUrl: true,
     });
     await this.store.clearFilters();
   }
@@ -596,12 +587,12 @@ export class InvoiceListComponent implements OnInit {
     const dialogData: InvoiceStatusDialogData = {
       invoiceId: invoice.id,
       invoiceNumber: invoice.invoiceNumber,
-      currentStatus: invoice.status
+      currentStatus: invoice.status,
     };
 
     const dialogRef = this.dialog.open(InvoiceStatusDialogComponent, {
       data: dialogData,
-      width: '400px'
+      width: '400px',
     });
 
     dialogRef.afterClosed().subscribe(async (newStatus: InvoiceStatus | undefined) => {
@@ -610,12 +601,12 @@ export class InvoiceListComponent implements OnInit {
           await this.invoiceService.updateStatus(invoice.id, { status: newStatus }).toPromise();
           this.store.updateInvoiceStatus(invoice.id, newStatus);
           this.snackBar.open('Status faktury został zmieniony', 'Zamknij', {
-            duration: 3000
+            duration: 3000,
           });
         } catch (error) {
           this.snackBar.open('Błąd podczas zmiany statusu', 'Zamknij', {
             duration: 5000,
-            panelClass: ['snackbar-error']
+            panelClass: ['snackbar-error'],
           });
         }
       }
@@ -630,7 +621,7 @@ export class InvoiceListComponent implements OnInit {
       const duplicated = await this.invoiceService.duplicate(invoice.id).toPromise();
       if (duplicated) {
         this.snackBar.open('Faktura została zduplikowana', 'Zamknij', {
-          duration: 3000
+          duration: 3000,
         });
         // Navigate to edit the duplicated invoice
         this.router.navigate(['/invoices', duplicated.id, 'edit']);
@@ -638,7 +629,7 @@ export class InvoiceListComponent implements OnInit {
     } catch (error) {
       this.snackBar.open('Błąd podczas duplikowania faktury', 'Zamknij', {
         duration: 5000,
-        panelClass: ['snackbar-error']
+        panelClass: ['snackbar-error'],
       });
     }
   }
@@ -652,12 +643,12 @@ export class InvoiceListComponent implements OnInit {
       message: `Czy na pewno chcesz usunąć fakturę ${invoice.invoiceNumber}? Ta operacja jest nieodwracalna.`,
       confirmText: 'Usuń',
       cancelText: 'Anuluj',
-      confirmColor: 'warn'
+      confirmColor: 'warn',
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: dialogData,
-      width: '400px'
+      width: '400px',
     });
 
     dialogRef.afterClosed().subscribe(async (confirmed: boolean) => {
@@ -665,12 +656,12 @@ export class InvoiceListComponent implements OnInit {
         const success = await this.store.deleteInvoice(invoice.id);
         if (success) {
           this.snackBar.open('Faktura została usunięta', 'Zamknij', {
-            duration: 3000
+            duration: 3000,
           });
         } else {
           this.snackBar.open('Błąd podczas usuwania faktury', 'Zamknij', {
             duration: 5000,
-            panelClass: ['snackbar-error']
+            panelClass: ['snackbar-error'],
           });
         }
       }

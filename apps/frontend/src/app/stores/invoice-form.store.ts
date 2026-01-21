@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import type { InvoiceItemRequest, VatRate, Currency } from '../../types';
 
 /**
@@ -36,7 +36,7 @@ const VAT_PERCENTAGES: Record<VatRate, number> = {
   '8': 0.08,
   '5': 0.05,
   '0': 0,
-  'zw': 0
+  zw: 0,
 };
 
 /**
@@ -83,7 +83,7 @@ export class InvoiceFormStore {
       vatBreakdown.set(rate, {
         net: existing.net + net,
         vat: existing.vat + vat,
-        gross: existing.gross + gross
+        gross: existing.gross + gross,
       });
     }
 
@@ -91,21 +91,15 @@ export class InvoiceFormStore {
       totalNet,
       totalVat,
       totalGross,
-      vatBreakdown
+      vatBreakdown,
     };
   });
 
-  readonly totalNetFormatted = computed(() =>
-    this.totals().totalNet.toFixed(2)
-  );
+  readonly totalNetFormatted = computed(() => this.totals().totalNet.toFixed(2));
 
-  readonly totalVatFormatted = computed(() =>
-    this.totals().totalVat.toFixed(2)
-  );
+  readonly totalVatFormatted = computed(() => this.totals().totalVat.toFixed(2));
 
-  readonly totalGrossFormatted = computed(() =>
-    this.totals().totalGross.toFixed(2)
-  );
+  readonly totalGrossFormatted = computed(() => this.totals().totalGross.toFixed(2));
 
   readonly hasItems = computed(() => this._items().length > 0);
 
@@ -140,10 +134,10 @@ export class InvoiceFormStore {
       vatRate: '23',
       netAmount: '0.00',
       vatAmount: '0.00',
-      grossAmount: '0.00'
+      grossAmount: '0.00',
     };
 
-    this._items.update(current => [...current, newItem]);
+    this._items.update((current) => [...current, newItem]);
     this._isDirty.set(true);
   }
 
@@ -151,7 +145,7 @@ export class InvoiceFormStore {
    * Update an item at given index.
    */
   updateItem(index: number, updates: Partial<InvoiceItemFormModel>): void {
-    this._items.update(current => {
+    this._items.update((current) => {
       const newItems = [...current];
       if (index >= 0 && index < newItems.length) {
         const item = { ...newItems[index], ...updates };
@@ -172,7 +166,7 @@ export class InvoiceFormStore {
    * Remove an item at given index.
    */
   removeItem(index: number): void {
-    this._items.update(current => {
+    this._items.update((current) => {
       const newItems = current.filter((_, i) => i !== index);
       // Update positions
       return newItems.map((item, i) => ({ ...item, position: i + 1 }));
@@ -184,7 +178,7 @@ export class InvoiceFormStore {
    * Move item from one position to another.
    */
   moveItem(fromIndex: number, toIndex: number): void {
-    this._items.update(current => {
+    this._items.update((current) => {
       const newItems = [...current];
       const [removed] = newItems.splice(fromIndex, 1);
       newItems.splice(toIndex, 0, removed);
@@ -213,23 +207,25 @@ export class InvoiceFormStore {
    * Get items as request DTOs.
    */
   getItemsForRequest(): InvoiceItemRequest[] {
-    return this._items().map(item => ({
+    return this._items().map((item) => ({
       id: item.id,
       position: item.position,
       name: item.name,
       unit: item.unit || undefined,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
-      vatRate: item.vatRate
+      vatRate: item.vatRate,
     }));
   }
 
   /**
    * Calculate item amounts based on quantity, unit price, and VAT rate.
    */
-  private calculateItemAmounts(item: InvoiceItemFormModel): Pick<InvoiceItemFormModel, 'netAmount' | 'vatAmount' | 'grossAmount'> {
-    const quantity = parseFloat(item.quantity) || 0;
-    const unitPrice = parseFloat(item.unitPrice) || 0;
+  private calculateItemAmounts(
+    item: InvoiceItemFormModel,
+  ): Pick<InvoiceItemFormModel, 'netAmount' | 'vatAmount' | 'grossAmount'> {
+    const quantity = parseFloat(item.quantity?.toString().replace(',', '.')) || 0;
+    const unitPrice = parseFloat(item.unitPrice?.toString().replace(',', '.')) || 0;
     const vatPercentage = VAT_PERCENTAGES[item.vatRate];
 
     const netAmount = quantity * unitPrice;
@@ -239,7 +235,7 @@ export class InvoiceFormStore {
     return {
       netAmount: netAmount.toFixed(2),
       vatAmount: vatAmount.toFixed(2),
-      grossAmount: grossAmount.toFixed(2)
+      grossAmount: grossAmount.toFixed(2),
     };
   }
 

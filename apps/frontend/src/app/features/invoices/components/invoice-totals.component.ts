@@ -66,9 +66,15 @@ interface VatTotalRow {
         <tfoot>
           <tr class="invoice-totals__summary-row">
             <td><strong>RAZEM</strong></td>
-            <td class="text-right"><strong>{{ formatCurrency(totalNetValue()) }}</strong></td>
-            <td class="text-right"><strong>{{ formatCurrency(totalVatValue()) }}</strong></td>
-            <td class="text-right"><strong>{{ formatCurrency(totalGrossValue()) }}</strong></td>
+            <td class="text-right">
+              <strong>{{ formatCurrency(totalNetValue()) }}</strong>
+            </td>
+            <td class="text-right">
+              <strong>{{ formatCurrency(totalVatValue()) }}</strong>
+            </td>
+            <td class="text-right">
+              <strong>{{ formatCurrency(totalGrossValue()) }}</strong>
+            </td>
           </tr>
         </tfoot>
       </table>
@@ -82,76 +88,80 @@ interface VatTotalRow {
       </div>
     </div>
   `,
-  styles: [`
-    .invoice-totals {
-      margin-top: 24px;
-    }
-
-    .invoice-totals__breakdown {
-      width: 100%;
-      max-width: 500px;
-      margin-left: auto;
-      border-collapse: collapse;
-      font-size: 14px;
-
-      th, td {
-        padding: 8px 12px;
-        border: 1px solid var(--mat-sys-outline-variant);
+  styles: [
+    `
+      .invoice-totals {
+        margin-top: 24px;
       }
 
-      th {
-        background-color: var(--mat-sys-surface-container);
-        font-weight: 500;
-        text-align: left;
-      }
-
-      .text-right {
-        text-align: right;
-      }
-    }
-
-    .invoice-totals__summary-row {
-      background-color: var(--mat-sys-surface-container-high);
-    }
-
-    .invoice-totals__grand-total {
-      display: flex;
-      justify-content: flex-end;
-      align-items: baseline;
-      gap: 16px;
-      margin-top: 16px;
-      padding: 16px;
-      background-color: var(--mat-sys-primary-container);
-      border-radius: 8px;
-    }
-
-    .invoice-totals__grand-total-label {
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    .invoice-totals__grand-total-amount {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--mat-sys-primary);
-    }
-
-    @media (max-width: 599px) {
       .invoice-totals__breakdown {
-        font-size: 12px;
+        width: 100%;
+        max-width: 500px;
+        margin-left: auto;
+        border-collapse: collapse;
+        font-size: 14px;
 
-        th, td {
-          padding: 6px 8px;
+        th,
+        td {
+          padding: 8px 12px;
+          border: 1px solid var(--mat-sys-outline-variant);
+        }
+
+        th {
+          background-color: var(--mat-sys-surface-container);
+          font-weight: 500;
+          text-align: left;
+        }
+
+        .text-right {
+          text-align: right;
         }
       }
 
-      .invoice-totals__grand-total {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 4px;
+      .invoice-totals__summary-row {
+        background-color: var(--mat-sys-surface-container-high);
       }
-    }
-  `]
+
+      .invoice-totals__grand-total {
+        display: flex;
+        justify-content: flex-end;
+        align-items: baseline;
+        gap: 16px;
+        margin-top: 16px;
+        padding: 16px;
+        background-color: var(--mat-sys-primary-container);
+        border-radius: 8px;
+      }
+
+      .invoice-totals__grand-total-label {
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .invoice-totals__grand-total-amount {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--mat-sys-primary);
+      }
+
+      @media (max-width: 599px) {
+        .invoice-totals__breakdown {
+          font-size: 12px;
+
+          th,
+          td {
+            padding: 6px 8px;
+          }
+        }
+
+        .invoice-totals__grand-total {
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 4px;
+        }
+      }
+    `,
+  ],
 })
 export class InvoiceTotalsComponent {
   /** Invoice items for VAT breakdown calculation */
@@ -182,13 +192,15 @@ export class InvoiceTotalsComponent {
   readonly vatTotals = computed((): VatTotalRow[] => {
     const itemsList = this.items();
     if (!itemsList.length) {
-      return [{
-        rate: '23',
-        rateLabel: '23%',
-        netAmount: this.totalNetValue(),
-        vatAmount: this.totalVatValue(),
-        grossAmount: this.totalGrossValue()
-      }];
+      return [
+        {
+          rate: '23',
+          rateLabel: '23%',
+          netAmount: this.totalNetValue(),
+          vatAmount: this.totalVatValue(),
+          grossAmount: this.totalGrossValue(),
+        },
+      ];
     }
 
     // Group items by VAT rate
@@ -204,7 +216,7 @@ export class InvoiceTotalsComponent {
           rateLabel,
           netAmount: 0,
           vatAmount: 0,
-          grossAmount: 0
+          grossAmount: 0,
         });
       }
 
@@ -227,7 +239,7 @@ export class InvoiceTotalsComponent {
   formatCurrency(value: number): string {
     return value.toLocaleString('pl-PL', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
   }
 }

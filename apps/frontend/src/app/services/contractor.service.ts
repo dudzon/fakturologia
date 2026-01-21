@@ -7,7 +7,7 @@ import type {
   ContractorListQuery,
   CreateContractorCommand,
   UpdateContractorCommand,
-  DeleteContractorResponse
+  DeleteContractorResponse,
 } from '../../types';
 import { environment } from '../../environments/environment';
 

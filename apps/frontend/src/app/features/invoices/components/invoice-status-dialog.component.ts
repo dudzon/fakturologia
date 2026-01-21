@@ -34,20 +34,20 @@ const STATUS_OPTIONS: StatusOption[] = [
     value: 'draft',
     label: 'Szkic',
     description: 'Faktura w trakcie tworzenia, można ją edytować',
-    icon: 'edit_note'
+    icon: 'edit_note',
   },
   {
     value: 'unpaid',
     label: 'Wystawiona (nieopłacona)',
     description: 'Faktura wystawiona, oczekuje na płatność',
-    icon: 'schedule'
+    icon: 'schedule',
   },
   {
     value: 'paid',
     label: 'Opłacona',
     description: 'Faktura została opłacona',
-    icon: 'check_circle'
-  }
+    icon: 'check_circle',
+  },
 ];
 
 /**
@@ -75,7 +75,7 @@ const STATUS_OPTIONS: StatusOption[] = [
     MatDialogModule,
     MatButtonModule,
     MatRadioModule,
-    MatIconModule
+    MatIconModule,
   ],
   template: `
     <h2 mat-dialog-title>Zmień status faktury</h2>
@@ -123,97 +123,94 @@ const STATUS_OPTIONS: StatusOption[] = [
 
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Anuluj</button>
-      <button
-        mat-raised-button
-        color="primary"
-        [disabled]="!canSave()"
-        (click)="save()"
-      >
+      <button mat-raised-button color="primary" [disabled]="!canSave()" (click)="save()">
         Zmień status
       </button>
     </mat-dialog-actions>
   `,
-  styles: [`
-    mat-dialog-content {
-      min-width: 350px;
-    }
-
-    .dialog-subtitle {
-      margin-bottom: 24px;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .status-radio-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .status-option {
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--mat-sys-outline-variant);
-      transition: all 0.15s ease;
-
-      &:hover:not(.mat-mdc-radio-disabled) {
-        border-color: var(--mat-sys-primary);
-        background-color: var(--mat-sys-surface-container-low);
+  styles: [
+    `
+      mat-dialog-content {
+        min-width: 350px;
       }
 
-      &.current {
-        border-color: var(--mat-sys-primary);
-        background-color: var(--mat-sys-primary-container);
+      .dialog-subtitle {
+        margin-bottom: 24px;
+        color: var(--mat-sys-on-surface-variant);
       }
 
-      &.mat-mdc-radio-disabled {
-        opacity: 0.5;
+      .status-radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
       }
-    }
 
-    .status-option__content {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
+      .status-option {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--mat-sys-outline-variant);
+        transition: all 0.15s ease;
 
-    .status-option__icon {
-      color: var(--mat-sys-on-surface-variant);
-      margin-top: 2px;
-    }
+        &:hover:not(.mat-mdc-radio-disabled) {
+          border-color: var(--mat-sys-primary);
+          background-color: var(--mat-sys-surface-container-low);
+        }
 
-    .status-option__text {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+        &.current {
+          border-color: var(--mat-sys-primary);
+          background-color: var(--mat-sys-primary-container);
+        }
 
-    .status-option__label {
-      font-weight: 500;
-    }
+        &.mat-mdc-radio-disabled {
+          opacity: 0.5;
+        }
+      }
 
-    .status-option__current {
-      font-weight: normal;
-      color: var(--mat-sys-primary);
-      font-size: 12px;
-    }
+      .status-option__content {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
 
-    .status-option__description {
-      font-size: 12px;
-      color: var(--mat-sys-on-surface-variant);
-    }
+      .status-option__icon {
+        color: var(--mat-sys-on-surface-variant);
+        margin-top: 2px;
+      }
 
-    .status-warning {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px;
-      margin-top: 16px;
-      border-radius: 8px;
-      background-color: #fff3e0;
-      color: #e65100;
-      font-size: 14px;
-    }
-  `]
+      .status-option__text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .status-option__label {
+        font-weight: 500;
+      }
+
+      .status-option__current {
+        font-weight: normal;
+        color: var(--mat-sys-primary);
+        font-size: 12px;
+      }
+
+      .status-option__description {
+        font-size: 12px;
+        color: var(--mat-sys-on-surface-variant);
+      }
+
+      .status-warning {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        margin-top: 16px;
+        border-radius: 8px;
+        background-color: #fff3e0;
+        color: #e65100;
+        font-size: 14px;
+      }
+    `,
+  ],
 })
 export class InvoiceStatusDialogComponent {
   readonly dialogRef = inject(MatDialogRef<InvoiceStatusDialogComponent>);
@@ -256,8 +253,9 @@ export class InvoiceStatusDialogComponent {
    * Check if save button should be enabled.
    */
   canSave(): boolean {
-    return this.selectedStatus !== this.data.currentStatus &&
-           this.canTransitionTo(this.selectedStatus);
+    return (
+      this.selectedStatus !== this.data.currentStatus && this.canTransitionTo(this.selectedStatus)
+    );
   }
 
   /**

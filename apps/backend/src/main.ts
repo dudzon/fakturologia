@@ -43,7 +43,7 @@ async function bootstrap() {
   // ===== COMPRESSION =====
 
   // Gzip compression reduces HTTP response size
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
   app.use(compression());
 
   // ===== EXCEPTION FILTERS =====
@@ -52,9 +52,8 @@ async function bootstrap() {
   // IMPORTANT: Order matters!
   // - AllExceptionsFilter as fallback (catches everything)
   // - HttpExceptionFilter for HTTP exceptions (more specific)
-  /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call */
+
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
-  /* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call */
 
   // ===== GLOBAL VALIDATION =====
 

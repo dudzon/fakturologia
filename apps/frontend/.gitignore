@@ -47,9 +47,17 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Test environment
+.env.test
+
 # Environment configuration files (contain secrets)
 /src/environments/environment.ts
 /src/environments/environment.*.ts
 # Keep production template and example
 !src/environments/environment.prod.ts
 !src/environments/environment.example.ts
+
+# Playwright
+/e2e-results
+/playwright-report
+test_output.txt

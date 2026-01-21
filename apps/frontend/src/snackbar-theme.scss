@@ -1,0 +1,25 @@
+/* Custom styles for Snackbar to fix transparency and contrast */
+.mat-mdc-snack-bar-container {
+  .mdc-snackbar__surface {
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(179, 157, 219, 0.3) !important;
+  }
+
+  .mdc-snackbar__label {
+    color: #333333 !important; /* Dark text for readability on white background */
+    font-weight: 500 !important;
+  }
+}
+
+.mat-mdc-snack-bar-action {
+  color: #3f51b5 !important; /* Indigo text for contrast */
+  background: transparent !important;
+  font-weight: 600 !important;
+  --mat-button-text-state-layer-color: transparent !important; /* Fix: Remove background on hover/focus */
+}
+
+.mat-mdc-snack-bar-action:hover, .mat-mdc-snack-bar-action:focus {
+  color: #303f9f !important;
+  background: rgba(63, 81, 181, 0.08) !important; /* Very subtle hover instead of solid purple */
+}

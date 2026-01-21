@@ -43,8 +43,11 @@ jobs:
           service: fakturologia-backend
           image: europe-central2-docker.pkg.dev/fakturologia-app/fakturologia-repo/backend:${{ github.sha }}
           region: europe-central2
-          allow_unauthenticated: true
-          # Add environment variables from GitHub Secrets if needed
-          # env_vars: |
-          #   SUPABASE_URL=${{ secrets.SUPABASE_URL }}
-          #   SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
+          flags: --allow-unauthenticated
+          # Add environment variables from GitHub Secrets
+          env_vars: |
+            SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+            SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+            SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+            SUPABASE_JWT_SECRET=${{ secrets.SUPABASE_JWT_SECRET }}
+            NODE_ENV=production

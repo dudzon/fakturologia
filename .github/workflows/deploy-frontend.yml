@@ -27,6 +27,13 @@ jobs:
       - name: Install dependencies
         run: cd apps/frontend && npm ci
 
+      - name: Create environment file
+        run: |
+          mkdir -p apps/frontend/src/environments
+          if [ ! -f apps/frontend/src/environments/environment.ts ]; then
+            echo "export const environment = { production: false, supabaseUrl: '', supabaseKey: '' };" > apps/frontend/src/environments/environment.ts
+          fi
+
       - name: Build Angular app
         run: cd apps/frontend && npm run build
 

@@ -1,0 +1,50 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/backend/**"
+      - ".github/workflows/deploy-backend.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          create_credentials_file: true
+          workload_identity_provider: projects/47248577649/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: github-deployer@fakturologia-app.iam.gserviceaccount.com
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker europe-central2-docker.pkg.dev
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t europe-central2-docker.pkg.dev/fakturologia-app/fakturologia-repo/backend:${{ github.sha }} apps/backend
+          docker push europe-central2-docker.pkg.dev/fakturologia-app/fakturologia-repo/backend:${{ github.sha }}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: fakturologia-backend
+          image: europe-central2-docker.pkg.dev/fakturologia-app/fakturologia-repo/backend:${{ github.sha }}
+          region: europe-central2
+          allow_unauthenticated: true
+          # Add environment variables from GitHub Secrets if needed
+          # env_vars: |
+          #   SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          #   SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}

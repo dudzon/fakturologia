@@ -89,7 +89,7 @@ async function ensureProfile(userId, email) {
     company_name: 'E2E Test Company',
     address: 'E2E Street 1, 00-000 Test City',
     nip: '0000000000',
-    bank_account: 'PL00000000000000000000000000',
+    bank_account: 'PL61109010140000071219812874',
     logo_url: null,
     invoice_number_format: 'E2E/{YYYY}/{MM}/{NNN}',
     invoice_number_counter: 1,

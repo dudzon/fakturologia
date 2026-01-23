@@ -1,7 +1,8 @@
-import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,11 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {
-  MatSnackBar,
-  MatSnackBarModule,
-  MAT_SNACK_BAR_DEFAULT_OPTIONS,
-} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { InvoiceService } from '../../services/invoice.service';
@@ -173,7 +170,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
                   @if (form.get('dueDate')?.hasError('required')) {
                     <mat-error>Termin płatności jest wymagany</mat-error>
                   }
-                  @if (form.get('dueDate')?.hasError('minDate')) {
+                  @if (form.get('dueDate')?.hasError('min')) {
                     <mat-error
                       >Termin płatności nie może być wcześniejszy niż data wystawienia</mat-error
                     >
@@ -244,7 +241,7 @@ const CURRENCIES: { value: Currency; label: string }[] = [
                   <mat-form-field appearance="outline" class="invoice-form__field">
                     <mat-label>NIP</mat-label>
                     <input matInput formControlName="nip" placeholder="np. 1234567890" />
-                    @if (form.get('buyer.nip')?.hasError('invalidNip')) {
+                    @if (form.get('buyer.nip')?.hasError('nip')) {
                       <mat-error>Nieprawidłowy numer NIP</mat-error>
                     }
                   </mat-form-field>
@@ -503,6 +500,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   readonly existingInvoice = signal<InvoiceResponse | null>(null);
   readonly selectedContractorId = signal<string | null>(null);
   readonly isManualBuyerMode = signal(false);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Computed
   readonly isEditMode = computed(() => !!this.route.snapshot.paramMap.get('id'));
@@ -533,10 +531,42 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
 
+    // Add validator for dueDate based on issueDate
+    this.form
+      .get('issueDate')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.validateDueDate();
+      });
+
+    this.form
+      .get('dueDate')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.validateDueDate();
+      });
+
     if (id) {
       this.loadExistingInvoice(id);
     } else {
       this.initializeNewInvoice();
+    }
+  }
+
+  /**
+   * Custom validator for due date.
+   */
+  private validateDueDate(): void {
+    const issueDate = this.form.get('issueDate')?.value;
+    const dueDate = this.form.get('dueDate')?.value;
+
+    if (issueDate && dueDate && dueDate < issueDate) {
+      this.form.get('dueDate')?.setErrors({ min: true });
+    } else if (this.form.get('dueDate')?.hasError('min')) {
+      // Remove only the min error
+      const errors = { ...this.form.get('dueDate')?.errors };
+      delete errors['min'];
+      this.form.get('dueDate')?.setErrors(Object.keys(errors).length > 0 ? errors : null);
     }
   }
 
@@ -787,7 +817,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   /**
    * Get default due date (14 days from today).
    */
-  private getDefaultDueDate(): Date {
+  private getDefaultDueDate(this: void): Date {
     const date = new Date();
     date.setDate(date.getDate() + 14);
     return date;
@@ -796,7 +826,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   /**
    * Format date to ISO string (YYYY-MM-DD).
    */
-  private formatDate(date: Date | null): string {
+  private formatDate(this: void, date: Date | null): string {
     if (!date) return '';
     return date.toISOString().split('T')[0];
   }

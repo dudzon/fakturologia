@@ -217,12 +217,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
               >
                 Anuluj
               </button>
-              <button
-                mat-raised-button
-                color="primary"
-                type="submit"
-                [disabled]="isSaving() || profileForm.invalid"
-              >
+              <button mat-raised-button color="primary" type="submit" [disabled]="isSaving()">
                 @if (isSaving()) {
                   <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
                   Zapisywanie...

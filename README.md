@@ -4,9 +4,8 @@ Aplikacja do wystawiania faktur VAT dla freelancerów i mikroprzedsiębiorców.
 
 ## Struktura projektu
 
-- `apps/frontend` - Frontend (Angular 21 + Material + Signals)
+- `apps/frontend` - Frontend (Angular 21 + Angular Material)
 - `apps/backend` - Backend (NestJS 11 + Supabase)
-- `packages/shared` - Współdzielone typy i interfejsy
 
 ## Wymagania
 

@@ -39,7 +39,7 @@ jobs:
           cat <<EOF > apps/frontend/src/environments/environment.prod.ts
           export const environment = {
             production: true,
-            apiUrl: 'https://fakturologia-backend-d3h7b2tsda-lm.a.run.app/api/v1',
+            apiUrl: 'https://fakturologia-backend-d3h7b2tsda-lm.a.run.app',
             supabaseUrl: '${{ secrets.SUPABASE_URL }}',
             supabaseKey: '${{ secrets.SUPABASE_ANON_KEY }}',
           };

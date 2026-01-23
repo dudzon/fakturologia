@@ -119,8 +119,7 @@ Projekt implementuje rygorystyczne standardy testowania na różnych poziomach:
 Aplikacja jest w pełni zautomatyzowana w modelu hybrid-cloud na platformie **Google Cloud (GCP)**.
 
 - **Frontend:** Firebase Hosting (CDN) -> [https://fakturologia-app.web.app](https://fakturologia-app.web.app)
-- **Backend:** Google Cloud Run (Docker) -> [https://fakturologia-backend-d3h7b2tsda-lm.a.run.app](https://fakturologia-backend-d3h7b2tsda-lm.a.run.app)
-- **Dokumentacja API:** [Swagger](https://fakturologia-backend-d3h7b2tsda-lm.a.run.app/api/docs)
+- **API Documentation:** [Swagger UI](https://fakturologia-backend-d3h7b2tsda-lm.a.run.app/api/docs) (deployed on GCP Cloud Run with Docker)
 
 ### CI/CD Pipeline
 

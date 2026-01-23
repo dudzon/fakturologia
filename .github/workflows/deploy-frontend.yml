@@ -36,9 +36,14 @@ jobs:
 
       - name: Inject secrets
         run: |
-          sed -i "s|\${SUPABASE_URL}|${{ secrets.SUPABASE_URL }}|g" apps/frontend/src/environments/environment.prod.ts
-          sed -i "s|\${SUPABASE_KEY}|${{ secrets.SUPABASE_ANON_KEY }}|g" apps/frontend/src/environments/environment.prod.ts
-          sed -i "s|\${API_URL}|https://fakturologia-backend-d3h7b2tsda-lm.a.run.app/api/v1|g" apps/frontend/src/environments/environment.prod.ts
+          cat <<EOF > apps/frontend/src/environments/environment.prod.ts
+          export const environment = {
+            production: true,
+            apiUrl: 'https://fakturologia-backend-d3h7b2tsda-lm.a.run.app/api/v1',
+            supabaseUrl: '${{ secrets.SUPABASE_URL }}',
+            supabaseKey: '${{ secrets.SUPABASE_ANON_KEY }}',
+          };
+          EOF
 
       - name: Build Angular app
         run: cd apps/frontend && npm run build

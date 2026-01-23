@@ -130,6 +130,32 @@ cd apps/frontend
 npx playwright test
 ```
 
+## Wdrożenie (Production)
+
+Aplikacja jest wdrożona w modelu hybrydowym na platformie Google Cloud:
+
+- **Frontend:** Firebase Hosting (CDN) -> [https://fakturologia-app.web.app](https://fakturologia-app.web.app)
+- **Backend:** Google Cloud Run (Docker) -> [https://fakturologia-backend-d3h7b2tsda-lm.a.run.app](https://fakturologia-backend-d3h7b2tsda-lm.a.run.app)
+- **Dokumentacja API:** [Swagger](https://fakturologia-backend-d3h7b2tsda-lm.a.run.app/api/docs)
+
+### Automatyzacja (CI/CD)
+
+Wdrożenie odbywa się automatycznie po wypchnięciu zmian do gałęzi `main` za pomocą **GitHub Actions**:
+
+1. `.github/workflows/deploy-backend.yml` - Buduje i wdraża kontener backendu.
+2. `.github/workflows/deploy-frontend.yml` - Buduje Angulara i publikuje na Firebase.
+
+### Wymagane Sekrety (GitHub Secrets)
+
+Aby CI/CD działało poprawnie, w ustawieniach repozytorium GitHub muszą być zdefiniowane następujące sekrety:
+
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_JWT_SECRET`
+
+Szczegółowy opis procesu wdrożenia znajduje się w [.ai/deployment-process-summary.md](.ai/deployment-process-summary.md).
+
 ## Bezpieczeństwo
 
 ⚠️ **WAŻNE:** Pliki zawierające sekrety są ignorowane przez git:

@@ -221,7 +221,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
                 mat-raised-button
                 color="primary"
                 type="submit"
-                [disabled]="isSaving() || profileForm.invalid"
+                [disabled]="isSaving()"
               >
                 @if (isSaving()) {
                   <mat-spinner diameter="20" class="button-spinner"></mat-spinner>

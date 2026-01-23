@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "fakturologia-app",
     "public": "dist/frontend/browser",
     "ignore": [
       "firebase.json",

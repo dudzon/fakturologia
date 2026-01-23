@@ -17,7 +17,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   MatSnackBar,
   MatSnackBarModule,
-  MAT_SNACK_BAR_DEFAULT_OPTIONS,
 } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
@@ -536,13 +535,19 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
     const id = this.route.snapshot.paramMap.get('id');
 
     // Add validator for dueDate based on issueDate
-    this.form.get('issueDate')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.validateDueDate();
-    });
+    this.form
+      .get('issueDate')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.validateDueDate();
+      });
 
-    this.form.get('dueDate')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.validateDueDate();
-    });
+    this.form
+      .get('dueDate')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.validateDueDate();
+      });
 
     if (id) {
       this.loadExistingInvoice(id);
@@ -564,9 +569,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
       // Remove only the min error
       const errors = { ...this.form.get('dueDate')?.errors };
       delete errors['min'];
-      this.form
-        .get('dueDate')
-        ?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+      this.form.get('dueDate')?.setErrors(Object.keys(errors).length > 0 ? errors : null);
     }
   }
 
@@ -817,7 +820,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   /**
    * Get default due date (14 days from today).
    */
-  private getDefaultDueDate(): Date {
+  private getDefaultDueDate(this: void): Date {
     const date = new Date();
     date.setDate(date.getDate() + 14);
     return date;
@@ -826,7 +829,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy, CanDeactivateCom
   /**
    * Format date to ISO string (YYYY-MM-DD).
    */
-  private formatDate(date: Date | null): string {
+  private formatDate(this: void, date: Date | null): string {
     if (!date) return '';
     return date.toISOString().split('T')[0];
   }
